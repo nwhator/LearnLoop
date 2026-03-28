@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Legal &amp; Compliance | LearnLoop</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-variant": "#d9dde1",
+                        "surface-container": "#e5e8ec",
+                        "on-surface": "#2c2f32",
+                        "on-primary-fixed-variant": "#003461",
+                        "surface-container-low": "#eef1f4",
+                        "tertiary-fixed": "#fed023",
+                        "background": "#f5f7fa",
+                        "outline": "#74777a",
+                        "on-tertiary-fixed": "#433500",
+                        "primary-fixed": "#68abff",
+                        "primary-container": "#68abff",
+                        "tertiary-container": "#fed023",
+                        "surface-container-highest": "#d9dde1",
+                        "secondary": "#843aa3",
+                        "on-surface-variant": "#595c5e",
+                        "primary-dim": "#005192",
+                        "on-secondary-fixed-variant": "#782e97",
+                        "on-primary-container": "#002b52",
+                        "tertiary-fixed-dim": "#eec209",
+                        "inverse-on-surface": "#9a9da0",
+                        "secondary-fixed": "#f1c1ff",
+                        "tertiary": "#6f5900",
+                        "surface-container-high": "#dfe3e7",
+                        "on-background": "#2c2f32",
+                        "on-secondary": "#ffedff",
+                        "inverse-surface": "#0b0f11",
+                        "surface-dim": "#d0d5d9",
+                        "on-tertiary-fixed-variant": "#655000",
+                        "on-secondary-fixed": "#570278",
+                        "on-error-container": "#570008",
+                        "on-primary-fixed": "#000c1e",
+                        "on-secondary-container": "#6d228d",
+                        "error": "#b31b25",
+                        "primary-fixed-dim": "#599ef1",
+                        "outline-variant": "#abadb0",
+                        "surface-bright": "#f5f7fa",
+                        "tertiary-dim": "#614d00",
+                        "secondary-fixed-dim": "#eaaeff",
+                        "inverse-primary": "#68abff",
+                        "surface": "#f5f7fa",
+                        "surface-tint": "#005da7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#f1c1ff",
+                        "error-container": "#fb5151",
+                        "on-error": "#ffefee",
+                        "on-primary": "#eef3ff",
+                        "secondary-dim": "#762d96",
+                        "primary": "#005da7",
+                        "on-tertiary": "#fff2d3",
+                        "error-dim": "#9f0519",
+                        "on-tertiary-container": "#594700"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopNavBar Component (Shared) -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm">
+<div class="flex justify-between items-center w-full px-6 py-3 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-blue-700 dark:text-blue-400 font-['Plus_Jakarta_Sans'] tracking-tight">LearnLoop</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#">Community</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 font-['Plus_Jakarta_Sans'] font-bold tracking-tight" href="#">Support</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined text-slate-600">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-200 rounded-full">
+<span class="material-symbols-outlined text-slate-600">settings</span>
+</button>
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border-2 border-primary-container object-cover" data-alt="Close up portrait of a smiling young professional woman with a clean neutral studio background and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDurbtDYkH1A6GFArRnhT14v4BcUBCnP5Bhhhepo3KGHyZLzFZi3ukGtVxRLxv4A23rlnf3Kd0tOW7IloHpYQnSJvEhwEZ5Ug7-OQj86MCP7A8FqUCDVQxnNp3c358gsb9muRKc0A1ZCyDqL3i5hpwWjcM1b56AxSM_XgByC80TR0ezflqQezitVjxqEw9vC-Vt8J4bRbEHKlWjYS8brxJ25RjmvFhxNixdfTPZneWgrvciK0xyfsiO1qpj623cYrtiNVTNP7B4sC0"/>
+</div>
+</div>
+</nav>
+<!-- Hero Header -->
+<header class="pt-32 pb-16 px-6 md:px-12 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<span class="inline-block px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-medium text-sm mb-6">Last Updated: October 24, 2023</span>
+<h1 class="text-5xl md:text-6xl font-extrabold text-on-surface tracking-tight leading-tight max-w-3xl">
+                Legal &amp; <span class="text-primary">Compliance</span> Center
+            </h1>
+<p class="mt-6 text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+                Everything you need to know about our terms of service, privacy practices, and how we protect your intellectual playground.
+            </p>
+</div>
+</header>
+<!-- Main Content Layout -->
+<main class="max-w-7xl mx-auto px-6 md:px-12 py-16">
+<div class="flex flex-col lg:flex-row gap-12">
+<!-- Side Navigation (Table of Contents) -->
+<aside class="lg:w-1/4 hidden lg:block sticky top-28 self-start">
+<div class="bg-surface-container-lowest rounded-lg p-8 shadow-sm">
+<h3 class="font-headline font-bold text-lg mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">list_alt</span>
+                        Contents
+                    </h3>
+<nav class="space-y-1">
+<a class="block py-2 text-primary font-bold border-l-4 border-primary pl-4" href="#introduction">1. Introduction</a>
+<a class="block py-2 text-on-surface-variant hover:text-primary pl-5 border-l-4 border-transparent transition-all" href="#terms">2. Terms of Service</a>
+<a class="block py-2 text-on-surface-variant hover:text-primary pl-5 border-l-4 border-transparent transition-all" href="#privacy">3. Privacy Policy</a>
+<a class="block py-2 text-on-surface-variant hover:text-primary pl-5 border-l-4 border-transparent transition-all" href="#data-usage">4. Data Usage &amp; AI</a>
+<a class="block py-2 text-on-surface-variant hover:text-primary pl-5 border-l-4 border-transparent transition-all" href="#intellectual-property">5. Intellectual Property</a>
+<a class="block py-2 text-on-surface-variant hover:text-primary pl-5 border-l-4 border-transparent transition-all" href="#cookies">6. Cookie Policy</a>
+<a class="block py-2 text-on-surface-variant hover:text-primary pl-5 border-l-4 border-transparent transition-all" href="#contact">7. Contact Legal</a>
+</nav>
+<div class="mt-12 p-6 bg-primary-container/10 rounded-lg">
+<p class="text-sm font-medium text-primary mb-3">Download PDF Version</p>
+<button class="w-full flex items-center justify-center gap-2 py-3 bg-primary text-on-primary rounded-full hover:bg-primary-dim transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Legal_Bundle.pdf
+                        </button>
+</div>
+</div>
+</aside>
+<!-- Legal Content Area -->
+<div class="lg:w-3/4 space-y-16">
+<!-- Introduction -->
+<section class="scroll-mt-32" id="introduction">
+<h2 class="text-3xl font-bold mb-8 text-on-surface">1. Introduction</h2>
+<div class="prose prose-lg prose-slate max-w-none text-on-surface-variant leading-relaxed space-y-6">
+<p>Welcome to LearnLoop. These Legal &amp; Compliance documents govern your use of the LearnLoop platform, website, and associated services. By accessing or using our platform, you agree to be bound by these terms.</p>
+<p>Our goal is to provide a transparent and secure "Intellectual Playground" where users can grow their skills without compromising their privacy or digital rights. We maintain high standards of compliance with global regulations including GDPR, CCPA, and COPPA.</p>
+</div>
+</section>
+<!-- Terms of Service Bento Grid (Highlighting Key Clauses) -->
+<section class="scroll-mt-32" id="terms">
+<h2 class="text-3xl font-bold mb-8 text-on-surface">2. Terms of Service</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest p-8 rounded-lg border border-outline-variant/10">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4">account_balance_wallet</span>
+<h4 class="font-headline font-bold text-xl mb-3">User Eligibility</h4>
+<p class="text-on-surface-variant leading-relaxed">Users must be at least 13 years of age to create an account. For users under 18, parental or guardian consent is required for certain premium features.</p>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-lg border border-outline-variant/10">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4">verified_user</span>
+<h4 class="font-headline font-bold text-xl mb-3">Account Security</h4>
+<p class="text-on-surface-variant leading-relaxed">You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account.</p>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-lg border border-outline-variant/10 md:col-span-2">
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="w-full md:w-1/2">
+<h4 class="font-headline font-bold text-xl mb-3">Prohibited Conduct</h4>
+<p class="text-on-surface-variant leading-relaxed mb-4">We strictly prohibit any use of the platform for harassment, data scraping, or the distribution of unauthorized intellectual property.</p>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 text-sm text-error font-medium">
+<span class="material-symbols-outlined text-sm">cancel</span> No automated bots or crawlers
+                                        </li>
+<li class="flex items-center gap-2 text-sm text-error font-medium">
+<span class="material-symbols-outlined text-sm">cancel</span> No reverse-engineering of AI models
+                                        </li>
+</ul>
+</div>
+<div class="w-full md:w-1/2 bg-surface-container p-4 rounded-xl">
+<img class="rounded-lg shadow-sm" data-alt="High angle view of a person signing a document on a clean desk with a laptop and coffee nearby in bright daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtdCwYdKcYoHnJkg3ySxSPS0N6JycmQ8jfGqrq-Nw0h-E-lKHvcxJkNFnV7-OSgv6rqtOpiJpUG1uU9wJaK-1hrVEDTYkeWYC1We7UnMkmL_hRxVVnYmeqXpAaxoOln_uureuW1Szq14d2KyiI5fbnmZ_vcLUd2Ne9VnMDWbktfuIIJzm371aXkdm6ypiDhewSM59Dtdbo9vzizPmoTMj5BYWDcJDoFSI0TgAEm61zRlPIOP-r0uMPsHxebWRhd2hOyDQxF0G5nR4"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Privacy Policy (Standard Text Focus) -->
+<section class="scroll-mt-32" id="privacy">
+<h2 class="text-3xl font-bold mb-8 text-on-surface">3. Privacy Policy</h2>
+<div class="bg-surface-container-low rounded-lg p-10 space-y-8">
+<div>
+<h3 class="font-headline font-bold text-xl mb-4 text-primary">How We Collect Information</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                                We collect information that you provide directly to us, such as when you create an account, update your profile, or participate in community discussions. This includes:
+                            </p>
+<ul class="mt-4 space-y-3 list-disc pl-6 text-on-surface-variant">
+<li>Identification data (Name, email address)</li>
+<li>Learning progress and quiz results</li>
+<li>Interaction metadata within the "AI Lab"</li>
+<li>Device information and IP addresses for security logs</li>
+</ul>
+</div>
+<div class="h-px bg-outline-variant/20 w-full"></div>
+<div>
+<h3 class="font-headline font-bold text-xl mb-4 text-primary">Your Rights (GDPR/CCPA)</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                                You have the right to access, correct, or delete your personal data at any time. You can also export your learning history in a machine-readable format from your settings panel.
+                            </p>
+<div class="mt-6 flex gap-4">
+<button class="px-6 py-2.5 rounded-full border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-colors">Request Data Export</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container-highest text-on-surface font-bold hover:bg-surface-variant transition-colors">Manage Consent</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Data Usage & AI (The Modern Twist) -->
+<section class="scroll-mt-32" id="data-usage">
+<h2 class="text-3xl font-bold mb-8 text-on-surface">4. Data Usage &amp; AI Ethics</h2>
+<div class="bg-secondary-container/5 rounded-lg border-2 border-secondary/10 p-10 relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="font-headline font-bold text-xl mb-4 text-secondary">The LearnLoop AI Commitment</h3>
+<p class="text-on-surface-variant leading-relaxed max-w-2xl mb-8">
+                                As a pioneer in the AI-driven education space, we believe in radical transparency. Your learning data is used to fine-tune our personalized curriculum algorithms, but we never sell your prompts or private interactions to third-party model trainers.
+                            </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white/60 backdrop-blur-sm p-6 rounded-xl">
+<h5 class="font-bold text-on-surface mb-2">Anonymization</h5>
+<p class="text-sm text-on-surface-variant">All data used for system improvement is fully anonymized.</p>
+</div>
+<div class="bg-white/60 backdrop-blur-sm p-6 rounded-xl">
+<h5 class="font-bold text-on-surface mb-2">No Leakage</h5>
+<p class="text-sm text-on-surface-variant">Strict isolation protocols prevent cross-tenant data leakage.</p>
+</div>
+<div class="bg-white/60 backdrop-blur-sm p-6 rounded-xl">
+<h5 class="font-bold text-on-surface mb-2">Human Control</h5>
+<p class="text-sm text-on-surface-variant">Users can opt-out of AI training contributions entirely.</p>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined absolute -right-8 -bottom-8 text-[12rem] text-secondary/5 pointer-events-none" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+</section>
+<!-- Contact & Support -->
+<section class="scroll-mt-32" id="contact">
+<div class="bg-on-surface text-surface rounded-lg p-12 text-center">
+<h2 class="text-3xl font-bold mb-4">Still have questions?</h2>
+<p class="text-inverse-on-surface mb-8 max-w-xl mx-auto">Our legal team and data protection officer are here to help clarify any points regarding our compliance or your rights.</p>
+<div class="flex flex-col md:flex-row justify-center gap-6">
+<a class="flex items-center justify-center gap-3 bg-primary px-8 py-4 rounded-full font-bold hover:bg-primary-dim transition-all" href="mailto:legal@learnloop.app">
+<span class="material-symbols-outlined">mail</span>
+                                Email Legal Team
+                            </a>
+<a class="flex items-center justify-center gap-3 bg-surface-container-highest/20 px-8 py-4 rounded-full font-bold hover:bg-surface-container-highest/30 transition-all border border-surface-container-highest/30" href="#">
+<span class="material-symbols-outlined">help_center</span>
+                                Visit Help Center
+                            </a>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low pt-20 pb-12 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-16">
+<div class="max-w-xs">
+<span class="text-2xl font-black text-blue-700 font-['Plus_Jakarta_Sans'] tracking-tight">LearnLoop</span>
+<p class="mt-4 text-on-surface-variant">Dismantling rigid learning systems through intentional design and deep intelligence.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+<div>
+<h5 class="font-bold mb-4">Platform</h5>
+<ul class="space-y-2 text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Curriculum</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">AI Lab</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Community</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-4">Legal</h5>
+<ul class="space-y-2 text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Cookie Policy</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-4">Connect</h5>
+<div class="flex gap-4">
+<a class="p-2 bg-surface-container-high rounded-full hover:text-primary transition-all" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="p-2 bg-surface-container-high rounded-full hover:text-primary transition-all" href="#"><span class="material-symbols-outlined">chat</span></a>
+<a class="p-2 bg-surface-container-high rounded-full hover:text-primary transition-all" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-on-surface-variant">
+<p>© 2023 LearnLoop AI Inc. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:underline" href="#">System Status</a>
+<a class="hover:underline" href="#">Accessibility</a>
+<a class="hover:underline" href="#">Privacy Preferences</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- SideNavBar Component (Hidden on Mobile, Visible on Tablet/Desktop for App Context) -->
+<!-- Suppressed for this Legal/Transactional page to focus on content hierarchy as per "Shell Visibility & Relevance" rule -->
+</body></html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inbox &amp; Notifications - LearnLoop</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#eaaeff",
+              "on-primary-container": "#002b52",
+              "outline": "#74777a",
+              "surface-container-low": "#eef1f4",
+              "on-tertiary-fixed": "#433500",
+              "surface-dim": "#d0d5d9",
+              "secondary-dim": "#762d96",
+              "secondary-fixed": "#f1c1ff",
+              "on-error": "#ffefee",
+              "surface-container-highest": "#d9dde1",
+              "error-container": "#fb5151",
+              "on-primary": "#eef3ff",
+              "on-surface": "#2c2f32",
+              "surface-container": "#e5e8ec",
+              "on-secondary": "#ffedff",
+              "tertiary-dim": "#614d00",
+              "tertiary-container": "#fed023",
+              "primary-fixed-dim": "#599ef1",
+              "on-surface-variant": "#595c5e",
+              "on-secondary-fixed-variant": "#782e97",
+              "on-primary-fixed-variant": "#003461",
+              "primary": "#005da7",
+              "surface": "#f5f7fa",
+              "surface-bright": "#f5f7fa",
+              "on-tertiary-fixed-variant": "#655000",
+              "inverse-on-surface": "#9a9da0",
+              "background": "#f5f7fa",
+              "surface-variant": "#d9dde1",
+              "surface-tint": "#005da7",
+              "tertiary": "#6f5900",
+              "on-secondary-container": "#6d228d",
+              "surface-container-high": "#dfe3e7",
+              "on-background": "#2c2f32",
+              "error": "#b31b25",
+              "on-error-container": "#570008",
+              "error-dim": "#9f0519",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#fff2d3",
+              "primary-dim": "#005192",
+              "on-secondary-fixed": "#570278",
+              "inverse-surface": "#0b0f11",
+              "tertiary-fixed": "#fed023",
+              "secondary": "#843aa3",
+              "primary-container": "#68abff",
+              "inverse-primary": "#68abff",
+              "outline-variant": "#abadb0",
+              "secondary-container": "#f1c1ff",
+              "primary-fixed": "#68abff",
+              "tertiary-fixed-dim": "#eec209",
+              "on-tertiary-container": "#594700",
+              "on-primary-fixed": "#000c1e"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-extrabold text-blue-700 dark:text-blue-400 font-['Plus_Jakarta_Sans'] tracking-tight">LearnLoop</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 font-medium font-['Plus_Jakarta_Sans'] hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors px-3 py-1 rounded-lg" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium font-['Plus_Jakarta_Sans'] hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors px-3 py-1 rounded-lg" href="#">Courses</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-4 py-1.5">
+<span class="material-symbols-outlined text-xl text-blue-700 dark:text-blue-400" data-icon="bolt">bolt</span>
+<span class="ml-1 font-bold text-on-surface">420</span>
+</div>
+<button class="material-symbols-outlined p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-95 duration-200" data-icon="workspace_premium">workspace_premium</button>
+<button class="material-symbols-outlined p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-95 duration-200" data-icon="local_fire_department">local_fire_department</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border-2 border-primary">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="professional headshot of a young man with glasses and a friendly smile in a clean modern setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU3IelSKkdTZXDDBOLqr4sGbYUjCg6dc8X_Hv6X_WURAjSA5tur3WWTE7-4aYven3wywulrz5TmhGxRuMCJuIbYa_fCm9Sem7yLOdg6nxbdpF4PPvoBzBK32-V7oU5KJfQQs_1L9rizYpNXH7ayNu-0GucY3sDhq5LCWNOL_ftLXKsys4YFW3d0G3UreE0--rIbxhilLw7Lep130k4HnPSpcFGHJ6hd0PVGq23IAhhaaCJxg2J1BlzjnkRkPrjsdlat6qc-bVLyJE"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="h-full w-64 fixed left-0 top-0 pt-20 flex flex-col border-r border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 hidden md:flex">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 p-2 bg-slate-200/50 dark:bg-slate-800/50 rounded-2xl">
+<img alt="User profile picture" class="w-10 h-10 rounded-full bg-white" data-alt="close up avatar portrait of a digital artist with trendy accessories" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBddNj8lt_LUJGpd1tJv_UqtdP_Eld0X2TzVLO3DyiuEAp2JIWcnR6bzTe6S3r26vYLeuO2Puu8RsSl_7uSyyqrcvHOUHzWnN3E7ExcXpe79hDDaDx_pZnrqbJIJzbCWWh3DAibQ2IJ5EIfC5RxJ74DmNEv8TUNaW1ZmbAWOzqdhT_NCUpYtEPI_XDk5hdSpsBh6d2JKOTFy_p4cVOE-nfOPBHY1xdF-4_B9LYOhdPzAuW6_oCNeOL84cZGdCPRgMrypQop1pRyaDA"/>
+<div>
+<p class="font-['Plus_Jakarta_Sans'] text-sm font-bold text-on-surface">Alex Chen</p>
+<p class="text-xs text-on-surface-variant">Level 12 Architect</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all font-['Plus_Jakarta_Sans'] text-sm font-semibold active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all font-['Plus_Jakarta_Sans'] text-sm font-semibold active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="local_library">local_library</span>
+                Library
+            </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all font-['Plus_Jakarta_Sans'] text-sm font-semibold active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+                Leaderboard
+            </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all font-['Plus_Jakarta_Sans'] text-sm font-semibold active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+                Missions
+            </a>
+<a class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full px-4 py-3 mx-2 font-['Plus_Jakarta_Sans'] text-sm font-bold active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                Notifications
+            </a>
+</nav>
+<div class="p-4 mt-auto space-y-1">
+<button class="w-full bg-primary text-on-primary font-bold py-3 rounded-full mb-4 shadow-md hover:brightness-110 transition-all active:scale-95">
+                Start Daily Quiz
+            </button>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all text-xs font-semibold" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="history">history</span>
+                History
+            </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all text-xs font-semibold" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+                Settings
+            </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="md:ml-64 pt-24 px-6 pb-12 min-h-screen">
+<div class="max-w-4xl mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h1 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Inbox</h1>
+<p class="text-on-surface-variant font-medium">Stay updated with your learning journey and social circle.</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-low text-primary font-bold rounded-full hover:bg-surface-container-high transition-all active:scale-95">
+<span class="material-symbols-outlined text-xl" data-icon="done_all">done_all</span>
+                    Mark all as read
+                </button>
+</div>
+<!-- Categories / Tabs -->
+<div class="flex gap-2 p-1.5 bg-surface-container rounded-2xl mb-8 w-fit">
+<button class="px-6 py-2 bg-surface-container-lowest text-primary font-bold rounded-xl shadow-sm">All</button>
+<button class="px-6 py-2 text-on-surface-variant font-semibold hover:bg-surface-container-low rounded-xl transition-all">Social</button>
+<button class="px-6 py-2 text-on-surface-variant font-semibold hover:bg-surface-container-low rounded-xl transition-all">Achievements</button>
+<button class="px-6 py-2 text-on-surface-variant font-semibold hover:bg-surface-container-low rounded-xl transition-all">System</button>
+</div>
+<!-- Notification List -->
+<div class="space-y-4">
+<!-- Social Category -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-lg hover:bg-surface-bright transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-2xl" data-icon="group">group</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-lg text-on-surface">New Friend Challenge!</h3>
+<span class="text-xs font-semibold text-on-surface-variant">2m ago</span>
+</div>
+<p class="text-on-surface-variant mb-4">Sarah Jenkins challenged you to a 'Python Basics' duel. The winner gets 500 XP!</p>
+<div class="flex gap-3">
+<button class="px-5 py-2 bg-primary text-on-primary text-sm font-bold rounded-full hover:shadow-lg transition-all active:scale-95">Accept Challenge</button>
+<button class="px-5 py-2 text-primary text-sm font-bold rounded-full hover:bg-primary-container/10 transition-all">Decline</button>
+</div>
+</div>
+<div class="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
+</div>
+</div>
+<!-- Achievements Category -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-lg hover:bg-surface-bright transition-all duration-300 border-l-4 border-tertiary-container">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-2xl" data-icon="military_tech" data-weight="fill" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-lg text-on-surface">Badge Unlocked: Night Owl</h3>
+<span class="text-xs font-semibold text-on-surface-variant">3h ago</span>
+</div>
+<p class="text-on-surface-variant">You've completed 5 lessons after 10 PM. You're part of the elite 5%!</p>
+</div>
+<div class="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></div>
+</div>
+</div>
+<!-- Social Category -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-lg hover:bg-surface-bright transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-2xl" data-icon="leaderboard">leaderboard</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-lg text-on-surface">Leaderboard Shift</h3>
+<span class="text-xs font-semibold text-on-surface-variant">5h ago</span>
+</div>
+<p class="text-on-surface-variant">Oh no! Marcus D. just overtook you in the Diamond League. Get 200 XP to reclaim your spot!</p>
+</div>
+</div>
+</div>
+<!-- System Category -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-lg hover:bg-surface-bright transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-2xl" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-lg text-on-surface">New Feature: Study Groups</h3>
+<span class="text-xs font-semibold text-on-surface-variant">Yesterday</span>
+</div>
+<p class="text-on-surface-variant">You can now create private study groups with your classmates and share resources in real-time.</p>
+</div>
+</div>
+</div>
+<!-- Achievement Category (Streak) -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-lg hover:bg-surface-bright transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined text-2xl" data-icon="local_fire_department" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-lg text-on-surface">15-Day Streak!</h3>
+<span class="text-xs font-semibold text-on-surface-variant">1d ago</span>
+</div>
+<p class="text-on-surface-variant">Incredible consistency, Alex! Keep it going to reach your monthly goal.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State / Load More -->
+<div class="mt-12 text-center">
+<button class="text-primary font-bold hover:underline transition-all">Load older notifications</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-xl flex justify-around items-center h-16 z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="local_library">local_library</span>
+<span class="text-[10px] font-bold">Library</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="notifications" data-weight="fill" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="text-[10px] font-bold">Inbox</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</button>
+</nav>
+</body></html>

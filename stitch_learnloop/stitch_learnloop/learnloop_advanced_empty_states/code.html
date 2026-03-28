@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LearnLoop | Discover More</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-variant": "#d9dde1",
+              "surface-container": "#e5e8ec",
+              "on-surface": "#2c2f32",
+              "on-primary-fixed-variant": "#003461",
+              "surface-container-low": "#eef1f4",
+              "tertiary-fixed": "#fed023",
+              "background": "#f5f7fa",
+              "outline": "#74777a",
+              "on-tertiary-fixed": "#433500",
+              "primary-fixed": "#68abff",
+              "primary-container": "#68abff",
+              "tertiary-container": "#fed023",
+              "surface-container-highest": "#d9dde1",
+              "secondary": "#843aa3",
+              "on-surface-variant": "#595c5e",
+              "primary-dim": "#005192",
+              "on-secondary-fixed-variant": "#782e97",
+              "on-primary-container": "#002b52",
+              "tertiary-fixed-dim": "#eec209",
+              "inverse-on-surface": "#9a9da0",
+              "secondary-fixed": "#f1c1ff",
+              "tertiary": "#6f5900",
+              "surface-container-high": "#dfe3e7",
+              "on-background": "#2c2f32",
+              "on-secondary": "#ffedff",
+              "inverse-surface": "#0b0f11",
+              "surface-dim": "#d0d5d9",
+              "on-tertiary-fixed-variant": "#655000",
+              "on-secondary-fixed": "#570278",
+              "on-error-container": "#570008",
+              "on-primary-fixed": "#000c1e",
+              "on-secondary-container": "#6d228d",
+              "error": "#b31b25",
+              "primary-fixed-dim": "#599ef1",
+              "outline-variant": "#abadb0",
+              "surface-bright": "#f5f7fa",
+              "tertiary-dim": "#614d00",
+              "secondary-fixed-dim": "#eaaeff",
+              "inverse-primary": "#68abff",
+              "surface": "#f5f7fa",
+              "surface-tint": "#005da7",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#f1c1ff",
+              "error-container": "#fb5151",
+              "on-error": "#ffefee",
+              "on-primary": "#eef3ff",
+              "secondary-dim": "#762d96",
+              "primary": "#005da7",
+              "on-tertiary": "#fff2d3",
+              "error-dim": "#9f0519",
+              "on-tertiary-container": "#594700"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-background min-h-screen">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm">
+<div class="flex justify-between items-center w-full px-6 py-3 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-blue-700 dark:text-blue-400 font-['Plus_Jakarta_Sans'] tracking-tight">LearnLoop</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-['Plus_Jakarta_Sans'] font-bold tracking-tight transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 font-['Plus_Jakarta_Sans'] font-bold tracking-tight hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">Community</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-blue-600 font-['Plus_Jakarta_Sans'] font-bold tracking-tight hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">Support</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border-2 border-primary-container" data-alt="Close up portrait of a friendly young man with short dark hair smiling in a professional studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaoIhbTzydu7h959X0pkhQj406JF2-3-Nz4JWMy8v_A1DMuml62VDr98EC8H-NYQsDvXSwuAC8AAWBitU5TTS4EENyMK3kxNuYK892UKPzt9ofc27KhynqkFa6aSybQeRFaom5UvHGc8rmDG9HFPQQ_EqOFLA-3uUt6JbU4BaoVVNgEXdMzz3WNgvOQPjidSWJmKoBGIWbkUolOPkixfxnx-YP49zLx8LX5cEaIZGPYem1zPk3AXTskcU2CIwZt_OzWN5B8mori-w"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar (Hidden on Mobile) -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 pt-20 py-6 gap-2 transition-all duration-200 ease-in-out">
+<div class="px-6 mb-6">
+<p class="text-xl font-bold text-blue-700 font-['Plus_Jakarta_Sans']">Admin Portal</p>
+<p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">System Overview</p>
+</div>
+<nav class="flex-grow">
+<div class="flex items-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-xl px-4 py-3 mx-2 font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined mr-3" data-icon="insights">insights</span>
+                Analytics
+            </div>
+<div class="flex items-center text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 font-['Plus_Jakarta_Sans'] text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined mr-3" data-icon="group">group</span>
+                Users
+            </div>
+<div class="flex items-center text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 font-['Plus_Jakarta_Sans'] text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined mr-3" data-icon="psychology">psychology</span>
+                AI Controls
+            </div>
+<div class="flex items-center text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 font-['Plus_Jakarta_Sans'] text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined mr-3" data-icon="payments">payments</span>
+                Billing
+            </div>
+<div class="flex items-center text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 font-['Plus_Jakarta_Sans'] text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined mr-3" data-icon="trophy">trophy</span>
+                Leaderboard
+            </div>
+<div class="flex items-center text-slate-500 dark:text-slate-400 px-4 py-3 mx-2 font-['Plus_Jakarta_Sans'] text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined mr-3" data-icon="auto_stories">auto_stories</span>
+                Content
+            </div>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-bold active:scale-95 transition-transform">
+                Export Data
+            </button>
+<div class="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center text-slate-500 dark:text-slate-400 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="gavel">gavel</span>
+<span class="text-sm font-semibold">Legal</span>
+</div>
+<div class="flex items-center text-slate-500 dark:text-slate-400 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-xl transition-all">
+<span class="material-symbols-outlined mr-3 text-sm" data-icon="help_center">help_center</span>
+<span class="text-sm font-semibold">Support</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 md:pl-72 px-6 max-w-7xl mx-auto">
+<header class="mb-12">
+<h1 class="text-4xl font-extrabold text-on-background tracking-tight mb-2">Edge Case Explorer</h1>
+<p class="text-on-surface-variant text-lg">Testing the "what-ifs" of the user journey.</p>
+</header>
+<!-- Bento Grid for Empty States -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- State 1: No Notes Uploaded (Hero-style Empty State) -->
+<section class="lg:col-span-8 bg-surface-container-lowest rounded-lg overflow-hidden shadow-[0_12px_40px_rgba(44,47,50,0.06)] group">
+<div class="relative h-64 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/30 to-secondary-container/30"></div>
+<img alt="Empty desk with a single pen" class="w-full h-full object-cover opacity-60 mix-blend-overlay" data-alt="Top-down view of a minimalist clean white desk with only a sleek black pen and soft morning shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5eE4r3UUUzUPA0Xj7XapUOltHulieCC8jeTATYKgDZSGFTYSz-zlXF0EnpMWtKo37DGJTePCu5QbRu9g-2hAOZ6hkUgx9VCQcKTIB_eCo0-XyGpAKmUr22PLxLDEP7ldJhiHum77FdIQ7i7HIjO53oEGhIgwVOmWeBFs37mxnkwKeeNfvHyO22mCzdYDMujZZu1clsbCPXoyZNxpumPOlWa_pcRHb_DVlP3x4-eCXTrF3-0erk97H29P1JGgR36Xbqsq5iLC1ghA"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/80 backdrop-blur-md p-6 rounded-full shadow-lg">
+<span class="material-symbols-outlined text-primary text-6xl" data-icon="edit_note">edit_note</span>
+</div>
+</div>
+</div>
+<div class="p-10 text-center">
+<h2 class="text-2xl font-bold text-on-background mb-4">No notes uploaded yet</h2>
+<p class="text-on-surface-variant max-w-md mx-auto mb-8">
+                        Your intellectual playground is a blank canvas. Start by capturing your thoughts, or upload your class PDF to see our AI work its magic.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-primary-dim transition-colors active:scale-95 shadow-md">
+<span class="material-symbols-outlined" data-icon="upload_file">upload_file</span>
+                            Upload First PDF
+                        </button>
+<button class="bg-surface-container-high text-on-surface px-8 py-4 rounded-full font-bold hover:bg-surface-variant transition-colors active:scale-95">
+                            Browse Templates
+                        </button>
+</div>
+</div>
+</section>
+<!-- State 2: No Active Missions (Side-car Empty State) -->
+<section class="lg:col-span-4 bg-secondary-container/20 rounded-lg p-8 flex flex-col items-center justify-center text-center border-2 border-dashed border-secondary/30">
+<div class="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<h3 class="text-xl font-bold text-on-secondary-container mb-2">No active missions</h3>
+<p class="text-on-surface-variant text-sm mb-6">
+                    Missions are gamified paths to mastery. You haven't started any quests for this semester yet.
+                </p>
+<a class="text-secondary font-bold flex items-center gap-1 hover:underline" href="#">
+                    Find a Mission <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</section>
+<!-- State 3: Leaderboard Empty State (Editorial Layout) -->
+<section class="lg:col-span-12 bg-surface-container-low rounded-lg p-10">
+<div class="flex flex-col md:flex-row items-center gap-12">
+<div class="w-full md:w-1/2 grid grid-cols-2 gap-4">
+<div class="aspect-square bg-surface-container-highest rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-5xl opacity-20" data-icon="person">person</span>
+</div>
+<div class="aspect-square bg-surface-container-highest rounded-2xl flex items-center justify-center scale-90 opacity-50">
+<span class="material-symbols-outlined text-outline text-5xl opacity-20" data-icon="person">person</span>
+</div>
+<div class="aspect-square bg-surface-container-highest rounded-2xl flex items-center justify-center scale-75 opacity-30">
+<span class="material-symbols-outlined text-outline text-5xl opacity-20" data-icon="person">person</span>
+</div>
+<div class="aspect-square border-4 border-dashed border-tertiary/20 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-5xl" data-icon="group_add">group_add</span>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<div class="inline-flex items-center gap-2 bg-tertiary-container text-on-tertiary-container px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+<span class="material-symbols-outlined text-sm" data-icon="stars" data-weight="fill">stars</span>
+                            Action Required
+                        </div>
+<h2 class="text-3xl font-bold text-on-background mb-4 leading-tight">Leaderboard needs more users to ignite the spark</h2>
+<p class="text-on-surface-variant mb-8 text-lg">
+                            Competition is the fuel for growth. Invite your classmates to LearnLoop to start seeing where you stand in the Global Analytics.
+                        </p>
+<button class="bg-on-background text-surface py-4 px-10 rounded-full font-bold shadow-lg hover:shadow-xl transition-all active:scale-95">
+                            Invite Classmates
+                        </button>
+</div>
+</div>
+</section>
+<!-- State 4: Small Component Empty State -->
+<section class="lg:col-span-6 bg-surface-container-lowest p-6 rounded-lg flex items-center gap-6">
+<div class="w-16 h-16 bg-surface-container rounded-xl flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-outline-variant" data-icon="history">history</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-on-background">Activity feed is quiet</h4>
+<p class="text-sm text-on-surface-variant">Perform an action to see it reflected here.</p>
+</div>
+<button class="p-2 text-primary hover:bg-primary-container/10 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="refresh">refresh</span>
+</button>
+</section>
+<!-- State 5: Small Component Error State -->
+<section class="lg:col-span-6 bg-error-container/10 border border-error/10 p-6 rounded-lg flex items-center gap-6">
+<div class="w-16 h-16 bg-error-container/20 rounded-xl flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-error" data-icon="sync_problem">sync_problem</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-error">Syncing failed</h4>
+<p class="text-sm text-on-surface-variant">We couldn't reach the cloud. Checking connection...</p>
+</div>
+<button class="text-sm font-bold text-error uppercase tracking-wider hover:underline">
+                    Retry
+                </button>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Visible on Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg z-50 rounded-t-[2.5rem] shadow-[0_-8px_30px_rgba(0,0,0,0.04)] border-t border-slate-100 dark:border-slate-800">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 font-['Plus_Jakarta_Sans'] text-[10px] font-bold hover:text-purple-500 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+            Home
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 font-['Plus_Jakarta_Sans'] text-[10px] font-bold hover:text-purple-500 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="bolt">bolt</span>
+            AI Lab
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 font-['Plus_Jakarta_Sans'] text-[10px] font-bold hover:text-purple-500 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="groups">groups</span>
+            Social
+        </a>
+<a class="flex flex-col items-center justify-center bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-200 rounded-full px-5 py-2 font-['Plus_Jakarta_Sans'] text-[10px] font-bold scale-110 duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+            Profile
+        </a>
+</nav>
+<!-- FAB Suppression Logic: Not rendered on dashboard-focused shell as per rules unless specific action -->
+</body></html>

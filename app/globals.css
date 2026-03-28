@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .glass-panel-dark {
+    background: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
+
+:root {
+  --foreground-rgb: 44, 47, 50;
+  --background-rgb: 245, 247, 250;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 238, 243, 255;
+    --background-rgb: 44, 47, 50;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  @apply font-body bg-surface text-surface-on;
+}
+
+/* Base interactive transitions */
+button, a {
+  @apply transition-transform;
+}
+
+/* Material symbols outlined font styles */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

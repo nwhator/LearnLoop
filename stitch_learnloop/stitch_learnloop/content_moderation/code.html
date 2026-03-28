@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LearnLoop Admin - Content Moderation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-header {
+            background: rgba(245, 247, 250, 0.8);
+            backdrop-filter: blur(24px);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container": "#e5e8ec",
+                        "tertiary-dim": "#614d00",
+                        "surface-bright": "#f5f7fa",
+                        "outline": "#74777a",
+                        "on-error": "#ffefee",
+                        "surface-tint": "#005da7",
+                        "surface-container-highest": "#d9dde1",
+                        "surface": "#f5f7fa",
+                        "secondary": "#843aa3",
+                        "on-secondary-container": "#6d228d",
+                        "secondary-container": "#f1c1ff",
+                        "on-primary-container": "#002b52",
+                        "secondary-dim": "#762d96",
+                        "surface-container-low": "#eef1f4",
+                        "primary-dim": "#005192",
+                        "inverse-on-surface": "#9a9da0",
+                        "error-container": "#fb5151",
+                        "on-secondary-fixed": "#570278",
+                        "on-tertiary-fixed-variant": "#655000",
+                        "surface-container-high": "#dfe3e7",
+                        "primary-fixed": "#68abff",
+                        "on-primary-fixed-variant": "#003461",
+                        "primary": "#005da7",
+                        "primary-fixed-dim": "#599ef1",
+                        "on-tertiary-container": "#594700",
+                        "surface-variant": "#d9dde1",
+                        "tertiary-fixed": "#fed023",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#000c1e",
+                        "outline-variant": "#abadb0",
+                        "on-surface-variant": "#595c5e",
+                        "error-dim": "#9f0519",
+                        "secondary-fixed": "#f1c1ff",
+                        "tertiary": "#6f5900",
+                        "inverse-surface": "#0b0f11",
+                        "on-secondary-fixed-variant": "#782e97",
+                        "background": "#f5f7fa",
+                        "on-secondary": "#ffedff",
+                        "primary-container": "#68abff",
+                        "on-surface": "#2c2f32",
+                        "on-background": "#2c2f32",
+                        "surface-dim": "#d0d5d9",
+                        "on-primary": "#eef3ff",
+                        "on-error-container": "#570008",
+                        "tertiary-container": "#fed023",
+                        "on-tertiary": "#fff2d3",
+                        "secondary-fixed-dim": "#eaaeff",
+                        "on-tertiary-fixed": "#433500",
+                        "tertiary-fixed-dim": "#eec209",
+                        "error": "#b31b25",
+                        "inverse-primary": "#68abff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-slate-50 border-r border-transparent z-50">
+<div class="flex flex-col h-full p-4 gap-2">
+<div class="px-4 py-6 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-blue-800 leading-none">Admin Console</h1>
+<p class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mt-1">System Overview</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-xl font-plus-jakarta text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">group</span>
+                    User Management
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-700 rounded-xl font-plus-jakarta text-sm font-semibold transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">gavel</span>
+                    Content Moderation
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-xl font-plus-jakarta text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                    System Analytics
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-xl font-plus-jakarta text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">psychology</span>
+                    AI Controls
+                </a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 pt-4 border-t border-slate-200">
+<button class="w-full mb-4 bg-primary text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                    Generate Report
+                </button>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 hover:bg-slate-200/50 transition-all duration-300 rounded-xl font-plus-jakarta text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">help</span>
+                    Help Center
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-red-600 hover:bg-red-50 transition-all duration-300 rounded-xl font-plus-jakarta text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">logout</span>
+                    Logout
+                </a>
+</div>
+</div>
+</aside>
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Anchor -->
+<header class="bg-white/80 backdrop-blur-xl docked full-width top-0 sticky z-40 shadow-sm">
+<div class="flex items-center justify-between px-8 py-3 w-full">
+<div class="flex items-center gap-6">
+<h2 class="text-xl font-bold tracking-tight text-blue-700 font-headline">Content Moderation</h2>
+<div class="relative w-96 hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400" placeholder="Search by topic, creator, or ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 transition-colors rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 transition-colors rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden ring-2 ring-white">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="professional portrait of a system administrator with a neutral background and professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGLFkJcnjKWAnNkFWpq1-p4Xy7M9OXtiIWXA1pGmTV9DRdvLT0BM6A9r08I5JxBzIhFQtDJvxkWGKiJQ4jaAtDZmujr08AjrPFj2c9U8WysWZd2vdZcwyeArkdZUB_cl-1MS-d7W-sMwOE39i0_abDIBvnQZQsfcR7NySMIBRG05mpG5zHodYO3akoaOSmTJoyUqRLM552Aj-TLRQ0EiiEqddlzLNek-8eKgd0jsW2kLYkaEqeEoQzNRkQncPoxBC2SgJedg8VrwI"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 space-y-8 max-w-7xl mx-auto">
+<!-- Dashboard Highlights / Bento Grid Header -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Content Health Chart -->
+<div class="md:col-span-2 bg-surface-container-lowest p-6 rounded-lg shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="text-lg font-bold font-headline text-on-surface">Content Health</h3>
+<p class="text-sm text-on-surface-variant">Generation volume vs. User reports (Last 30 Days)</p>
+</div>
+<div class="flex gap-2">
+<span class="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full bg-primary/10 text-primary">
+<span class="w-2 h-2 rounded-full bg-primary"></span> Volume
+                            </span>
+<span class="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full bg-secondary/10 text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Reports
+                            </span>
+</div>
+</div>
+<!-- Mock Chart Visualization -->
+<div class="h-48 flex items-end justify-between gap-2 px-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group h-[40%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg h-[60%] transition-all"></div>
+<div class="absolute inset-x-0 bottom-0 bg-secondary w-2 mx-auto rounded-t-full h-[10%] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg relative group h-[60%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg h-[80%]"></div>
+<div class="absolute inset-x-0 bottom-0 bg-secondary w-2 mx-auto rounded-t-full h-[25%] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg relative group h-[85%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg h-[90%]"></div>
+<div class="absolute inset-x-0 bottom-0 bg-secondary w-2 mx-auto rounded-t-full h-[15%] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg relative group h-[45%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg h-[50%]"></div>
+<div class="absolute inset-x-0 bottom-0 bg-secondary w-2 mx-auto rounded-t-full h-[60%] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg relative group h-[70%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg h-[75%]"></div>
+<div class="absolute inset-x-0 bottom-0 bg-secondary w-2 mx-auto rounded-t-full h-[10%] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg relative group h-[95%]">
+<div class="absolute inset-x-0 bottom-0 bg-primary rounded-t-lg h-[100%]"></div>
+<div class="absolute inset-x-0 bottom-0 bg-secondary w-2 mx-auto rounded-t-full h-[5%] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</div>
+<!-- Quick Actions / Bulk Tool -->
+<div class="bg-secondary-container p-6 rounded-lg flex flex-col justify-between">
+<div>
+<h3 class="text-lg font-bold font-headline text-on-secondary-container mb-2">Bulk Update Tool</h3>
+<p class="text-sm text-on-secondary-container/80 mb-6">Modify categories or tags for multiple sets simultaneously.</p>
+<div class="space-y-3">
+<div class="bg-white/40 p-3 rounded-xl backdrop-blur-sm border border-white/20">
+<label class="text-[10px] font-bold uppercase tracking-wider text-on-secondary-container block mb-1">Target Category</label>
+<select class="w-full bg-transparent border-none p-0 text-sm focus:ring-0 text-on-secondary-container font-semibold">
+<option>Computer Science</option>
+<option>Natural Sciences</option>
+<option>Literature</option>
+</select>
+</div>
+<div class="bg-white/40 p-3 rounded-xl backdrop-blur-sm border border-white/20">
+<label class="text-[10px] font-bold uppercase tracking-wider text-on-secondary-container block mb-1">New Tag</label>
+<input class="w-full bg-transparent border-none p-0 text-sm focus:ring-0 placeholder:text-on-secondary-container/50 font-semibold text-on-secondary-container" placeholder="e.g. #AI-Verified" type="text"/>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 bg-secondary text-white py-3 rounded-xl font-bold text-sm shadow-xl shadow-secondary/20 active:scale-95 transition-all">
+                        Execute Bulk Action
+                    </button>
+</div>
+</div>
+<!-- Content Header & Filters -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+<button class="whitespace-nowrap px-6 py-2 bg-primary text-white rounded-full font-bold text-sm">All Content</button>
+<button class="whitespace-nowrap px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-semibold text-sm hover:bg-surface-container-highest transition-colors">Flagged Sets</button>
+<button class="whitespace-nowrap px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-semibold text-sm hover:bg-surface-container-highest transition-colors">AI Notes</button>
+<button class="whitespace-nowrap px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-semibold text-sm hover:bg-surface-container-highest transition-colors">Quizzes</button>
+<button class="whitespace-nowrap px-6 py-2 bg-surface-container-high text-on-surface-variant rounded-full font-semibold text-sm hover:bg-surface-container-highest transition-colors">Flashcards</button>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant/30 rounded-xl text-sm font-semibold text-on-surface-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                        Sort By: Newest
+                    </button>
+</div>
+</div>
+<!-- Recently Generated Sets - Bento Style Cards -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Item 1: Flagged Quiz -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden group border border-outline-variant/10 hover:shadow-xl transition-all duration-300">
+<div class="flex h-full">
+<div class="w-40 relative overflow-hidden">
+<img alt="Quiz Thumbnail" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="abstract tech background with blue and purple geometric shapes and glowing lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsV1J1CR9rBWo6WZI5RmZX96QdDAZxmtOhQXaotsNvv93cYTvSP7EqQEyRXxGTfR98s0PE4IDBSzrp06cNKNaI5JuLOsNzzjOduqjdre0ZuVgfuQas6KpJjNgsmAPbjAIe_pTrBZxltJ_H5DUeMOBUd29OZccguuaFlicMJCC6fxvicI6amG5ZV5LU8CH1WSHKyv9JI0aUaIFjjWZqvCRNe8_x9UHPaHookIclvSeIpx2g4dQNVkkYfzMPmhPEcnsJWB07NYXCKxY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute top-2 left-2 bg-error text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+                                FLAGGED
+                            </div>
+</div>
+<div class="flex-1 p-5 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">Quiz • 24 Questions</span>
+<span class="text-[10px] font-medium text-slate-400">2 hrs ago</span>
+</div>
+<h4 class="font-bold text-on-surface leading-tight mb-2">Introduction to Quantum Computing 101</h4>
+<p class="text-xs text-on-surface-variant line-clamp-2 mb-4">Generated via GPT-4o. Flagged by 3 users for "Inaccurate Formulas" in Section 3.</p>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200" data-alt="minimalist user avatar placeholder"></div>
+<span class="text-[11px] font-semibold text-on-surface">AI_Gen_Node_04</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors" title="Review">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-full transition-colors" title="Delete">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2: Flashcards -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden group border border-outline-variant/10 hover:shadow-xl transition-all duration-300">
+<div class="flex h-full">
+<div class="w-40 relative overflow-hidden">
+<img alt="Flashcards Thumbnail" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="stack of vintage books on a wooden table with soft sunlight coming through a window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbqb-DUMcnIEBZwqj6fWvIJIxcQmzm90Jatv0jBryjCwF8jcANB46wzsXmm7mR_jY3EGPbdcZAv7O5CTSB5azD-SzHXY8_97OZ0EyvBIFuetw20kZd1yT23siJXFXAtH7_tB5s4W26qnovfn3IdqChc6qGcYifOChkKxC1VwKUmGl1TuFPI5YhkS8ZeMgO0U3PmYmyPn_uZi0nC35ewea5k8ZxcnIdTR9ZJoIyWcXHYkmNahTLSiQEFVYH9Xc9VBtHnhhvg7R1oH4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute top-2 left-2 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                NEW
+                            </div>
+</div>
+<div class="flex-1 p-5 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-secondary uppercase tracking-wider">Flashcards • 50 Items</span>
+<span class="text-[10px] font-medium text-slate-400">45 mins ago</span>
+</div>
+<h4 class="font-bold text-on-surface leading-tight mb-2">Organic Chemistry: Functional Groups</h4>
+<p class="text-xs text-on-surface-variant line-clamp-2 mb-4">High accuracy score. Categorized under "Science". Recommended for Library promotion.</p>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="text-[11px] font-semibold text-on-surface">System_Automator</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-3 py-1.5 bg-primary/10 text-primary text-[10px] font-bold rounded-full hover:bg-primary hover:text-white transition-colors">
+                                        PROMOTE TO LIBRARY
+                                    </button>
+<button class="p-2 text-slate-400 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3: Summary Notes -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden group border border-outline-variant/10 hover:shadow-xl transition-all duration-300">
+<div class="flex h-full">
+<div class="w-40 relative overflow-hidden">
+<img alt="Notes Thumbnail" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="clean workspace with a laptop, notebook, and a coffee cup on a white desk with plants" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDofY3bBnApx_rgR03E18kwbyeJxl005v1KLSKCssSwPB4z4S_fXu-VrLxV29YukAHJh0fQ1s3FqL-ni5fVLEwYzfFKbYe0fg41j4sqXxnms3z56nkk8OLL_QIgmcN44W15z2KWpOHO5eK1yiHWstc76Zf1J6pN0VzVqgtoJbKT1HR9cT5ka5ufVSuI1W66PVPuTvhqQRmcv_j0wKh3b6kke29XuV5YpFwKzYBoXfxddaq0nJ7Xd-Ya8rY9tchzTO5NCKlqjlXF2Po"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute top-2 left-2 bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                REVIEWED
+                            </div>
+</div>
+<div class="flex-1 p-5 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">Summary • 12 Pages</span>
+<span class="text-[10px] font-medium text-slate-400">1 day ago</span>
+</div>
+<h4 class="font-bold text-on-surface leading-tight mb-2">Modern European History: Post-War Recovery</h4>
+<p class="text-xs text-on-surface-variant line-clamp-2 mb-4">Comprehensive notes covering 1945-1960. Tags: #History #PostWar #Europe.</p>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="text-[11px] font-semibold text-on-surface">Curator_Max</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors" title="Review">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-slate-100 rounded-full transition-colors" title="Archive">
+<span class="material-symbols-outlined text-xl">archive</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 4: Interactive Quiz -->
+<div class="bg-surface-container-lowest rounded-lg overflow-hidden group border border-outline-variant/10 hover:shadow-xl transition-all duration-300">
+<div class="flex h-full">
+<div class="w-40 relative overflow-hidden">
+<img alt="Quiz Thumbnail" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="dynamic 3D rendering of complex mathematical equations floating in a dark digital space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCodNn3-NKU50IOM5QPQdeiGI07yL90gEYlzwU9iZhTRvYVI409-LSWFTMxygLqNL43GVk5J1QoxemwG0jsbT-omd1T-MGfgcCLdRi91O0OeQn55_bOwFpX9P0f_2QJk13WF_DMMZBUuHvBP2RvzPz3qfSgpzGY14wA-jv3HwokqaFY2wGQlMyeOFe6E56RMZcAPyRXM75zcmW0xVkEonx1NtJSqa5lY-QTBYtr4E2L_tKMGasCULE7ftwE8EDhuqn3pBHwvY0NjiU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+<div class="absolute top-2 left-2 bg-error-container text-on-error-container text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">feedback</span>
+                                NEEDS REVIEW
+                            </div>
+</div>
+<div class="flex-1 p-5 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">Quiz • 15 Questions</span>
+<span class="text-[10px] font-medium text-slate-400">3 hrs ago</span>
+</div>
+<h4 class="font-bold text-on-surface leading-tight mb-2">Advanced Calculus: Partial Derivatives</h4>
+<p class="text-xs text-on-surface-variant line-clamp-2 mb-4">Low engagement score. Users reported difficulty spikes at question 7 and 12.</p>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200"></div>
+<span class="text-[11px] font-semibold text-on-surface">AI_Gen_Node_09</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors" title="Review">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-full transition-colors" title="Flag as Inappropriate">
+<span class="material-symbols-outlined text-xl">flag</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Footer Actions -->
+<div class="flex items-center justify-between py-4 border-t border-slate-200">
+<span class="text-xs font-semibold text-on-surface-variant">Showing 4 of 248 AI-generated sets</span>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center">
+<button class="w-8 h-8 rounded-full bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container transition-colors text-xs font-bold">2</button>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container transition-colors text-xs font-bold">3</button>
+<span class="px-2 text-slate-400">...</span>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container transition-colors text-xs font-bold">12</button>
+</div>
+<button class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Only for Main Screens, Suppressed here as it's a sub-screen) -->
+<!-- Suppressed: Contextual State & Identity Logic -->
+</body></html>
