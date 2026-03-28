@@ -59,7 +59,7 @@ export default function CommunityPage() {
     fetchData();
   }, []);
 
-  const filteredSets = studySets.filter(s => 
+  const filteredSets = studySets.filter((s: StudySet) => 
     s.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
     s.category?.toLowerCase().includes(searchQuery.toLowerCase())
   );
