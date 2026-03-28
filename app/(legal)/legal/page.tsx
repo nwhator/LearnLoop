@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import PublicHeader from "@/app/components/PublicHeader";
-import PublicFooter from "@/app/components/PublicFooter";
+import PublicHeader from "@/components/PublicHeader";
+import PublicFooter from "@/components/PublicFooter";
 
 export default function LegalPage() {
   const [activeSection, setActiveSection] = useState("introduction");

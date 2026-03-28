@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import DashboardSidebar from "@/app/components/DashboardSidebar";
-import DashboardHeader from "@/app/components/DashboardHeader";
+import DashboardSidebar from "@/components/DashboardSidebar";
+import DashboardHeader from "@/components/DashboardHeader";
 import Link from "next/link";
 
 interface StudySet {

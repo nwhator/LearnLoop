@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabaseClient";
-import DashboardSidebar from "@/app/components/DashboardSidebar";
-import DashboardHeader from "@/app/components/DashboardHeader";
+import DashboardSidebar from "@/components/DashboardSidebar";
+import DashboardHeader from "@/components/DashboardHeader";
 
 interface Mission {
   id: string;

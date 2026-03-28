@@ -1,7 +1,7 @@
 "use client";
 
-import PublicHeader from "@/app/components/PublicHeader";
-import PublicFooter from "@/app/components/PublicFooter";
+import PublicHeader from "@/components/PublicHeader";
+import PublicFooter from "@/components/PublicFooter";
 import Link from "next/link";
 import { useState } from "react";
 

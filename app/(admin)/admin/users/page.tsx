@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import AdminSidebar from "@/app/components/admin/AdminSidebar";
-import AdminHeader from "@/app/components/admin/AdminHeader";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminHeader from "@/components/admin/AdminHeader";
 
 interface DBUser {
   id: string;
