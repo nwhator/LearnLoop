@@ -3,9 +3,10 @@ import { motion, HTMLMotionProps } from 'framer-motion';
 
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'glass';
 
-export interface ButtonProps extends Omit<HTMLMotionProps<"button">, 'ref'> {
+export interface ButtonProps extends Omit<HTMLMotionProps<"button">, 'ref' | 'children'> {
   variant?: ButtonVariant;
   isLoading?: boolean;
+  children?: React.ReactNode;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {

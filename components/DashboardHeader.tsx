@@ -22,35 +22,35 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   }, []);
 
   return (
-    <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-20 bg-white/90 backdrop-blur-xl border-b border-surface-container/50 shadow-sm flex items-center justify-between px-8 z-40 transition-all duration-300">
-      <div className="flex items-center gap-10">
-        <h1 className="text-2xl font-black font-headline text-surface-on tracking-tighter leading-none hidden md:block">
+    <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-24 bg-background/80 backdrop-blur-2xl border-b border-white/5 flex items-center justify-between px-10 z-[45] transition-all duration-300">
+      <div className="flex items-center gap-14">
+        <h1 className="text-3xl font-black font-headline text-foreground tracking-tighter leading-none hidden md:block">
           {title}
         </h1>
         
         {/* Universal Search */}
-        <div className="hidden sm:flex items-center bg-surface-container rounded-full px-5 py-2.5 border border-surface-container/30 w-72 lg:w-80 group focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-white transition-all">
-          <span className="material-symbols-outlined text-surface-variant text-sm group-focus-within:text-primary">search</span>
+        <div className="hidden sm:flex items-center liquid-glass rounded-full px-6 py-3 border border-white/5 w-72 lg:w-96 group focus-within:ring-2 focus-within:ring-white/10 transition-all shadow-inner">
+          <span className="material-symbols-outlined text-muted-foreground text-sm group-focus-within:text-foreground">search</span>
           <input 
             type="text" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search resources, topics..." 
-            className="bg-transparent border-none focus:ring-0 text-sm w-full font-bold placeholder:font-medium placeholder:text-surface-variant text-surface-on ml-2 outline-none" 
+            placeholder="Search Arena..." 
+            className="bg-transparent border-none focus:ring-0 text-xs w-full font-black tracking-widest uppercase placeholder:font-black placeholder:text-muted-foreground/30 text-foreground ml-3 outline-none" 
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
           <HeaderAction icon="notifications" badge="2" />
-          <HeaderAction icon="local_fire_department" color="text-tertiary" badge={userData?.streak_count?.toString() || "0"} />
-          <HeaderAction icon="stars" color="text-secondary" />
+          <HeaderAction icon="bolt" color="text-foreground" badge={userData?.streak_count?.toString() || "0"} />
+          <HeaderAction icon="workspace_premium" color="text-foreground" />
         </div>
         
-        <div className="h-10 w-px bg-surface-container mx-2" />
+        <div className="h-12 w-px bg-white/10 mx-2" />
         
-        <Link href="/profile" className="w-10 h-10 rounded-full border-2 border-primary-container bg-surface flex justify-center items-center text-primary font-bold shadow-sm font-headline hover:scale-105 active:scale-95 transition-all">
+        <Link href="/profile" className="w-12 h-12 rounded-full border-2 border-white/10 liquid-glass flex justify-center items-center text-foreground font-black text-xs shadow-2xl font-headline hover:scale-110 active:scale-95 transition-all">
           {userData?.initials || "U"}
         </Link>
       </div>
@@ -58,12 +58,12 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   );
 }
 
-function HeaderAction({ icon, color = "text-surface-variant", badge }: { icon: string, color?: string, badge?: string }) {
+function HeaderAction({ icon, color = "text-muted-foreground", badge }: { icon: string, color?: string, badge?: string }) {
   return (
-    <button className="relative w-10 h-10 rounded-full border border-surface-container bg-white flex items-center justify-center hover:bg-surface-container transition-all active:scale-90 group outline-none">
-      <span className={`material-symbols-outlined text-xl transition-colors ${color} group-hover:text-primary`}>{icon}</span>
+    <button className="relative w-12 h-12 rounded-full border border-white/5 liquid-glass flex items-center justify-center hover:bg-white/10 transition-all active:scale-90 group outline-none overflow-visible">
+      <span className={`material-symbols-outlined text-xl transition-colors ${color} group-hover:text-foreground`}>{icon}</span>
       {badge && parseInt(badge) > 0 && (
-        <span className="absolute -top-1 -right-1 bg-primary text-white text-[8px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">{badge}</span>
+        <span className="absolute -top-1 -right-1 bg-foreground text-background text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-background shadow-xl scale-110">{badge}</span>
       )}
     </button>
   );

@@ -9,53 +9,61 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: '#005da7',
-          container: '#68abff',
-          on: '#eef3ff',
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: '#843aa3',
-          container: '#f1c1ff',
-          on: '#ffedff',
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
         },
-        tertiary: {
-          DEFAULT: '#6f5900',
-          container: '#fed023',
-          on: '#fff2d3',
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
         },
         surface: {
-          DEFAULT: '#f5f7fa',
-          bright: '#ffffff',
-          container: '#e5e8ec',
-          on: '#2c2f32',
-          variant: '#595c5e'
+          DEFAULT: 'hsl(var(--background))',
+          bright: 'hsl(var(--card))',
+          container: 'hsl(var(--muted))',
+          on: 'hsl(var(--foreground))',
+          variant: 'hsl(var(--muted-foreground))',
         },
-        error: {
-          DEFAULT: '#b31b25',
-          container: '#fb5151',
-          on: '#ffefee',
-        }
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        'hero-subtitle': 'hsl(var(--hero-subtitle))',
       },
       fontFamily: {
-        headline: ['var(--font-jakarta)', 'sans-serif'],
-        body: ['var(--font-inter)', 'sans-serif'],
-      },
-      borderRadius: {
-        DEFAULT: '1rem',
-        lg: '2rem',
-        xl: '3rem',
-        full: '9999px',
+        sans: ['Inter', 'sans-serif'],
+        serif: ['Instrument Serif', 'serif'],
       },
       boxShadow: {
-        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
-        'premium': '0 12px 40px rgba(44, 47, 50, 0.06)',
-      }
+        'premium': '0 20px 50px rgba(0, 0, 0, 0.5)',
+      },
+      animation: {
+        "fade-up": "fade-up 0.5s ease-out forwards",
+      },
+      keyframes: {
+        "fade-up": {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
     },
   },
   plugins: [
-    require('@tailwindcss/forms'), 
-    require('@tailwindcss/container-queries')
+    require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
   ],
 };
 
