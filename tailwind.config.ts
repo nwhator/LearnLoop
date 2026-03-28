@@ -9,61 +9,55 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: '#005da7',
+          container: '#68abff',
+          on: '#eef3ff',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: '#843aa3',
+          container: '#f1c1ff',
+          on: '#ffedff',
         },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+        tertiary: {
+          DEFAULT: '#6f5900',
+          container: '#fed023',
+          on: '#fff2d3',
         },
         surface: {
-          DEFAULT: 'hsl(var(--background))',
-          bright: 'hsl(var(--card))',
-          container: 'hsl(var(--muted))',
-          on: 'hsl(var(--foreground))',
-          variant: 'hsl(var(--muted-foreground))',
+          DEFAULT: '#f5f7fa',
+          bright: '#ffffff',
+          container: '#e5e8ec',
+          on: '#2c2f32',
+          variant: '#595c5e'
         },
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        'hero-subtitle': 'hsl(var(--hero-subtitle))',
+        error: {
+          DEFAULT: '#b31b25',
+          container: '#fb5151',
+          on: '#ffefee',
+        }
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Instrument Serif', 'serif'],
+        headline: ['var(--font-jakarta)', 'sans-serif'],
+        body: ['var(--font-inter)', 'sans-serif'],
+      },
+      borderRadius: {
+        DEFAULT: '1rem',
+        lg: '2rem',
+        xl: '3rem',
+        full: '9999px',
       },
       boxShadow: {
-        'premium': '0 20px 50px rgba(0, 0, 0, 0.5)',
-      },
-      animation: {
-        "fade-up": "fade-up 0.5s ease-out forwards",
-      },
-      keyframes: {
-        "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-      },
+        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+        'premium': '0 12px 40px rgba(44, 47, 50, 0.06)',
+      }
     },
   },
   plugins: [
     require('tailwindcss-animate'),
     require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/container-queries')
   ],
 };
 
