@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --foreground-rgb: 44, 47, 50;
+    --background-rgb: 245, 247, 250;
+    --primary-rgb: 74, 144, 226;
+  }
+}
+
+/* Explicitly setting body to be light by default unless enforced otherwise */
+body {
+  background: #f5f7fa;
+  color: #2c2f32;
+  @apply font-body;
+  overflow-x: hidden;
+}
+
+/* Fix for potential "black out" when html is dark but user thinks its light */
+.light body {
+  background-color: #f5f7fa !important;
+  color: #2c2f32 !important;
+}
+
 @layer utilities {
   .glass-panel {
     background: rgba(255, 255, 255, 0.7);
@@ -9,40 +31,15 @@
     -webkit-backdrop-filter: blur(16px);
   }
 
-  .glass-panel-dark {
-    background: rgba(30, 30, 30, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+  .gradient-text {
+    background: linear-gradient(135deg, #4A90E2 0%, #843aa3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .preserve-3d {
     transform-style: preserve-3d;
   }
-}
-
-:root {
-  --foreground-rgb: 44, 47, 50;
-  --background-rgb: 245, 247, 250;
-  --primary-rgb: 0, 93, 167;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 238, 243, 255;
-    --background-rgb: 30, 33, 37;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
-  @apply font-body bg-surface text-surface-on;
-  overflow-x: hidden;
-}
-
-/* Base interactive transitions */
-button, a {
-  @apply transition-transform;
 }
 
 /* Material symbols outlined font styles */

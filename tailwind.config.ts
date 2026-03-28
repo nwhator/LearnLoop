@@ -1,7 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  darkMode: 'class',
+  darkMode: 'class', // Keep this but ensure it doesn't force black
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,9 +10,9 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#005da7',
-          container: '#68abff',
-          on: '#eef3ff',
+          DEFAULT: '#4A90E2',
+          container: '#d1e4ff',
+          on: '#ffffff',
         },
         secondary: {
           DEFAULT: '#843aa3',
@@ -27,7 +27,8 @@ const config: Config = {
         surface: {
           DEFAULT: '#f5f7fa',
           bright: '#ffffff',
-          container: '#e5e8ec',
+          container: '#eef1f4',
+          lowest: '#ffffff',
           on: '#2c2f32',
           variant: '#595c5e'
         },
@@ -40,6 +41,7 @@ const config: Config = {
       fontFamily: {
         headline: ['var(--font-jakarta)', 'sans-serif'],
         body: ['var(--font-inter)', 'sans-serif'],
+        'plus-jakarta-sans': ['var(--font-jakarta)', 'sans-serif'],
       },
       borderRadius: {
         DEFAULT: '1rem',
@@ -48,8 +50,17 @@ const config: Config = {
         full: '9999px',
       },
       boxShadow: {
-        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
-        'premium': '0 12px 40px rgba(44, 47, 50, 0.06)',
+        'glass': '0 4px 30px rgba(0, 0, 0, 0.05)',
+        'premium': '0 20px 50px rgba(0,0,0,0.05)',
+      },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' },
+        }
       }
     },
   },
