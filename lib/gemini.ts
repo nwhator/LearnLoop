@@ -1,18 +1,21 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-
-export const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY || "",
+});
 
 /**
- * Generate a study set or content using Gemini.
+ * Generate a study set or content using the new unified Gemini SDK.
  * @param prompt - The instruction for the AI
  */
 export async function generateContent(prompt: string) {
   try {
-    const result = await geminiModel.generateContent(prompt);
-    const response = await result.response;
-    return response.text();
+    const response = await ai.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: prompt,
+    });
+    
+    return response.text;
   } catch (error) {
     console.error("Gemini Error:", error);
     throw error;
@@ -29,9 +32,12 @@ export async function moderateContent(content: string) {
   Content: ${content}`;
 
   try {
-    const result = await geminiModel.generateContent(prompt);
-    const response = await result.response;
-    return JSON.parse(response.text());
+    const response = await ai.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: prompt,
+    });
+    
+    return JSON.parse(response.text || "{}");
   } catch (error) {
     console.error("Moderation Error:", error);
     return { flagged: false, reason: "Error in moderation check", accuracyScore: 0 };

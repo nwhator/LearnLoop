@@ -12,6 +12,9 @@ interface StudySet {
   description: string;
   category: string;
   created_at: string;
+  users?: {
+    name: string;
+  };
 }
 
 export default function LibraryPage() {
@@ -26,7 +29,7 @@ export default function LibraryPage() {
       try {
         const { data, error } = await supabase
           .from("study_sets")
-          .select("*")
+          .select("*, users(name)")
           .order("created_at", { ascending: false });
 
         if (error) throw error;
@@ -113,7 +116,10 @@ function StudyCard({ set }: { set: StudySet }) {
         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-secondary"></div>
         
         <div className="flex justify-between items-start mb-6">
-            <span className="bg-secondary/10 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm">{set.category || 'General'}</span>
+            <div className="flex flex-col gap-1">
+                <span className="bg-secondary/10 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm w-fit">{set.category || 'General'}</span>
+                {set.users?.name && <span className="text-[9px] font-bold text-surface-variant uppercase ml-2">by {set.users.name}</span>}
+            </div>
             <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest">{new Date(set.created_at).toLocaleDateString()}</span>
         </div>
 
