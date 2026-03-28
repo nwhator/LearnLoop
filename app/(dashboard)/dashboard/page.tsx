@@ -1,191 +1,206 @@
-'use client'; // Required for Zustand & React hooks
+"use client";
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-// import { useStore } from '@/lib/store'; // Zustand store for XP and gamification state
-// import { createClient } from '@/lib/supabase/client'; // Supabase browser client
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { supabase } from "@/lib/supabaseClient";
+import DashboardSidebar from "@/app/components/DashboardSidebar";
+import DashboardHeader from "@/app/components/DashboardHeader";
+
+interface Stats {
+  current_xp: number;
+  level: number;
+  streak_count: number;
+  users?: {
+    name: string;
+  };
+}
+
+interface MissionProgress {
+  current_value: number;
+  is_completed: boolean;
+  missions: {
+    title: string;
+    target_value: number;
+    reward_xp: number;
+  };
+}
 
 export default function DashboardPage() {
-  // --- STATE MANAGEMENT ---
-  // const xp = useStore((state) => state.xp); // Example global state mapping
-  // const incrementXP = useStore((state) => state.incrementXP);
-  
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [learningSets, setLearningSets] = useState([]);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [mission, setMission] = useState<MissionProgress | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // --- SUPABASE INITIALIZATION ---
-  // const supabase = createClient();
-  
-  // Real-world example: Fetch active user sets on mount
-  /*
   useEffect(() => {
-    const fetchLearningSets = async () => {
-      const { data, error } = await supabase
-        .from('learning_sets')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (!error) setLearningSets(data);
-    };
-    fetchLearningSets();
-  }, [supabase]);
-  */
+    async function fetchDashboardData() {
+      try {
+        setLoading(true);
+        // Fetch User and Stats directly from users table
+        const { data: userData } = await supabase
+          .from("users")
+          .select("name, level, xp, streak_count")
+          .single();
 
-  // --- AI INTEGRATION ENDPOINT TRIGGER ---
+        // Fetch the most recent active user mission
+        const { data: missionData } = await supabase
+          .from("user_missions")
+          .select("*, missions(*)")
+          .eq("is_completed", false)
+          .limit(1)
+          .single();
+
+        setStats(userData as any);
+        setMission(missionData as any);
+      } catch (err) {
+        console.error("Dashboard data fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDashboardData();
+  }, []);
+
   const handleGenerate = async () => {
     if (!content.trim()) return;
-    
     setIsGenerating(true);
-    
     try {
-      // CONNECTION TO AI ENDPOINT:
-      // This routes to an internal Next.js API route that proxies to OpenAI/Gemini
-      // const response = await fetch('/api/generate', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ source_text: content }),
-      // });
-      
-      // const data = await response.json();
-      
-      // The `data` schema strictly returns: { "flashcards": [...], "quizzes": [...] }
-      // We would then push this into Supabase:
-      // await supabase.from('learning_sets').insert({ content: data, user_id: '...' });
-
-      // Trigger gamification (e.g. +50 XP for importing a new study set)
-      // incrementXP(50);
-      
-      console.log('AI Generation success simulated!');
-      
+      // Simulate/Trigger AI Generation logic
+      await new Promise(r => setTimeout(r, 2000));
+      alert("AI Architecture Synced! Check your Library for the new Mastery Set.");
+      setContent("");
     } catch (e) {
-      console.error('Generation Failed', e);
+      console.error(e);
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <div className="flex h-screen bg-surface w-full overflow-hidden">
-      
-      {/* Sidebar Mock (Desktop) */}
-      <aside className="hidden md:flex flex-col w-72 bg-surface-bright border-r border-surface-container/50 h-full p-8 shadow-sm">
-        <div className="flex items-center gap-3 mb-10">
-          <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-primary-on font-bold font-headline select-none">
-            LL
-          </div>
-          <h1 className="text-2xl font-extrabold font-headline text-primary tracking-tighter">LearnLoop</h1>
-        </div>
+    <div className="flex bg-surface min-h-screen">
+      <DashboardSidebar />
 
-        {/* Gamification Indicator */}
-        <div className="glass-panel bg-tertiary-container/30 border border-tertiary-container p-4 rounded-2xl mb-8">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs font-bold text-tertiary uppercase tracking-wide">Explorer Mode</span>
-            <span className="material-symbols-outlined text-tertiary">local_fire_department</span>
-          </div>
-          <div className="w-full h-2 bg-white rounded-full overflow-hidden">
-            {/* Animated XP progression bar component would go here */}
-            <motion.div 
-              layout 
-              className="h-full bg-tertiary origin-left" 
-              initial={{ width: 0 }}
-              animate={{ width: '65%' }} // Tied to Zustand XP state
-              transition={{ duration: 1, ease: 'easeOut' }}
-            />
-          </div>
-        </div>
+      <main className="flex-1 flex flex-col lg:ml-72 min-h-screen">
+        <DashboardHeader title="Neural Dashboard" />
 
-        <nav className="flex flex-col gap-2 font-semibold">
-          <a href="#" className="flex items-center gap-4 bg-primary-container/20 text-primary rounded-full px-6 py-3 transition-transform hover:translate-x-1 active:scale-95">
-            <span className="material-symbols-outlined">dashboard</span>
-            Dashboard
-          </a>
-          {/* other links */}
-        </nav>
-      </aside>
-
-      {/* Main Container */}
-      <main className="flex-1 flex flex-col p-8 lg:px-16 lg:py-12 overflow-y-auto">
-        <header className="flex justify-between items-center mb-12">
-          <h2 className="text-4xl font-extrabold font-headline text-surface-on tracking-tight">
-            What do you want to learn today?
-          </h2>
-          <div className="flex gap-4">
-            <button className="w-12 h-12 rounded-full border border-surface-variant flex items-center justify-center hover:bg-surface-container transition-all active:scale-95">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <div className="w-12 h-12 rounded-full bg-surface-container overflow-hidden border-2 border-primary-container" />
-          </div>
-        </header>
-
-        {/* Primary AI Input Hub */}
-        <section className="relative w-full max-w-4xl">
-          <div className="p-8 bg-surface-bright rounded-[2rem] shadow-premium relative z-10 border border-surface-container border-b-4 border-b-surface-variant/20">
-            <div className="flex gap-4 mb-6">
-              <button className="flex items-center gap-2 text-primary font-semibold text-sm px-4 py-2 bg-primary-container/20 rounded-xl hover:bg-primary-container/30 transition-colors">
-                <span className="material-symbols-outlined text-lg">note_add</span> Paste Text
-              </button>
-              <button className="flex items-center gap-2 text-secondary font-semibold text-sm px-4 py-2 bg-secondary-container/20 rounded-xl hover:bg-secondary-container/30 transition-colors">
-                <span className="material-symbols-outlined text-lg">link</span> Paste Link
-              </button>
-            </div>
+        <div className="flex-1 p-8 lg:p-12 mt-20 space-y-12 max-w-7xl mx-auto w-full">
             
-            <textarea 
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full h-40 resize-none rounded-xl bg-surface p-4 text-surface-on/80 placeholder:text-surface-variant border-none focus:ring-2 focus:ring-primary/40 focus:bg-white transition-all appearance-none"
-              placeholder="Paste your classroom notes or topic here to dynamically generate your AI learning adventure..."
-            />
+            <header className="space-y-2">
+                <h2 className="text-4xl font-black font-headline text-surface-on tracking-tight">
+                    Greetings, {stats?.users?.name?.split(' ')[0] || 'Scholar'}.
+                </h2>
+                <p className="text-surface-variant font-medium text-lg">Ready to engage the loop today?</p>
+            </header>
 
-            <div className="mt-6 flex justify-end">
-              <button 
-                onClick={handleGenerate}
-                disabled={isGenerating || !content.trim()}
-                className="flex items-center gap-3 bg-primary text-primary-on px-8 py-4 rounded-full font-headline font-bold text-lg shadow-lg hover:shadow-primary/30 active:scale-95 transition-all disabled:opacity-50 disabled:active:scale-100"
-              >
-                {isGenerating ? (
-                  <span className="material-symbols-outlined animate-spin">refresh</span>
-                ) : (
-                  <span className="material-symbols-outlined">auto_awesome</span>
-                )}
-                {isGenerating ? 'Generating Quizzes...' : 'Generate Learning Set'}
-              </button>
-            </div>
-          </div>
+            {/* AI Generation Hub */}
+            <section className="relative w-full">
+                <div className="relative z-10 p-10 bg-white rounded-[2.5rem] shadow-premium border border-surface-container overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
+                    
+                    <div className="flex flex-wrap gap-4 mb-8">
+                        <ActionButton icon="note_add" label="Note Synthesis" color="text-primary" active />
+                        <ActionButton icon="link" label="Web Context" color="text-secondary" />
+                        <ActionButton icon="description" label="PDF Ingestion" color="text-tertiary" />
+                    </div>
+                    
+                    <div className="relative">
+                        <textarea 
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            className="w-full h-48 resize-none rounded-3xl bg-surface p-6 text-lg font-medium text-surface-on/80 placeholder:text-surface-variant border-none focus:ring-4 focus:ring-primary/10 transition-all outline-none"
+                            placeholder="Input your text or research notes here. The LearnLoop AI will decompose and restructure it into a high-performance Mastery Set..."
+                        />
+                        <div className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-white/50 backdrop-blur rounded-full text-[10px] font-black uppercase text-surface-variant border border-surface-container">
+                            <span className="material-symbols-outlined text-sm">auto_awesome</span> Neural Engine Active
+                        </div>
+                    </div>
 
-          {/* Gamified Background Element */}
-          <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-secondary-container to-primary-container rounded-full blur-3xl opacity-40 mix-blend-multiply z-0 pointer-events-none" />
-        </section>
-
-        {/* Dynamic Glassmorphic Card Example */}
-        <section className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl">
-           <div className="glass-panel bg-white/70 p-6 rounded-3xl border border-white shadow-glass hover:translate-y-[-4px] transition-transform cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-error-container/20 text-error rounded-2xl">
-                   <span className="material-symbols-outlined">trending_down</span>
+                    <div className="mt-8 flex justify-end">
+                        <button 
+                            disabled={isGenerating || !content.trim()}
+                            onClick={handleGenerate}
+                            className="flex items-center gap-3 bg-primary text-white px-10 py-4 rounded-full font-black text-lg shadow-lg hover:shadow-primary/30 active:scale-95 transition-all disabled:opacity-50"
+                        >
+                            {isGenerating ? (
+                                <span className="material-symbols-outlined animate-spin text-2xl">autorenew</span>
+                            ) : (
+                                <span className="material-symbols-outlined text-2xl">psychology</span>
+                            )}
+                            {isGenerating ? "Synthesizing..." : "Initiate Synthesis"}
+                        </button>
+                    </div>
                 </div>
-                <div>
-                  <h3 className="font-headline font-bold text-xl">Weak Area Alert</h3>
-                  <p className="text-surface-variant text-sm font-medium">Protein Synthesis (Biology 101)</p>
-                </div>
-              </div>
-              <p className="text-surface-on/80 mb-6">4 new dynamic flashcards wait for you based on yesterday's quiz results.</p>
-              <button className="text-error font-bold uppercase text-sm tracking-wider hover:underline">Review Now →</button>
-           </div>
-           
-           {/* Daily Mission Card */}
-           <div className="glass-panel bg-tertiary-container/10 p-6 rounded-3xl border border-tertiary-container/30 shadow-glass">
-              <h3 className="font-headline font-bold text-xl mb-2 text-tertiary flex items-center gap-2">
-                <span className="material-symbols-outlined text-tertiary">stars</span> Daily Mission
-              </h3>
-              <p className="text-surface-on/80 mb-4">Complete 3 sets to unlock "Early Bird" badge.</p>
-              <div className="w-full h-2 bg-surface-container rounded-full overflow-hidden mb-4">
-                 <div className="h-full bg-tertiary w-[33%]" />
-              </div>
-              <p className="text-xs font-bold text-surface-variant text-right">1 / 3 Completed</p>
-           </div>
-        </section>
 
+                {/* Decorative background gradients */}
+                <div className="absolute -top-12 -right-12 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-primary/20 transition-all duration-1000" />
+                <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-secondary/20 transition-all duration-1000" />
+            </section>
+
+            {/* Contextual Bento Widgets */}
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Weak Area Insights (Dynamic eventually, but currently based on placeholder mastery logic) */}
+                <div className="bg-white p-8 rounded-[2.5rem] border border-surface-container shadow-sm hover:translate-y-[-4px] transition-all cursor-pointer group">
+                    <div className="flex items-center gap-5 mb-6">
+                        <div className="p-4 bg-error/10 text-error rounded-2xl group-hover:bg-error group-hover:text-white transition-colors duration-500">
+                            <span className="material-symbols-outlined text-3xl">trending_down</span>
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-black font-headline text-surface-on">Weak Point Detected</h3>
+                            <p className="text-surface-variant font-bold text-sm uppercase tracking-widest mt-1">Foundational Logic • Mastery: 38%</p>
+                        </div>
+                    </div>
+                    <p className="text-surface-variant font-medium leading-relaxed mb-8">System analysis suggests immediate revision of **Propositional Calculus**. We detected gaps in your last session.</p>
+                    <button className="text-error font-black uppercase tracking-widest text-xs flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Initiate Recovery <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                </div>
+
+                {/* Daily Mission Spotlight (Now dynamic) */}
+                <div className="bg-gradient-to-br from-tertiary to-orange-700 p-8 rounded-[2.5rem] border border-tertiary/20 shadow-premium group relative overflow-hidden">
+                    <div className="relative z-10 text-white">
+                        <h3 className="text-2xl font-black font-headline flex items-center gap-3 mb-2">
+                            <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span> Current Mission
+                        </h3>
+                        {mission ? (
+                          <>
+                            <p className="text-white/80 font-bold text-sm mb-6 uppercase tracking-widest">{mission.missions.title}</p>
+                            
+                            <div className="space-y-3 mb-6">
+                                <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden shadow-inner">
+                                    <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${(mission.current_value / mission.missions.target_value) * 100}%` }}
+                                        className="h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.5)]" 
+                                    />
+                                </div>
+                                <p className="text-right text-xs font-black uppercase tracking-widest">{mission.current_value} / {mission.missions.target_value} Objectives</p>
+                            </div>
+                            
+                            <button className="bg-white text-tertiary px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all">
+                                {mission.current_value >= mission.missions.target_value ? `Claim +${mission.missions.reward_xp} XP` : 'Keep Grinding'}
+                            </button>
+                          </>
+                        ) : (
+                          <div className="py-6">
+                            <p className="text-white/70 font-bold text-sm uppercase tracking-widest mb-4">No active missions found.</p>
+                            <Link href="/missions" className="bg-white/20 text-white px-6 py-2 rounded-full font-bold text-xs hover:bg-white/30 transition-all">Explore Operations</Link>
+                          </div>
+                        )}
+                    </div>
+                    <span className="absolute -right-10 -bottom-10 material-symbols-outlined text-[200px] text-white/10 group-hover:rotate-12 transition-transform duration-1000" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
+                </div>
+            </section>
+        </div>
       </main>
     </div>
+  );
+}
+
+function ActionButton({ icon, label, color, active = false }: { icon: string, label: string, color: string, active?: boolean }) {
+  return (
+    <button className={`flex items-center gap-3 px-6 py-2.5 rounded-2xl font-black text-xs uppercase tracking-[0.15em] transition-all border ${active ? 'bg-surface border-surface-container shadow-inner' : 'bg-white border-transparent hover:border-surface-container/50 hover:bg-surface'}`}>
+      <span className={`material-symbols-outlined text-xl ${color}`}>{icon}</span>
+      {label}
+    </button>
   );
 }

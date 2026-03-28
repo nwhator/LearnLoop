@@ -1,144 +1,153 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useStore } from "@/lib/store";
+import { supabase } from "@/lib/supabaseClient";
+import DashboardSidebar from "@/app/components/DashboardSidebar";
+import DashboardHeader from "@/app/components/DashboardHeader";
 
-// Mocking Mission data structure mapped from Supabase public.user_missions
-const DAILY_MISSIONS = [
-  { id: "1", type: "daily_quiz", title: "Complete 3 Quizzes", reward: 150, current: 1, target: 3 },
-  { id: "2", type: "streak_3", title: "Maintain a 3-Day Streak", reward: 500, current: 2, target: 3 },
-  { id: "3", type: "perfect_score", title: "Master 10 Flashcards", reward: 300, current: 10, target: 10 },
-];
+interface Mission {
+  id: string;
+  title: string;
+  description: string;
+  reward_xp: number;
+  type: "daily" | "weekly" | "achievement";
+  target_value: number;
+}
 
 export default function MissionsPage() {
-  const incrementXP = useStore((state) => state.incrementXP);
-  // Simulated State for claiming missions
-  const [claimedMissions, setClaimedMissions] = useState<Set<string>>(new Set());
+  const [missions, setMissions] = useState<Mission[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleClaimReward = (id: string, rewardValue: number) => {
-    if (!claimedMissions.has(id)) {
-      setClaimedMissions(new Set(claimedMissions).add(id));
-      incrementXP(rewardValue);
+  useEffect(() => {
+    async function fetchMissions() {
+      try {
+        const { data, error } = await supabase
+          .from("missions")
+          .select("*")
+          .eq("is_active", true)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        setMissions(data || []);
+      } catch (err) {
+        console.error("Missions fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
     }
+    fetchMissions();
+  }, []);
+
+  return (
+    <div className="flex bg-surface min-h-screen">
+      <DashboardSidebar />
+
+      <main className="flex-1 lg:ml-72 min-h-screen">
+        <DashboardHeader title="Elite Missions" />
+
+        <div className="p-8 lg:p-12 mt-20 space-y-12 max-w-7xl mx-auto w-full">
+            
+            <header className="space-y-4">
+                <h2 className="text-5xl font-black font-headline text-surface-on tracking-tighter">Daily Operations</h2>
+                <p className="text-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Complete synchronized challenges to earn bonus XP and exclusive badges. Operations reset in <span className="text-error font-black">08:42:15</span>.</p>
+            </header>
+
+            {/* Event Spotlight */}
+            <section className="relative w-full overflow-hidden bg-primary-container rounded-[3rem] p-12 shadow-premium group">
+                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-on/10 to-transparent blur-[120px] rounded-full" />
+                <div className="absolute top-0 right-0 w-80 h-full flex items-center justify-center opacity-10 pointer-events-none transform translate-x-12 group-hover:rotate-12 group-hover:scale-110 transition-transform duration-[2000ms]">
+                    <span className="material-symbols-outlined text-[250px] text-primary-on" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
+                </div>
+
+                <div className="relative z-10 space-y-8">
+                    <span className="bg-primary/20 text-primary-on border border-primary-on/30 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 inline-block shadow-sm">
+                        Global Event Operation
+                    </span>
+                    <h2 className="text-4xl md:text-6xl font-black font-headline text-primary-on tracking-tighter mb-4 max-w-2xl leading-none">
+                        The Neural <br /><span className="italic font-serif opacity-70">Architecture</span> Challenge
+                    </h2>
+                    <p className="text-primary-on/80 max-w-lg font-medium text-lg leading-relaxed">
+                        Generate 5 high-accuracy study sets in under 24 hours to earn the restricted <span className="text-white font-black underline underline-offset-4 decoration-white/30 truncate">Synaptic Master</span> badge.
+                    </p>
+                    
+                    <div className="flex flex-col sm:flex-row gap-6 pt-4">
+                        <button className="bg-white text-primary font-black px-12 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all text-xs uppercase tracking-widest border-2 border-white">
+                            Initialize Mission
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            {/* List of active tasks */}
+            <section className="space-y-10">
+                <h3 className="text-2xl font-black font-headline text-surface-on tracking-tight">Active Assignments</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {loading ? (
+                        Array(3).fill(0).map((_, i) => (
+                            <div key={i} className="h-64 bg-white rounded-[2.5rem] animate-pulse"></div>
+                        ))
+                    ) : missions.length > 0 ? missions.map((mission) => (
+                        <MissionCard key={mission.id} mission={mission} />
+                    )) : (
+                        <div className="col-span-full py-20 bg-white border border-surface-container rounded-[2.5rem] flex flex-col items-center justify-center text-surface-variant font-bold">
+                            <span className="material-symbols-outlined text-6xl mb-4 opacity-30">check_circle</span>
+                            <p className="text-xl font-headline font-black">All Objectives Complete.</p>
+                        </div>
+                    )}
+                </div>
+            </section>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function MissionCard({ mission }: { mission: Mission }) {
+  const iconMap: any = {
+    daily: "bolt",
+    weekly: "rocket_launch",
+    achievement: "stars",
+  };
+
+  const colorMap: any = {
+    daily: "text-primary bg-primary/10 border-primary/20",
+    weekly: "text-secondary bg-secondary/10 border-secondary/20",
+    achievement: "text-tertiary bg-tertiary/10 border-tertiary/20",
   };
 
   return (
-    <div className="flex-1 p-8 lg:px-16 lg:py-12 bg-surface min-h-screen">
-      <header className="flex flex-col mb-12">
-        <h1 className="text-4xl font-extrabold font-headline text-surface-on tracking-tight flex items-center gap-3">
-           <span className="material-symbols-outlined text-tertiary-fixed text-4xl">local_activity</span>
-           Daily Missions
-        </h1>
-        <p className="text-surface-variant max-w-2xl text-lg mt-2 font-medium">
-          Complete daily challenges to earn bonus XP and limited-edition badges. Rewards expire in 8 hours!
-        </p>
-      </header>
-
-      {/* Hero Mission Card / Active Challenge Spotlight */}
-      <section className="mb-12">
-        <div className="relative w-full overflow-hidden bg-primary-container rounded-[2rem] p-8 md:p-12 shadow-premium">
-           {/* Background Overlay Graphic */}
-           <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-on/10 to-transparent blur-3xl rounded-full" />
-           <div className="absolute top-0 right-0 w-64 h-full flex items-center justify-center opacity-20 pointer-events-none transform translate-x-12">
-              <span className="material-symbols-outlined text-[200px] text-primary-on" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
-           </div>
-
-           <div className="relative z-10">
-              <span className="bg-primary/20 text-primary-on border border-primary-on/30 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 inline-block shadow-sm">
-                Event Mission
-              </span>
-              <h2 className="text-3xl md:text-5xl font-extrabold font-headline text-primary-on tracking-tight mb-4 max-w-lg leading-tight">
-                Quantum Week Creator Challenge
-              </h2>
-              <p className="text-primary-on/80 max-w-md font-medium mb-8">
-                Generate 5 new study sets using the Next-Gen Gemini API to earn the legendary Quantum Brain badge.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                 <button className="bg-white text-primary font-bold px-8 py-3 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all">
-                    Start Generating
-                 </button>
-                 <div className="flex items-center gap-2 text-primary-on/90 bg-primary/20 px-6 py-3 rounded-full font-bold backdrop-blur-md border border-primary/30">
-                    <span className="material-symbols-outlined">schedule</span> Ends in 2 Days
-                 </div>
-              </div>
-           </div>
+    <div className="bg-white rounded-[2.5rem] p-8 border border-surface-container shadow-sm hover:translate-y-[-4px] transition-all hover:shadow-xl group relative overflow-hidden flex flex-col h-full">
+        <div className="flex justify-between items-start mb-8">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colorMap[mission.type]}`}>
+                <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  {iconMap[mission.type]}
+                </span>
+            </div>
+            <div className="px-4 py-1.5 bg-surface text-surface-variant rounded-full text-[10px] font-black uppercase tracking-widest shadow-inner border border-surface-container/50">
+                +{mission.reward_xp} XP
+            </div>
         </div>
-      </section>
 
-      {/* Grid of Daily Tasks */}
-      <section>
-        <h3 className="text-2xl font-extrabold font-headline text-surface-on mb-6">Today's Goals</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-           {DAILY_MISSIONS.map((mission) => {
-             const isComplete = mission.current >= mission.target;
-             const isClaimed = claimedMissions.has(mission.id);
-             const progressPercentage = Math.min((mission.current / mission.target) * 100, 100);
+        <h4 className="text-2xl font-black font-headline text-surface-on mb-3 leading-tight group-hover:text-primary transition-colors">{mission.title}</h4>
+        <p className="text-surface-variant text-sm font-medium leading-relaxed mb-10 italic opacity-80 line-clamp-2">"{mission.description}"</p>
+        
+        <div className="mt-auto space-y-6">
+            <div className="space-y-2">
+                <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.2em] text-surface-variant">
+                    <span>Progress</span>
+                    <span className="text-surface-on">0 / {mission.target_value}</span>
+                </div>
+                <div className="w-full h-2 bg-surface rounded-full overflow-hidden shadow-inner border border-surface-container/30">
+                    <div className="h-full bg-primary/20 transition-all duration-1000" style={{ width: '0%' }}></div>
+                </div>
+            </div>
 
-             return (
-               <motion.div 
-                 key={mission.id}
-                 whileHover={{ y: -4 }}
-                 className={`relative glass-panel rounded-3xl p-6 border shadow-glass transition-colors 
-                   ${isClaimed ? 'bg-surface-container/50 border-surface-container grayscale opacity-70' : 'bg-white border-surface-container/30 hover:border-tertiary/20'}
-                 `}
-               >
-                  <div className="flex justify-between items-start mb-6">
-                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isComplete && !isClaimed ? 'bg-tertiary-container/50' : 'bg-surface-container'}`}>
-                        <span className={`material-symbols-outlined text-2xl font-bold ${isComplete && !isClaimed ? 'text-tertiary' : 'text-surface-variant'}`}>
-                          {mission.type.includes('quiz') ? 'quiz' : mission.type.includes('streak') ? 'local_fire_department' : 'stars'}
-                        </span>
-                     </div>
-                     <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm
-                       ${isComplete && !isClaimed ? 'bg-tertiary text-tertiary-on shadow-tertiary/20' : 'bg-surface-container text-surface-variant'}
-                     `}>
-                       +{mission.reward} XP
-                     </span>
-                  </div>
-
-                  <h4 className="text-xl font-headline font-bold text-surface-on mb-2">{mission.title}</h4>
-                  
-                  {/* Progress Tracker */}
-                  <div className="mb-6">
-                     <div className="flex justify-between text-xs font-bold text-surface-variant mb-2">
-                       <span>Progress</span>
-                       <span>{mission.current} / {mission.target}</span>
-                     </div>
-                     <div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-                        <motion.div 
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progressPercentage}%` }}
-                          transition={{ duration: 1, ease: "easeOut" }}
-                          className={`h-full rounded-full ${isComplete ? 'bg-tertiary' : 'bg-primary'}`}
-                        />
-                     </div>
-                  </div>
-
-                  {/* Call to Action */}
-                  <div className="w-full flex">
-                    {isClaimed ? (
-                      <button disabled className="w-full py-3 rounded-xl bg-surface-container text-surface-variant font-bold flex items-center justify-center gap-2">
-                        <span className="material-symbols-outlined text-lg">done_all</span> Claimed
-                      </button>
-                    ) : isComplete ? (
-                      <button 
-                         onClick={() => handleClaimReward(mission.id, mission.reward)}
-                         className="w-full py-3 rounded-xl bg-tertiary text-tertiary-on font-bold shadow-lg hover:shadow-tertiary/30 active:scale-95 transition-all flex items-center justify-center gap-2"
-                      >
-                         <span className="material-symbols-outlined text-lg">redeem</span> Claim Reward
-                      </button>
-                    ) : (
-                      <button className="w-full py-3 rounded-xl bg-primary-container/20 text-primary font-bold hover:bg-primary-container/30 active:scale-95 transition-all">
-                        Go to Task
-                      </button>
-                    )}
-                  </div>
-               </motion.div>
-             );
-           })}
+            <button className="w-full py-4 rounded-2xl bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-primary/10">
+                Initialize Task
+            </button>
         </div>
-      </section>
     </div>
   );
 }

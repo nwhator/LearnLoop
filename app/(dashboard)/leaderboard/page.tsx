@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import DashboardSidebar from "@/app/components/DashboardSidebar";
+import DashboardHeader from "@/app/components/DashboardHeader";
 
 interface LeaderboardEntry {
   user_id: string;
@@ -15,8 +16,7 @@ interface LeaderboardEntry {
   };
 }
 
-export default function ChallengesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+export default function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,101 +39,81 @@ export default function ChallengesPage() {
     fetchLeaderboard();
   }, []);
 
-  const filteredLeaderboard = leaderboard.filter(entry => 
-    entry.users?.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <div className="bg-surface text-surface-on min-h-screen">
-      
-      {/* TopNavBar */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 h-16 border-b border-surface-container/50">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="text-2xl font-extrabold text-primary font-headline tracking-tight">LearnLoop</Link>
-          <div className="hidden md:flex items-center bg-surface-container/50 rounded-full px-4 py-1.5 border border-surface-container/30">
-            <span className="material-symbols-outlined text-surface-variant text-sm">search</span>
-            <input 
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search competitors..." 
-                className="bg-transparent border-none focus:ring-0 text-sm w-48 font-medium placeholder:text-surface-variant outline-none" 
-            />
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary-container bg-surface flex justify-center items-center text-primary font-bold shadow-sm">
-             A
-          </div>
-        </div>
-      </nav>
+    <div className="flex bg-surface min-h-screen">
+      <DashboardSidebar />
 
-      {/* Main Content */}
-      <main className="md:ml-64 pt-28 px-6 pb-12 transition-all duration-300">
-        <div className="max-w-6xl mx-auto">
+      <main className="flex-1 lg:ml-72 min-h-screen">
+        <DashboardHeader title="Elite Ranks" />
+
+        <div className="p-8 lg:p-12 mt-20 space-y-12 max-w-7xl mx-auto w-full">
             
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-                <div className="max-w-xl">
-                    <span className="inline-block px-4 py-1.5 bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-black rounded-full mb-4 tracking-[0.2em] uppercase">GLOBAL RANKS</span>
-                    <h1 className="text-4xl md:text-5xl font-black font-headline tracking-tighter text-surface-on mb-4">Elite Hall of Fame</h1>
-                    <p className="text-surface-variant font-medium text-lg leading-relaxed">The top learners shaping the future of LearnLoop.</p>
-                </div>
-            </div>
+            <header className="space-y-4">
+                <span className="inline-block px-4 py-1.5 bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-black rounded-full mb-2 tracking-[0.2em] uppercase">Global Rankings</span>
+                <h2 className="text-5xl font-black font-headline text-surface-on tracking-tighter">The Hall of Fame</h2>
+                <p className="text-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Recognizing the most dedicated learners on the platform. Can you climb to the top?</p>
+            </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Main Leaderboard Table */}
+            <section className="bg-white rounded-[3rem] overflow-hidden border border-surface-container shadow-premium relative">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-tertiary to-secondary"></div>
                 
-                {/* Main Leaderboard Table */}
-                <div className="lg:col-span-12">
-                   <div className="bg-white rounded-[2rem] overflow-hidden border border-surface-container shadow-sm">
-                      <table className="w-full text-left">
-                        <thead className="bg-surface/50 border-b border-surface-container">
-                          <tr className="text-[10px] font-black uppercase tracking-widest text-surface-variant">
-                            <th className="px-8 py-5">Rank</th>
-                            <th className="px-8 py-5">Learner</th>
-                            <th className="px-8 py-5">Level</th>
-                            <th className="px-8 py-5 text-right">XP Points</th>
-                          </tr>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse min-w-[800px]">
+                        <thead>
+                            <tr className="bg-surface/50 border-b border-surface-container text-[10px] font-black uppercase tracking-widest text-surface-variant">
+                                <th className="px-10 py-6">Rank</th>
+                                <th className="px-10 py-6">Learner</th>
+                                <th className="px-10 py-6">Level</th>
+                                <th className="px-10 py-6 text-right">XP Mastery</th>
+                            </tr>
                         </thead>
                         <tbody className="divide-y divide-surface-container">
-                          {loading ? (
-                            Array(5).fill(0).map((_, i) => (
-                              <tr key={i} className="animate-pulse">
-                                <td colSpan={4} className="h-20 bg-white"></td>
-                              </tr>
-                            ))
-                          ) : filteredLeaderboard.map((entry) => (
-                            <tr key={entry.user_id} className="hover:bg-surface/30 transition-colors group">
-                              <td className="px-8 py-6">
-                                <span className={`text-xl font-black ${entry.rank === 1 ? 'text-tertiary' : entry.rank === 2 ? 'text-primary' : 'text-surface-variant'}`}>
-                                  #{entry.rank}
-                                </span>
-                              </td>
-                              <td className="px-8 py-6">
-                                <div className="flex items-center gap-4">
-                                  <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold font-headline border border-primary/20">
-                                    {entry.users?.initials || entry.users?.name?.charAt(0) || 'U'}
-                                  </div>
-                                  <span className="font-black font-headline text-surface-on">{entry.users?.name || 'Anonymous User'}</span>
-                                </div>
-                              </td>
-                              <td className="px-8 py-6">
-                                <span className="bg-secondary/10 text-secondary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
-                                  Lvl {entry.users?.level || 1}
-                                </span>
-                              </td>
-                              <td className="px-8 py-6 text-right">
-                                <span className="text-lg font-black font-headline text-surface-on">
-                                  {entry.xp.toLocaleString()} <span className="text-[10px] text-surface-variant uppercase ml-1">XP</span>
-                                </span>
-                              </td>
-                            </tr>
-                          ))}
+                            {loading ? (
+                                Array(5).fill(0).map((_, i) => (
+                                    <tr key={i} className="animate-pulse">
+                                        <td colSpan={4} className="h-24 bg-white"></td>
+                                    </tr>
+                                ))
+                            ) : leaderboard.map((entry) => (
+                                <tr key={entry.user_id} className={`hover:bg-surface/30 transition-all duration-300 group ${entry.rank === 1 ? 'bg-tertiary/5' : ''}`}>
+                                    <td className="px-10 py-8">
+                                        <div className={`text-2xl font-black font-headline ${entry.rank === 1 ? 'text-tertiary' : entry.rank === 2 ? 'text-primary' : 'text-surface-variant'}`}>
+                                            #{entry.rank}
+                                        </div>
+                                    </td>
+                                    <td className="px-10 py-8">
+                                        <div className="flex items-center gap-6">
+                                            <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl font-headline border border-primary/20 shadow-sm transition-transform group-hover:scale-110">
+                                                {entry.users?.initials || entry.users?.name?.charAt(0) || 'U'}
+                                            </div>
+                                            <div>
+                                                <p className="font-black font-headline text-surface-on text-lg tracking-tight">{entry.users?.name || 'Anonymous User'}</p>
+                                                <p className="text-[10px] text-surface-variant font-black uppercase tracking-widest mt-0.5">Verified Scholar</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-10 py-8">
+                                        <span className="bg-secondary/10 text-secondary border border-secondary/20 px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-inner">
+                                            Lvl {entry.users?.level || 1}
+                                        </span>
+                                    </td>
+                                    <td className="px-10 py-8 text-right">
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-xl font-black font-headline text-surface-on tracking-tight">
+                                                {entry.xp.toLocaleString()} <span className="text-xs text-primary ml-1 opacity-70">XP</span>
+                                            </span>
+                                            <div className="w-20 h-1 bg-surface-container rounded-full mt-2 overflow-hidden">
+                                                <div className="h-full bg-primary" style={{ width: '100%' }}></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
-                      </table>
-                   </div>
+                    </table>
                 </div>
-
-            </div>
+            </section>
         </div>
       </main>
     </div>
