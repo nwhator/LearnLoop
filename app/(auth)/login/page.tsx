@@ -65,7 +65,7 @@ export default function LoginPage() {
             {/* Auth Header */}
             <div className="mb-8">
               <h2 className="text-3xl font-extrabold font-headline text-surface-on tracking-tight mb-2">Welcome Back</h2>
-              <p className="text-surface-variant font-medium">Don't have an account? <Link href="/signup" className="text-primary hover:underline underline-offset-4 font-bold">Sign up here</Link></p>
+              <p className="text-surface-variant font-medium">Don't have an account? <Link href="/register" className="text-primary hover:underline underline-offset-4 font-bold">Sign up here</Link></p>
             </div>
             
             {/* Social Logins */}

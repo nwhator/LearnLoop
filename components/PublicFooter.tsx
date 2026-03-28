@@ -27,9 +27,9 @@ export default function PublicFooter() {
           ]} />
           
           <FooterColumn title="Legal" links={[
-            { label: "Privacy Policy", href: "/legal#privacy" },
-            { label: "Terms of Service", href: "/legal#terms" },
-            { label: "Cookie Policy", href: "/legal#cookies" }
+            { label: "Privacy Policy", href: "/privacy" },
+            { label: "Terms of Service", href: "/terms" },
+            { label: "Cookie Policy", href: "/terms" }
           ]} />
           
           <FooterColumn title="Support" links={[

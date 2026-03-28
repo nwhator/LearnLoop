@@ -23,7 +23,7 @@ export default function PublicHeader() {
           <Link href="/login" className="hidden sm:block text-surface-variant font-bold font-headline text-sm hover:text-primary transition-colors px-4 py-2">
             Login
           </Link>
-          <Link href="/signup" className="bg-primary text-primary-on px-6 py-2.5 rounded-full font-bold font-headline text-sm shadow-md hover:scale-105 transition-all active:scale-95">
+          <Link href="/register" className="bg-primary text-primary-on px-6 py-2.5 rounded-full font-bold font-headline text-sm shadow-md hover:scale-105 transition-all active:scale-95">
             Get Started
           </Link>
         </div>

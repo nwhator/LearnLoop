@@ -254,22 +254,24 @@ export default function LandingPage() {
             </div>
           </div>
           
-          <div className="col-span-1 md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-12">
             {[
               { title: "Product", links: ["Features", "Leaderboards", "Missions"] },
-              { title: "Legal", links: ["Privacy Policy", "Terms of Service"] },
+              { title: "Legal", links: [{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms of Service", href: "/terms" }] },
               { title: "Support", links: ["Help Center", "Contact Us", "Careers"] }
             ].map((col, idx) => (
               <div key={idx}>
                 <p className="font-black text-on-surface uppercase tracking-widest text-xs mb-8">{col.title}</p>
                 <ul className="space-y-5">
-                  {col.links.map(link => (
-                    <li key={link}><Link className="text-on-surface-variant hover:text-primary font-bold text-sm transition-colors" href="#">{link}</Link></li>
+                  {col.links.map((link: any) => (
+                    <li key={typeof link === 'string' ? link : link.label}>
+                      <Link className="text-on-surface-variant hover:text-primary font-bold text-sm transition-colors" href={typeof link === 'string' ? "#" : link.href}>
+                        {typeof link === 'string' ? link : link.label}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               </div>
             ))}
-          </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 py-10 border-t border-surface-container">
           <p className="text-on-surface-variant/40 text-xs font-black uppercase tracking-[0.3em] text-center">© 2024 LearnLoop AI. Elevate your intellect.</p>
