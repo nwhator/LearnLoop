@@ -29,6 +29,12 @@ export default function SettingsPage() {
     publicLeaderboard: false
   });
 
+  const handleSave = () => {
+    // TODO: Implement save logic (e.g., update user preferences in Supabase)
+    setSaving(true);
+    setTimeout(() => setSaving(false), 1000);
+  };
+
   const handleToggle = (key: string) => {
     if (key === "darkMode") {
       toggleTheme();
@@ -44,8 +50,8 @@ export default function SettingsPage() {
         <div className="flex items-center gap-8">
           <Link href="/" className="text-2xl font-black text-primary font-headline tracking-tighter">LearnLoop</Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/dashboard" className="text-surface-variant font-medium hover:text-primary transition-colors px-3 py-1 rounded-md font-headline font-bold">Dashboard</Link>
-            <Link href="/library" className="text-surface-variant font-medium hover:text-primary transition-colors px-3 py-1 rounded-md font-headline font-bold">Library</Link>
+            <Link href="/dashboard" className="text-surface-variant hover:text-primary transition-colors px-3 py-1 rounded-md font-headline font-bold">Dashboard</Link>
+            <Link href="/library" className="text-surface-variant hover:text-primary transition-colors px-3 py-1 rounded-md font-headline font-bold">Library</Link>
             <Link href="/settings" className="text-primary border-b-2 border-primary px-3 py-1 font-headline font-bold">Settings</Link>
           </div>
         </div>

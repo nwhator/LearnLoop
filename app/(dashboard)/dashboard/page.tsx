@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabaseClient";
+import type { Database } from "@/types/supabase";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardHeader from "@/components/DashboardHeader";
 import Link from "next/link";
@@ -90,17 +91,19 @@ export default function DashboardPage() {
       if (!user) return;
 
       // 1. Create Study Set row
-      const { data: newSet, error } = await supabase
+
+      const { data, error } = await supabase
         .from("study_sets")
-        .insert({
-          creator_id: user.id,
-          title: content.slice(0, 40) + "...",
-          description: "Synthesized by LearnLoop AI Architecture.",
-          category: "General Intelligence",
-          is_public: false
-        })
-        .select()
-        .single();
+        .insert([
+          {
+            creator_id: user.id,
+            title: content.slice(0, 40) + "...",
+            description: "Synthesized by LearnLoop AI Architecture.",
+            category: "General Intelligence",
+            is_public: false
+          }
+        ])
+        .select();
 
       if (error) throw error;
 
@@ -108,7 +111,11 @@ export default function DashboardPage() {
       await new Promise(r => setTimeout(r, 2000));
       
       // 3. Navigate to the new set
-      router.push(`/library?search=${newSet.id}`);
+      if (data && data.length > 0) {
+        router.push(`/library?search=${data[0].id}`);
+      } else {
+        throw new Error("Study set creation failed");
+      }
     } catch (e) {
       console.error(e);
       alert("Synthesis sequence interrupted.");

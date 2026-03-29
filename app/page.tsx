@@ -40,7 +40,7 @@ export default function LandingPage() {
                 Next-Gen Intellectual Engine
               </div>
               
-              <h1 className="text-6xl md:text-8xl font-black font-headline text-on-surface leading-[0.9] tracking-tighter mb-10">
+              <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-headline text-on-surface leading-tight md:leading-[0.9] tracking-tight md:tracking-tighter mb-10 break-words hyphens-auto">
                 Elevate Your <br />
                 <span className="gradient-text italic font-normal">Genius</span>
               </h1>
@@ -208,7 +208,7 @@ export default function LandingPage() {
                 <circle cx="50" cy="50" fill="white" r="30"></circle>
               </svg>
             </div>
-            <h2 className="text-6xl font-black font-headline mb-10 tracking-tighter leading-none">Your Intellect, <br /> Unleashed.</h2>
+            <h2 className="text-4xl sm:text-6xl font-black font-headline mb-10 tracking-tight md:tracking-tighter leading-tight md:leading-none break-words hyphens-auto">Your Intellect, <br /> Unleashed.</h2>
             <p className="text-white/90 mb-14 max-w-xl mx-auto text-xl font-medium">Join 50,000+ learners today. The first 100 XP are on us.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
               <Link href="/register" className="bg-white text-primary px-16 py-6 rounded-full text-xl font-black shadow-2xl hover:scale-105 active:scale-95 transition-all w-full sm:w-auto uppercase tracking-widest">

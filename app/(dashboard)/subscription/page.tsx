@@ -1,14 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import { useStore } from "@/lib/store";
 
 export default function SubscriptionPage() {
-  const [isYearly, setIsYearly] = useState(false);
+    const [isYearly, setIsYearly] = useState(false);
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-  return (
-    <div className="bg-surface text-surface-on min-h-screen">
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+            setLoading(false);
+        };
+        getUser();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-surface text-surface-on">
+                <span className="text-lg font-bold">Loading...</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="bg-surface text-surface-on min-h-screen">
       
       {/* TopNavBar */}
       <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-sm border-b border-surface-container/50">
@@ -34,7 +54,13 @@ export default function SubscriptionPage() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 pt-32 md:pt-40 pb-20">
+            <main className="max-w-7xl mx-auto px-6 pt-32 md:pt-40 pb-20">
+                {user && (
+                    <div className="max-w-2xl mx-auto mt-10 mb-10 p-6 bg-primary/10 border border-primary/20 rounded-2xl text-center">
+                        <h2 className="text-2xl font-black mb-2 text-primary">Welcome, {user.email}!</h2>
+                        <p className="text-primary font-bold">You are logged in. (Subscription status coming soon.)</p>
+                    </div>
+                )}
         
         {/* Hero Section */}
         <section className="text-center mb-16 md:mb-24">
@@ -55,7 +81,7 @@ export default function SubscriptionPage() {
             <div className="flex flex-col items-center">
                 
                 {/* Pricing Toggle */}
-                <div className="bg-white p-1.5 rounded-full flex items-center mb-16 border border-surface-container shadow-sm p-1">
+                <div className="bg-white p-1 rounded-full flex items-center mb-16 border border-surface-container shadow-sm">
                     <button 
                         onClick={() => setIsYearly(false)}
                         className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${!isYearly ? 'bg-surface border border-surface-container shadow-sm text-primary' : 'text-surface-variant hover:text-surface-on'}`}
@@ -325,5 +351,5 @@ export default function SubscriptionPage() {
       </nav>
 
     </div>
-  );
+    );
 }

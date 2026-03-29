@@ -3,17 +3,43 @@
 import PublicHeader from "@/components/PublicHeader";
 import PublicFooter from "@/components/PublicFooter";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function PremiumPage() {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
+    const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly");
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-  return (
-    <div className="bg-surface text-surface-on min-h-screen flex flex-col antialiased">
-      <PublicHeader />
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+            setLoading(false);
+        };
+        getUser();
+    }, []);
 
-      <main className="flex-1">
-        {/* Hero Section */}
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-surface text-surface-on">
+                <span className="text-lg font-bold">Loading...</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="bg-surface text-surface-on min-h-screen flex flex-col antialiased">
+            <PublicHeader />
+
+            <main className="flex-1">
+                {/* Hero Section */}
+                {user && (
+                    <div className="max-w-2xl mx-auto mt-10 mb-10 p-6 bg-primary/10 border border-primary/20 rounded-2xl text-center">
+                        <h2 className="text-2xl font-black mb-2 text-primary">Welcome, {user.email}!</h2>
+                        <p className="text-primary font-bold">You are logged in. (Subscription status coming soon.)</p>
+                    </div>
+                )}
         <section className="pt-24 pb-32 px-6 text-center">
             <div className="max-w-4xl mx-auto space-y-8">
                 <span className="inline-flex items-center gap-2 bg-tertiary-container text-tertiary-on px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-sm border border-tertiary-container/30">
@@ -123,7 +149,7 @@ export default function PremiumPage() {
 
       <PublicFooter />
     </div>
-  );
+    );
 }
 
 function PriceCard({ title, price, period, description, features, cta, href, featured = false }: any) {

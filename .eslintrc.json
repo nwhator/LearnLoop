@@ -1,0 +1,18 @@
+{
+  "extends": ["next", "next/core-web-vitals"],
+  "rules": {
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "class",
+        "format": ["kebab-case"],
+        "filter": {
+          "regex": ".*",
+          "match": false
+        }
+      }
+    ],
+    "bem-helper/case": "off"
+  },
+  "plugins": ["bem-helper"]
+}

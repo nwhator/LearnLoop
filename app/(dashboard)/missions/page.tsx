@@ -13,6 +13,11 @@ interface Mission {
   reward_xp: number;
   type: "daily" | "weekly" | "achievement";
   target_value: number;
+  // User progress fields (from user_missions join)
+  current_value?: number;
+  is_completed?: boolean;
+  is_claimed?: boolean;
+  user_mission_id?: string;
 }
 
 export default function MissionsPage() {
@@ -89,7 +94,12 @@ export default function MissionsPage() {
                             <div key={i} className="h-64 bg-white rounded-[2.5rem] animate-pulse"></div>
                         ))
                     ) : missions.length > 0 ? missions.map((mission) => (
-                        <MissionCard key={mission.id} mission={mission} />
+                        <MissionCard 
+                          key={mission.id} 
+                          mission={mission} 
+                          onClaim={() => {}} 
+                          onInit={() => {}} 
+                        />
                     )) : (
                         <div className="col-span-full py-20 bg-white border border-surface-container rounded-[2.5rem] flex flex-col items-center justify-center text-surface-variant font-bold">
                             <span className="material-symbols-outlined text-6xl mb-4 opacity-30">check_circle</span>

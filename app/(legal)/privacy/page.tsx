@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           className="bg-white rounded-[3rem] p-8 md:p-16 border border-surface-container shadow-premium"
         >
           <div className="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-10 border border-secondary/10">
-            Current Version: v1.8.2
+            Current Version: v0.1.0
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black font-headline text-on-surface tracking-tighter leading-none mb-10">
