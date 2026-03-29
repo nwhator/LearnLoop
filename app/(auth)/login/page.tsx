@@ -1,6 +1,40 @@
+"use client";
+
+import { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (loginError) throw loginError;
+
+      if (data.session) {
+        router.push("/dashboard");
+      }
+    } catch (err: any) {
+      setError(err.message || "Credential verification failed. Please check your inputs.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-surface text-surface-on flex flex-col min-h-screen">
       {/* Auth Layout Wrapper: Split Screen Aesthetic */}
@@ -95,12 +129,15 @@ export default function LoginPage() {
             </div>
             
             {/* Login Form */}
-            <form className="space-y-5">
+            <form onSubmit={handleLogin} className="space-y-5">
               <div>
                 <label className="block text-xs font-bold text-surface-variant uppercase tracking-wider mb-2 ml-1" htmlFor="email">Email Address</label>
                 <input 
                   type="email" 
                   id="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   placeholder="hello@example.com" 
                   className="w-full px-5 py-4 rounded-2xl bg-surface border border-surface-container focus:bg-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-surface-on placeholder:text-surface-variant/70 font-medium shadow-inner" 
                 />
@@ -114,10 +151,20 @@ export default function LoginPage() {
                 <input 
                   type="password" 
                   id="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                   placeholder="••••••••" 
                   className="w-full px-5 py-4 rounded-2xl bg-surface border border-surface-container focus:bg-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-surface-on placeholder:text-surface-variant/70 font-medium shadow-inner" 
                 />
               </div>
+
+              {error && (
+                <div className="p-4 bg-error/10 border border-error/20 rounded-2xl flex items-center gap-3">
+                  <span className="material-symbols-outlined text-error text-xl">error</span>
+                  <p className="text-error text-xs font-bold leading-none">{error}</p>
+                </div>
+              )}
               
               <div className="pt-4 mt-8 relative">
                 {/* Gamified Hint Badge */}
@@ -125,8 +172,13 @@ export default function LoginPage() {
                   <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
                   <span className="text-[10px] font-black uppercase tracking-tighter">Enter the Arena</span>
                 </div>
-                <button type="button" className="w-full bg-primary text-primary-on py-4 px-8 rounded-full font-bold text-lg shadow-premium hover:shadow-primary/30 active:scale-[0.98] transition-all duration-200">
-                   Sign In
+                <button 
+                  disabled={loading}
+                  type="submit" 
+                  className="w-full bg-primary text-primary-on py-4 px-8 rounded-full font-bold text-lg shadow-premium hover:shadow-primary/30 active:scale-[0.98] transition-all duration-200 flex justify-center items-center gap-3"
+                >
+                  {loading && <span className="material-symbols-outlined animate-spin text-xl">autorenew</span>}
+                  {loading ? "Verifying..." : "Sign In"}
                 </button>
               </div>
             </form>

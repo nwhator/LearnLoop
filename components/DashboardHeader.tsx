@@ -16,8 +16,14 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
 
   useEffect(() => {
     async function fetchHeaderData() {
-      // Fetch dynamic user streak and data
-      const { data } = await supabase.from("users").select("name, initials, streak_count").single();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from("users")
+        .select("name, initials, streak_count")
+        .eq("id", user.id)
+        .single();
       if (data) setUserData(data);
     }
     fetchHeaderData();

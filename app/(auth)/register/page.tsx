@@ -1,9 +1,50 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: signupError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+          },
+        },
+      });
+
+      if (signupError) throw signupError;
+
+      if (data.user) {
+        setSuccess(true);
+        // Optional: Automagically redirect after 3s
+        setTimeout(() => router.push("/login"), 3000);
+      }
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred during synthesis.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-surface text-on-surface flex flex-col min-h-screen selection:bg-primary/10 selection:text-primary">
       {/* Auth Layout Wrapper */}
@@ -106,13 +147,16 @@ export default function RegisterPage() {
             </div>
             
             {/* Registration Form */}
-            <form className="space-y-6">
+            <form onSubmit={handleRegister} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2.5 ml-1" htmlFor="name">Full Name</label>
                   <input 
                     type="text" 
                     id="name" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
                     placeholder="Sarah Chen" 
                     className="w-full px-6 py-4 rounded-2xl bg-white border border-surface-container focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all underline-offset-0 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-bold shadow-sm" 
                   />
@@ -122,6 +166,9 @@ export default function RegisterPage() {
                   <input 
                     type="email" 
                     id="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                     placeholder="sarah@learnloop.app" 
                     className="w-full px-6 py-4 rounded-2xl bg-white border border-surface-container focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all underline-offset-0 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-bold shadow-sm" 
                   />
@@ -133,10 +180,27 @@ export default function RegisterPage() {
                 <input 
                   type="password" 
                   id="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                   placeholder="••••••••" 
                   className="w-full px-6 py-4 rounded-2xl bg-white border border-surface-container focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all underline-offset-0 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-bold shadow-sm" 
                 />
               </div>
+
+              {error && (
+                <div className="p-4 bg-error/10 border border-error/20 rounded-2xl flex items-center gap-3">
+                  <span className="material-symbols-outlined text-error text-xl">error</span>
+                  <p className="text-error text-xs font-bold leading-none">{error}</p>
+                </div>
+              )}
+
+              {success && (
+                <div className="p-4 bg-tertiary/10 border border-tertiary/20 rounded-2xl flex items-center gap-3">
+                  <span className="material-symbols-outlined text-tertiary text-xl">verified</span>
+                  <p className="text-tertiary text-xs font-bold leading-none">Synthesis Initiated! Check your email to confirm.</p>
+                </div>
+              )}
               
               <div className="pt-6 relative">
                 {/* Gamified Hint Badge */}
@@ -144,8 +208,13 @@ export default function RegisterPage() {
                   <span className="material-symbols-outlined text-sm font-black" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
                   <span className="text-[10px] font-black uppercase tracking-tighter">Level 1 Awaits</span>
                 </div>
-                <button type="button" className="w-full bg-primary text-white py-5 px-8 rounded-full font-black text-lg shadow-premium hover:scale-[1.02] active:scale-[0.98] transition-all">
-                   Join the Loop
+                <button 
+                  disabled={loading || success}
+                  type="submit" 
+                  className="w-full bg-primary text-white py-5 px-8 rounded-full font-black text-lg shadow-premium hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 flex justify-center items-center gap-3"
+                >
+                  {loading && <span className="material-symbols-outlined animate-spin text-xl">autorenew</span>}
+                  {loading ? "Sythesizing..." : "Join the Loop"}
                 </button>
               </div>
             </form>

@@ -3,20 +3,38 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useStore } from "@/lib/store";
+import { useRouter } from "next/navigation";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function SettingsPage() {
   const level = useStore((state) => state.level);
+  const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
 
-  const [darkMode, setDarkMode] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [emailNotifs, setEmailNotifs] = useState(true);
-  const [inAppAlerts, setInAppAlerts] = useState(true);
-  const [pushNotifs, setPushNotifs] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [fullName, setFullName] = useState("Alex Rivers");
+  const [email, setEmail] = useState("alex@example.com");
 
-  // Gamification states
-  const [xpPopups, setXpPopups] = useState(true);
-  const [streakReminders, setStreakReminders] = useState(true);
-  const [publicLeaderboard, setPublicLeaderboard] = useState(false);
+  // Preferences (Local State)
+  const [preferences, setPreferences] = useState({
+    darkMode: theme === "dark",
+    reducedMotion: false,
+    emailNotifs: true,
+    inAppAlerts: true,
+    pushNotifs: false,
+    xpPopups: true,
+    streakReminders: true,
+    publicLeaderboard: false
+  });
+
+  const handleToggle = (key: string) => {
+    if (key === "darkMode") {
+      toggleTheme();
+    }
+    setPreferences(prev => ({ ...prev, [key]: !prev[key as keyof typeof preferences] }));
+  };
 
   return (
     <div className="bg-surface text-surface-on min-h-screen">
@@ -121,7 +139,9 @@ export default function SettingsPage() {
                         {/* Profile Identity */}
                         <div className="flex flex-col md:flex-row gap-8 items-start md:items-center p-6 bg-surface rounded-2xl border border-surface-container">
                             <div className="relative group">
-                                <div className="w-24 h-24 rounded-full border-4 border-white bg-surface-container flex justify-center items-center text-primary font-headline font-black text-4xl shadow-md">A</div>
+                                <div className="w-24 h-24 rounded-full border-4 border-white bg-surface-container flex justify-center items-center text-primary font-headline font-black text-4xl shadow-md uppercase">
+                                  {user?.initials || fullName.charAt(0) || "U"}
+                                </div>
                                 <button className="absolute bottom-0 right-0 p-2 bg-primary text-primary-on rounded-full shadow-lg hover:scale-105 transition-transform">
                                     <span className="material-symbols-outlined text-sm">photo_camera</span>
                                 </button>
@@ -134,35 +154,29 @@ export default function SettingsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
                                         <label className="text-xs font-bold uppercase tracking-wider text-surface-variant pl-1">Full Name</label>
-                                        <input type="text" defaultValue="Alex Rivers" className="w-full bg-white border border-surface-container rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary focus:outline-none transition-all shadow-sm" />
+                                        <input 
+                                          type="text" 
+                                          value={fullName}
+                                          onChange={(e) => setFullName(e.target.value)}
+                                          className="w-full bg-white border border-surface-container rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary focus:outline-none transition-all shadow-sm" 
+                                        />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-surface-variant pl-1">Username</label>
-                                        <input type="text" defaultValue="arivers_architect" className="w-full bg-white border border-surface-container rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary focus:outline-none transition-all shadow-sm" />
+                                        <label className="text-xs font-bold uppercase tracking-wider text-surface-variant pl-1">Scholar Status</label>
+                                        <input type="text" disabled value={`Level ${user?.level || 1} Architect`} className="w-full bg-surface-container/30 border border-surface-container rounded-xl px-4 py-3 text-sm font-medium cursor-not-allowed opacity-70" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Email & Security */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="p-6 border border-surface-container rounded-2xl hover:border-primary/30 hover:bg-surface transition-all group bg-white shadow-sm cursor-pointer">
-                                <div className="flex items-center justify-between mb-3">
-                                    <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">mail</span>
-                                    <button className="text-sm font-bold text-primary hover:underline">Change</button>
-                                </div>
-                                <h4 className="font-bold text-surface-on mt-2">Email Address</h4>
-                                <p className="text-sm text-surface-variant mt-1">alex.rivers@design.com</p>
+                        {/* Email Info */}
+                        <div className="p-6 border border-surface-container rounded-2xl bg-white shadow-sm">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">mail</span>
                             </div>
-                            
-                            <div className="p-6 border border-surface-container rounded-2xl hover:border-primary/30 hover:bg-surface transition-all group bg-white shadow-sm cursor-pointer">
-                                <div className="flex items-center justify-between mb-3">
-                                    <span className="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">lock</span>
-                                    <button className="text-sm font-bold text-primary hover:underline">Update</button>
-                                </div>
-                                <h4 className="font-bold text-surface-on mt-2">Password</h4>
-                                <p className="text-sm text-surface-variant mt-1">Last changed 3 months ago</p>
-                            </div>
+                            <h4 className="font-bold text-surface-on mt-2">Email Address</h4>
+                            <p className="text-sm text-surface-variant mt-1">{email}</p>
+                            <p className="text-[10px] text-surface-variant/60 italic mt-2">To change your email, please contact Support Architecture.</p>
                         </div>
                     </div>
                 </section>
@@ -177,7 +191,7 @@ export default function SettingsPage() {
                     </div>
                     
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between p-5 bg-surface border border-surface-container rounded-2xl cursor-pointer hover:border-surface-variant transition-colors" onClick={() => setEmailNotifs(!emailNotifs)}>
+                        <div className="flex items-center justify-between p-5 bg-surface border border-surface-container rounded-2xl cursor-pointer hover:border-surface-variant transition-colors" onClick={() => handleToggle('emailNotifs')}>
                             <div className="flex items-center gap-5">
                                 <div className="p-2 bg-white rounded-xl shadow-sm border border-surface-container/50">
                                    <span className="material-symbols-outlined text-secondary">alternate_email</span>
@@ -187,12 +201,12 @@ export default function SettingsPage() {
                                     <p className="text-xs text-surface-variant mt-0.5">Weekly summaries and achievement reports.</p>
                                 </div>
                             </div>
-                            <div className={`w-14 h-8 rounded-full relative p-1 transition-colors shadow-inner flex items-center ${emailNotifs ? 'bg-secondary' : 'bg-surface-container-high'}`}>
-                                <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${emailNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                            <div className={`w-14 h-8 rounded-full relative p-1 transition-colors shadow-inner flex items-center ${preferences.emailNotifs ? 'bg-secondary' : 'bg-surface-container-high'}`}>
+                                <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${preferences.emailNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between p-5 bg-surface border border-surface-container rounded-2xl cursor-pointer hover:border-surface-variant transition-colors" onClick={() => setInAppAlerts(!inAppAlerts)}>
+                        <div className="flex items-center justify-between p-5 bg-surface border border-surface-container rounded-2xl cursor-pointer hover:border-surface-variant transition-colors" onClick={() => handleToggle('inAppAlerts')}>
                             <div className="flex items-center gap-5">
                                 <div className="p-2 bg-white rounded-xl shadow-sm border border-surface-container/50">
                                    <span className="material-symbols-outlined text-secondary">app_registration</span>
@@ -202,12 +216,12 @@ export default function SettingsPage() {
                                     <p className="text-xs text-surface-variant mt-0.5">Real-time feedback during learning sessions.</p>
                                 </div>
                             </div>
-                            <div className={`w-14 h-8 rounded-full relative p-1 transition-colors shadow-inner flex items-center ${inAppAlerts ? 'bg-secondary' : 'bg-surface-container-high'}`}>
-                                <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${inAppAlerts ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                            <div className={`w-14 h-8 rounded-full relative p-1 transition-colors shadow-inner flex items-center ${preferences.inAppAlerts ? 'bg-secondary' : 'bg-surface-container-high'}`}>
+                                <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${preferences.inAppAlerts ? 'translate-x-6' : 'translate-x-0'}`}></div>
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between p-5 bg-surface border border-surface-container rounded-2xl cursor-pointer hover:border-surface-variant transition-colors" onClick={() => setPushNotifs(!pushNotifs)}>
+                        <div className="flex items-center justify-between p-5 bg-surface border border-surface-container rounded-2xl cursor-pointer hover:border-surface-variant transition-colors" onClick={() => handleToggle('pushNotifs')}>
                             <div className="flex items-center gap-5">
                                 <div className="p-2 bg-white rounded-xl shadow-sm border border-surface-container/50 opacity-60">
                                    <span className="material-symbols-outlined text-surface-variant">phone_iphone</span>
@@ -217,8 +231,8 @@ export default function SettingsPage() {
                                     <p className="text-xs text-surface-variant mt-0.5">Daily reminders and mission updates on mobile.</p>
                                 </div>
                             </div>
-                            <div className={`w-14 h-8 rounded-full relative p-1 transition-colors shadow-inner flex items-center ${pushNotifs ? 'bg-secondary' : 'bg-surface-container-high'}`}>
-                                <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${pushNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                            <div className={`w-14 h-8 rounded-full relative p-1 transition-colors shadow-inner flex items-center ${preferences.pushNotifs ? 'bg-secondary' : 'bg-surface-container-high'}`}>
+                                <div className={`w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ${preferences.pushNotifs ? 'translate-x-6' : 'translate-x-0'}`}></div>
                             </div>
                         </div>
                     </div>
@@ -235,17 +249,17 @@ export default function SettingsPage() {
                     </h3>
                     
                     <div className="space-y-5">
-                        <div className="flex items-center justify-between cursor-pointer group" onClick={() => setDarkMode(!darkMode)}>
+                        <div className="flex items-center justify-between cursor-pointer group" onClick={() => handleToggle('darkMode')}>
                             <span className="text-sm font-bold text-surface-on group-hover:text-primary transition-colors">Dark Mode</span>
-                            <div className={`w-12 h-6 rounded-full relative p-1 transition-colors flex items-center shadow-inner ${darkMode ? 'bg-primary' : 'bg-surface-container-high'}`}>
-                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                            <div className={`w-12 h-6 rounded-full relative p-1 transition-colors flex items-center shadow-inner ${preferences.darkMode ? 'bg-primary' : 'bg-surface-container-high'}`}>
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${preferences.darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
                             </div>
                         </div>
                         
-                        <div className="flex items-center justify-between cursor-pointer group" onClick={() => setReducedMotion(!reducedMotion)}>
+                        <div className="flex items-center justify-between cursor-pointer group" onClick={() => handleToggle('reducedMotion')}>
                             <span className="text-sm font-bold text-surface-on group-hover:text-primary transition-colors">Reduced Motion</span>
-                            <div className={`w-12 h-6 rounded-full relative p-1 transition-colors flex items-center shadow-inner ${reducedMotion ? 'bg-primary' : 'bg-surface-container-high'}`}>
-                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${reducedMotion ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                            <div className={`w-12 h-6 rounded-full relative p-1 transition-colors flex items-center shadow-inner ${preferences.reducedMotion ? 'bg-primary' : 'bg-surface-container-high'}`}>
+                                <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${preferences.reducedMotion ? 'translate-x-6' : 'translate-x-0'}`}></div>
                             </div>
                         </div>
                         
@@ -267,7 +281,7 @@ export default function SettingsPage() {
                     
                     <div className="space-y-6">
                         <label className="flex items-start gap-4 cursor-pointer group">
-                            <input type="checkbox" checked={xpPopups} onChange={() => setXpPopups(!xpPopups)} className="mt-1 w-5 h-5 rounded border-surface-variant text-primary focus:ring-primary accent-primary cursor-pointer" />
+                            <input type="checkbox" checked={preferences.xpPopups} onChange={() => handleToggle('xpPopups')} className="mt-1 w-5 h-5 rounded border-surface-variant text-primary focus:ring-primary accent-primary cursor-pointer" />
                             <div>
                                 <p className="text-sm font-bold text-surface-on group-hover:text-primary transition-colors">XP Level-Up Popups</p>
                                 <p className="text-[11px] text-surface-variant mt-0.5">Show celebratory animations when earning XP.</p>
@@ -275,7 +289,7 @@ export default function SettingsPage() {
                         </label>
                         
                         <label className="flex items-start gap-4 cursor-pointer group">
-                            <input type="checkbox" checked={streakReminders} onChange={() => setStreakReminders(!streakReminders)} className="mt-1 w-5 h-5 rounded border-surface-variant text-primary focus:ring-primary accent-primary cursor-pointer" />
+                            <input type="checkbox" checked={preferences.streakReminders} onChange={() => handleToggle('streakReminders')} className="mt-1 w-5 h-5 rounded border-surface-variant text-primary focus:ring-primary accent-primary cursor-pointer" />
                             <div>
                                 <p className="text-sm font-bold text-surface-on group-hover:text-primary transition-colors">Streak Reminders</p>
                                 <p className="text-[11px] text-surface-variant mt-0.5">Alert me if my daily streak is at risk.</p>
@@ -283,7 +297,7 @@ export default function SettingsPage() {
                         </label>
                         
                         <label className="flex items-start gap-4 cursor-pointer group">
-                            <input type="checkbox" checked={publicLeaderboard} onChange={() => setPublicLeaderboard(!publicLeaderboard)} className="mt-1 w-5 h-5 rounded border-surface-variant text-primary focus:ring-primary accent-primary cursor-pointer" />
+                            <input type="checkbox" checked={preferences.publicLeaderboard} onChange={() => handleToggle('publicLeaderboard')} className="mt-1 w-5 h-5 rounded border-surface-variant text-primary focus:ring-primary accent-primary cursor-pointer" />
                             <div>
                                 <p className="text-sm font-bold text-surface-on group-hover:text-primary transition-colors">Public Leaderboard</p>
                                 <p className="text-[11px] text-surface-variant mt-0.5">Show my name on global ranking charts.</p>
@@ -313,11 +327,19 @@ export default function SettingsPage() {
 
         {/* Sticky Footer Action */}
         <div className="mt-12 pt-8 border-t border-surface-container flex flex-col-reverse sm:flex-row justify-end gap-4 relative z-10 bg-surface">
-            <button className="px-8 py-4 font-bold text-surface-variant border border-surface-container hover:bg-surface-bright rounded-full transition-all active:scale-95 text-sm">
-                Discard Changes
+            <button 
+              onClick={() => router.push("/dashboard")}
+              className="px-8 py-4 font-bold text-surface-variant border border-surface-container hover:bg-surface-bright rounded-full transition-all active:scale-95 text-sm"
+            >
+                Return to Dashboard
             </button>
-            <button className="px-10 py-4 bg-primary text-primary-on font-bold rounded-full shadow-premium hover:shadow-lg hover:brightness-110 active:scale-95 transition-all text-sm tracking-wide">
-                Save Preferences
+            <button 
+              disabled={saving}
+              onClick={handleSave}
+              className={`px-10 py-4 bg-primary text-primary-on font-bold rounded-full shadow-premium hover:shadow-lg hover:brightness-110 active:scale-95 transition-all text-sm tracking-wide flex items-center gap-2 ${saving ? 'opacity-70 pointer-events-none' : ''}`}
+            >
+                {saving && <span className="material-symbols-outlined animate-spin text-sm">autorenew</span>}
+                {saving ? "Saving Changes..." : "Save Preferences"}
             </button>
         </div>
       </main>

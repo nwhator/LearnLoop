@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import './globals.css';
 
 // Initialize the required fonts for LearnLoop
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'LearnLoop',
     description: 'Transform your notes into an interactive learning adventure.',
-    url: 'https://learnloop.app',
+    url: 'https://learn-loop-murex.vercel.app',
     siteName: 'LearnLoop',
     images: [
       {
@@ -49,9 +50,11 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
       </head>
       <body className={`${jakarta.variable} ${inter.variable} bg-surface text-surface-on font-body min-h-screen selection:bg-primary-container selection:text-primary-on overflow-x-hidden`}>
-        <div className="relative overflow-x-hidden min-h-screen flex flex-col">
-          {children}
-        </div>
+        <ThemeProvider>
+          <div className="relative overflow-x-hidden min-h-screen flex flex-col">
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -19,10 +19,13 @@ export default function DashboardSidebar() {
 
   useEffect(() => {
     async function fetchSidebarData() {
-      // Fetch user profile data and their level/stats directly from users table
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { data } = await supabase
         .from("users")
         .select("name, initials, level")
+        .eq("id", user.id)
         .single();
       
       if (data) setUserData(data);

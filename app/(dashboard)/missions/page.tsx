@@ -104,49 +104,62 @@ export default function MissionsPage() {
   );
 }
 
-function MissionCard({ mission }: { mission: Mission }) {
-  const iconMap: any = {
-    daily: "bolt",
-    weekly: "rocket_launch",
-    achievement: "stars",
-  };
-
+function MissionCard({ mission, onClaim, onInit }: { mission: Mission, onClaim: () => void, onInit: () => void }) {
+  const iconMap: any = { daily: "bolt", weekly: "rocket_launch", achievement: "stars" };
   const colorMap: any = {
     daily: "text-primary bg-primary/10 border-primary/20",
     weekly: "text-secondary bg-secondary/10 border-secondary/20",
     achievement: "text-tertiary bg-tertiary/10 border-tertiary/20",
   };
 
+  const isCompleted = mission.is_completed || (mission.current_value || 0) >= mission.target_value;
+
   return (
     <div className="bg-white rounded-[2.5rem] p-8 border border-surface-container shadow-sm hover:translate-y-[-4px] transition-all hover:shadow-xl group relative overflow-hidden flex flex-col h-full">
         <div className="flex justify-between items-start mb-8">
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colorMap[mission.type]}`}>
-                <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  {iconMap[mission.type]}
-                </span>
+                <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{iconMap[mission.type]}</span>
             </div>
-            <div className="px-4 py-1.5 bg-surface text-surface-variant rounded-full text-[10px] font-black uppercase tracking-widest shadow-inner border border-surface-container/50">
-                +{mission.reward_xp} XP
+            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-inner border border-surface-container/50 ${mission.is_claimed ? 'bg-surface text-surface-variant opacity-50' : 'bg-primary/10 text-primary'}`}>
+                {mission.is_claimed ? 'Awarded' : `+${mission.reward_xp} XP`}
             </div>
         </div>
 
-        <h4 className="text-2xl font-black font-headline text-surface-on mb-3 leading-tight group-hover:text-primary transition-colors">{mission.title}</h4>
+        <h4 className="text-2xl font-black font-headline text-surface-on mb-3 leading-tight group-hover:text-primary transition-colors line-clamp-1">{mission.title}</h4>
         <p className="text-surface-variant text-sm font-medium leading-relaxed mb-10 italic opacity-80 line-clamp-2">"{mission.description}"</p>
         
         <div className="mt-auto space-y-6">
             <div className="space-y-2">
                 <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.2em] text-surface-variant">
                     <span>Progress</span>
-                    <span className="text-surface-on">0 / {mission.target_value}</span>
+                    <span className="text-surface-on">{mission.current_value || 0} / {mission.target_value}</span>
                 </div>
                 <div className="w-full h-2 bg-surface rounded-full overflow-hidden shadow-inner border border-surface-container/30">
-                    <div className="h-full bg-primary/20 transition-all duration-1000" style={{ width: '0%' }}></div>
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min(((mission.current_value || 0) / mission.target_value) * 100, 100)}%` }}
+                      className={`h-full transition-all duration-1000 ${isCompleted ? 'bg-tertiary shadow-[0_0_10px_rgba(var(--tertiary),0.4)]' : 'bg-primary'}`}
+                    />
                 </div>
             </div>
 
-            <button className="w-full py-4 rounded-2xl bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-primary/10">
-                Initialize Task
-            </button>
+            {mission.is_claimed ? (
+              <div className="w-full py-4 rounded-2xl bg-surface text-surface-variant text-[10px] font-black uppercase tracking-widest text-center border border-dashed border-surface-container">
+                Mission Finalized
+              </div>
+            ) : isCompleted ? (
+              <button onClick={onClaim} className="w-full py-4 rounded-2xl bg-tertiary text-white text-[10px] font-black uppercase tracking-widest hover:brightness-110 shadow-lg shadow-tertiary/20 transition-all">
+                  Claim Reward
+              </button>
+            ) : (
+              <button 
+                onClick={onInit} 
+                className="w-full py-4 rounded-2xl bg-primary/5 text-primary text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all border border-primary/10"
+                disabled={!!mission.user_mission_id}
+              >
+                  {mission.user_mission_id ? "Operation Active" : "Initialize Task"}
+              </button>
+            )}
         </div>
     </div>
   );

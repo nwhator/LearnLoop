@@ -1,19 +1,56 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminLoginPage() {
-  const [adminId, setAdminId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Basic mock login
-    router.push("/admin/dashboard");
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 1. Authenticate with Supabase
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) throw authError;
+
+      if (authData.user) {
+        // 2. Check for Admin Role in public.admin_roles
+        const { data: roleData, error: roleError } = await supabase
+          .from("admin_roles")
+          .select("role")
+          .eq("user_id", authData.user.id)
+          .single();
+
+        if (roleError || !roleData) {
+          // If not an admin, sign them back out immediately
+          await supabase.auth.signOut();
+          throw new Error("Access Denied: Your identity does not possess administrative clearances.");
+        }
+
+        // 3. Success -> Proceed to Command Center
+        router.push("/admin/dashboard");
+      }
+    } catch (err: any) {
+      setError(err.message || "Authorization sequence failed.");
+      // Auto-clear error after 5s
+      setTimeout(() => setError(null), 5000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,10 +94,10 @@ export default function AdminLoginPage() {
                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-surface-variant group-focus-within:text-primary transition-colors z-10">badge</span>
                 <input 
                   id="admin-id" 
-                  type="text" 
-                  value={adminId}
-                  onChange={(e) => setAdminId(e.target.value)}
-                  placeholder="ID or Enterprise Email" 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@enterprise.app" 
                   className="w-full pl-12 pr-4 py-4 bg-surface border border-surface-container rounded-xl focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-all text-sm font-semibold text-surface-on outline-none placeholder:font-medium placeholder:text-surface-variant"
                   required
                 />
@@ -71,7 +108,7 @@ export default function AdminLoginPage() {
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-1">
                 <label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-surface-variant font-headline">Access Key</label>
-                <Link href="#" className="text-[10px] font-black text-primary hover:brightness-110 uppercase tracking-wider">Forgot Password?</Link>
+                <Link href="/forgot-password" title="Recover Access" className="text-[10px] font-black text-primary hover:brightness-110 uppercase tracking-wider">Forgot Password?</Link>
               </div>
               <div className="relative group">
                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-surface-variant group-focus-within:text-primary transition-colors z-10">key</span>
@@ -94,23 +131,25 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            {/* Remember Toggle */}
-            <div className="flex items-center gap-3 py-2 pl-1">
-              <input 
-                id="remember" 
-                type="checkbox" 
-                className="w-5 h-5 rounded text-primary border-surface-variant/50 focus:ring-primary accent-primary cursor-pointer"
-              />
-              <label htmlFor="remember" className="text-sm font-bold text-surface-variant cursor-pointer select-none hover:text-surface-on transition-colors">Trusted terminal (30 days)</label>
-            </div>
+            {error && (
+                <div className="p-4 bg-error/10 border border-error/20 rounded-xl flex items-center gap-3">
+                    <span className="material-symbols-outlined text-error text-xl">gpp_maybe</span>
+                    <p className="text-error text-[10px] font-black uppercase leading-tight tracking-wider">{error}</p>
+                </div>
+            )}
 
             {/* CTA Button */}
             <button 
+              disabled={loading}
               type="submit" 
-              className="w-full bg-primary text-white font-black py-4 rounded-full shadow-md shadow-primary/20 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 group outline-none"
+              className="w-full bg-primary text-white font-black py-4 rounded-full shadow-md shadow-primary/20 hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 group outline-none disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
-              Secure Login
+              {loading ? (
+                <span className="material-symbols-outlined animate-spin text-xl">autorenew</span>
+              ) : (
+                <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
+              )}
+              {loading ? "Authenticating..." : "Secure Login"}
             </button>
           </form>
         </div>

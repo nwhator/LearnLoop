@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardHeader from "@/components/DashboardHeader";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface DashboardStats {
   name: string;
@@ -30,23 +31,30 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [mission, setMission] = useState<MissionProgress | null>(null);
   const [loading, setLoading] = useState(true);
+  const [resetTime, setResetTime] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchDashboardData() {
       try {
         setLoading(true);
-        // Fetch User and Stats directly from users table (Flat Structure)
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Fetch User and Stats directly from users table
         const { data: userData, error: userError } = await supabase
           .from("users")
           .select("name, level, xp, streak_count")
+          .eq("id", user.id)
           .single();
 
         if (userError) throw userError;
 
         // Fetch the most recent active user mission
-        const { data: missionData, error: missionError } = await supabase
+        const { data: missionData } = await supabase
           .from("user_missions")
           .select("current_value, is_completed, missions(title, target_value, reward_xp)")
+          .eq("user_id", user.id)
           .eq("is_completed", false)
           .limit(1)
           .single();
@@ -60,18 +68,50 @@ export default function DashboardPage() {
       }
     }
     fetchDashboardData();
+
+    const interval = setInterval(() => {
+        const now = new Date();
+        const next = new Date();
+        next.setUTCHours(24, 0, 0, 0);
+        const diff = next.getTime() - now.getTime();
+        const h = Math.floor(diff / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        setResetTime(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`);
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleGenerate = async () => {
     if (!content.trim()) return;
     setIsGenerating(true);
     try {
-      // Simulate/Trigger AI Generation logic
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // 1. Create Study Set row
+      const { data: newSet, error } = await supabase
+        .from("study_sets")
+        .insert({
+          creator_id: user.id,
+          title: content.slice(0, 40) + "...",
+          description: "Synthesized by LearnLoop AI Architecture.",
+          category: "General Intelligence",
+          is_public: false
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // 2. Simulate AI Processing
       await new Promise(r => setTimeout(r, 2000));
-      alert("AI Architecture Synced! Check your Library for the new Mastery Set.");
-      setContent("");
+      
+      // 3. Navigate to the new set
+      router.push(`/library?search=${newSet.id}`);
     } catch (e) {
       console.error(e);
+      alert("Synthesis sequence interrupted.");
     } finally {
       setIsGenerating(false);
     }

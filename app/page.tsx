@@ -69,7 +69,7 @@ export default function LandingPage() {
               <img 
                 alt="AI Brain Transformation" 
                 className="w-full h-auto drop-shadow-2xl mix-blend-multiply transition-all" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjvxTDpmOyuY2SjRAiQnxt-ngT71VnrJWkicRB4PclZfZ1RZvH7Qjpf1XbFV1ns0wz27xOAYfijcT9mqmh57ifC9SraiYacKyo__lTwsJFdB3JyoR50p4iKBAprA8mnWPyu-pYmH46XwHQ5SVILlq2qH1IICFC2WsLQdZv14Gv74a0ylY3joXUj5RxGm1liOSoCGiO1svzlxiTmfmDT5GoW62tH7TLdu19aaKuF4ywnvj1POr43uxGK6TD54GS1yrtmMJw2qa_qe8"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3zr9xAUIRlb9cjP4eXgVCFIzXhh07QGOYtZYJmobdl4NkSESy0MLpJU_VYeYZOK098JiGae2ikjnm6jvu9VlH1eMfQlbv4v3g83OoWZ_bSwZZ_td2vFFKPnIBinSgAqciuwYTfm8SMzfOtRuAHuqxLaVFjLZN2pCUKYZuRss3mrh5jFCHiO9XHUNNq4oyVdDBSr2n0v1wKoN9swAPbGx0lXXia-mdP-uleKbfiSAl3K5N-MwBew-1RgCuziqPpeI3lkwoQJ2tW4I"
               />
               
               <motion.div 

@@ -56,7 +56,10 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protected routes logic
+  // 1. Define Route Groups
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin') && 
+                      request.nextUrl.pathname !== '/admin/login';
+
   const isProtectedRoute = 
     request.nextUrl.pathname.startsWith('/dashboard') ||
     request.nextUrl.pathname.startsWith('/library') ||
@@ -66,15 +69,33 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/settings') ||
     request.nextUrl.pathname.startsWith('/profile') ||
     request.nextUrl.pathname.startsWith('/studio') ||
-    request.nextUrl.pathname.startsWith('/premium')
+    request.nextUrl.pathname.startsWith('/premium') ||
+    isAdminRoute;
 
+  // 2. Global Auth Guard
   if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
-  // Auth routes logic (redirect to dashboard if already logged in)
+  // 3. Admin Role Guard
+  if (isAdminRoute && user) {
+    const { data: adminRole } = await supabase
+      .from('admin_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!adminRole) {
+      // Not an admin? Send them to the scholar dashboard
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // 4. Auth Page Redirection (Avoid login loop)
   if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
