@@ -10,11 +10,11 @@ interface ModerationItem {
   id: string;
   type: string;
   content_id: string;
-  flagged_by: string;
+  flagged_by: string | null;
   reason: string;
   status: string;
-  created_at: string;
-  title?: string; // Optinal field for better UI
+  created_at: string | null;
+  title?: string; // Optional field for better UI
 }
 
 export default function ModerationPage() {
@@ -191,7 +191,7 @@ function ModerationCard({ item, onAIReview, isModerating }: { item: ModerationIt
           <div className="flex-1 p-6 flex flex-col">
               <div className="flex justify-between items-start mb-2">
                   <span className="text-[10px] font-black text-primary uppercase tracking-widest font-headline">{item.type} • ID: {item.content_id.slice(0,8)}</span>
-                  <span className="text-[10px] font-bold text-surface-variant uppercase tracking-wider">{new Date(item.created_at).toLocaleDateString()}</span>
+                  <span className="text-[10px] font-bold text-surface-variant uppercase tracking-wider">{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</span>
               </div>
               <h4 className="text-lg font-black font-headline text-surface-on leading-tight mb-3">Report Reason</h4>
               <p className="text-sm text-surface-variant leading-relaxed mb-6 font-medium">"{item.reason}"</p>

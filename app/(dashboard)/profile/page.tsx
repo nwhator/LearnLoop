@@ -7,12 +7,12 @@ import DashboardHeader from "@/components/DashboardHeader";
 import Link from "next/link";
 
 interface UserProfile {
-  name: string;
-  email: string;
-  level: number;
-  xp: number;
-  streak_count: number;
-  initials?: string;
+    name: string;
+    email: string;
+    level: number;
+    xp: number;
+    streak_count: number;
+    initials?: string | null;
 }
 
 export default function ProfilePage() {

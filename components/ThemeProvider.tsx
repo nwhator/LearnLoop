@@ -31,17 +31,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // 3. Optional: Sync from Supabase in background
     async function syncFromSupabase() {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data } = await supabase
-          .from("users")
-          .select("preferences")
-          .eq("id", user.id)
-          .single<Database["public"]["Tables"]["users"]["Row"]>();
-        if (data?.preferences && typeof data.preferences === "object" && "darkMode" in data.preferences) {
-          const remoteTheme = (data.preferences as any).darkMode ? "dark" : "light";
-          applyTheme(remoteTheme);
-        }
-      }
+      // preferences column removed: skipping remote theme sync
     }
     syncFromSupabase();
   }, []);

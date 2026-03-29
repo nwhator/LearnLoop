@@ -9,10 +9,10 @@ import Link from "next/link";
 interface StudySet {
   id: string;
   title: string;
-  description: string;
-  category: string;
-  creator_id: string;
-  created_at: string;
+  description: string | null;
+  category: string | null;
+  creator_id: string | null;
+  created_at: string | null;
   is_public: boolean;
 }
 
@@ -108,7 +108,7 @@ export default function CommunityPage() {
                                 <p className="text-surface-variant text-sm font-medium leading-relaxed mb-8 line-clamp-2 italic opacity-80">"{set.description}"</p>
                                 
                                 <div className="flex items-center justify-between mt-auto pt-6 border-t border-surface-container">
-                                    <span className="text-[10px] text-surface-variant font-black uppercase tracking-widest">Added {new Date(set.created_at).toLocaleDateString()}</span>
+                                    <span className="text-[10px] text-surface-variant font-black uppercase tracking-widest">Added {set.created_at ? new Date(set.created_at).toLocaleDateString() : 'N/A'}</span>
                                     <Link href={`/sets/${set.id}`} className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest group/btn">
                                         View Set <span className="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
                                     </Link>

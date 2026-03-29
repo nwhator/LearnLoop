@@ -11,10 +11,10 @@ interface DBUser {
   email: string;
   level: number;
   xp: number;
-  initials?: string;
-  status: string;
-  is_banned: boolean;
-  created_at: string;
+  initials?: string | null;
+  status: string | null;
+  is_banned: boolean | null;
+  created_at: string | null;
 }
 
 export default function UserManagementPage() {
@@ -161,7 +161,7 @@ export default function UserManagementPage() {
                                         </span>
                                     </td>
                                     <td className="px-8 py-6 text-sm font-bold text-surface-on">
-                                      {new Date(user.created_at).toLocaleDateString()}
+                                      {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
                                     </td>
                                     <td className="px-8 py-6 text-right">
                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

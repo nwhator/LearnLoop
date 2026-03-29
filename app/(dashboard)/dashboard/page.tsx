@@ -91,18 +91,18 @@ export default function DashboardPage() {
       if (!user) return;
 
       // 1. Create Study Set row
-
+      const insertPayload: Database['public']['Tables']['study_sets']['Insert'][] = [
+        {
+          creator_id: user.id,
+          title: content.slice(0, 40) + "...",
+          description: "Synthesized by LearnLoop AI Architecture.",
+          category: "General Intelligence",
+          is_public: false
+        }
+      ];
       const { data, error } = await supabase
         .from("study_sets")
-        .insert([
-          {
-            creator_id: user.id,
-            title: content.slice(0, 40) + "...",
-            description: "Synthesized by LearnLoop AI Architecture.",
-            category: "General Intelligence",
-            is_public: false
-          }
-        ])
+        .insert(insertPayload)
         .select();
 
       if (error) throw error;

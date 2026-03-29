@@ -10,12 +10,12 @@ import Link from "next/link";
 interface StudySet {
   id: string;
   title: string;
-  description: string;
-  category: string;
-  created_at: string;
+  description: string | null;
+  category: string | null;
+  created_at: string | null;
   users?: {
-    name: string;
-  };
+    name: string | null;
+  } | null;
 }
 
 function LibraryContent() {
@@ -50,7 +50,7 @@ function LibraryContent() {
     const matchesCategory = activeCategory === "All Topics" || s.category === activeCategory;
     const matchesSearch = !search || 
       s.title.toLowerCase().includes(search) || 
-      s.description.toLowerCase().includes(search);
+      (s.description?.toLowerCase().includes(search) ?? false);
     return matchesCategory && matchesSearch;
   });
 
@@ -139,7 +139,7 @@ function StudyCard({ set }: { set: StudySet }) {
                 <span className="bg-secondary/10 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm w-fit">{set.category || 'General'}</span>
                 {set.users?.name && <span className="text-[9px] font-bold text-surface-variant uppercase ml-2">by {set.users.name}</span>}
             </div>
-            <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest">{new Date(set.created_at).toLocaleDateString()}</span>
+            <span className="text-[10px] font-bold text-surface-variant uppercase tracking-widest">{set.created_at ? new Date(set.created_at).toLocaleDateString() : 'N/A'}</span>
         </div>
 
         <h4 className="text-2xl font-black font-headline text-surface-on leading-tight mb-4 group-hover:text-primary transition-colors">{set.title}</h4>

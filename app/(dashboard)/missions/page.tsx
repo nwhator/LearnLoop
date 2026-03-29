@@ -9,15 +9,15 @@ import DashboardHeader from "@/components/DashboardHeader";
 interface Mission {
   id: string;
   title: string;
-  description: string;
-  reward_xp: number;
-  type: "daily" | "weekly" | "achievement";
+  description: string | null;
+  reward_xp: number | null;
+  type: string | null;
   target_value: number;
   // User progress fields (from user_missions join)
-  current_value?: number;
-  is_completed?: boolean;
-  is_claimed?: boolean;
-  user_mission_id?: string;
+  current_value?: number | null;
+  is_completed?: boolean | null;
+  is_claimed?: boolean | null;
+  user_mission_id?: string | null;
 }
 
 export default function MissionsPage() {
@@ -127,8 +127,8 @@ function MissionCard({ mission, onClaim, onInit }: { mission: Mission, onClaim: 
   return (
     <div className="bg-white rounded-[2.5rem] p-8 border border-surface-container shadow-sm hover:translate-y-[-4px] transition-all hover:shadow-xl group relative overflow-hidden flex flex-col h-full">
         <div className="flex justify-between items-start mb-8">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colorMap[mission.type]}`}>
-                <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{iconMap[mission.type]}</span>
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colorMap[mission.type ?? 'daily']}`}>
+              <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{iconMap[mission.type ?? 'daily']}</span>
             </div>
             <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-inner border border-surface-container/50 ${mission.is_claimed ? 'bg-surface text-surface-variant opacity-50' : 'bg-primary/10 text-primary'}`}>
                 {mission.is_claimed ? 'Awarded' : `+${mission.reward_xp} XP`}

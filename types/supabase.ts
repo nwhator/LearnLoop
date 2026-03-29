@@ -1,5 +1,3 @@
-
-// Ensure this Database type is the default export for Supabase client typing
 export type Json =
   | string
   | number
@@ -9,156 +7,351 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.4"
+  }
   public: {
     Tables: {
-      users: {
+      admin_roles: {
         Row: {
+          created_at: string | null
           id: string
-          email: string
-          name: string
-          initials: string | null
-          level: number
-          xp: number
-          streak_count: number
-          created_at: string
-          updated_at: string | null
-          preferences: {
-            darkMode?: boolean;
-            emailNotifs?: boolean;
-            inAppAlerts?: boolean;
-            [key: string]: any;
-          } | null;
+          role: string
+          user_id: string | null
         }
         Insert: {
-          id: string
-          email: string
-          name: string
-          initials?: string | null
-          level?: number
-          xp?: number
-          streak_count?: number
-          created_at?: string
-          updated_at?: string | null
-          preferences?: {
-            darkMode?: boolean;
-            emailNotifs?: boolean;
-            inAppAlerts?: boolean;
-            [key: string]: any;
-          } | null;
-        }
-        Update: {
+          created_at?: string | null
           id?: string
-          email?: string
-          name?: string
-          initials?: string | null
-          level?: number
-          xp?: number
-          streak_count?: number
-          created_at?: string
-          updated_at?: string | null
-          preferences?: {
-            darkMode?: boolean;
-            emailNotifs?: boolean;
-            inAppAlerts?: boolean;
-            [key: string]: any;
-          } | null;
+          role: string
+          user_id?: string | null
         }
-      },
-      study_sets: {
-        Row: {
-          id: string;
-          creator_id: string | null;
-          title: string;
-          description: string | null;
-          category: string | null;
-          tags: string[] | null;
-          is_public: boolean;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          creator_id: string;
-          title: string;
-          description?: string | null;
-          category?: string | null;
-          tags?: string[] | null;
-          is_public?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
         Update: {
-          id?: string;
-          creator_id?: string | null;
-          title?: string;
-          description?: string | null;
-          category?: string | null;
-          tags?: string[] | null;
-          is_public?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-      },
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leaderboard: {
+        Row: {
+          rank: number
+          updated_at: string | null
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          rank: number
+          updated_at?: string | null
+          user_id: string
+          xp: number
+        }
+        Update: {
+          rank?: number
+          updated_at?: string | null
+          user_id?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       missions: {
         Row: {
-          id: string;
-          title: string;
-          description: string | null;
-          reward_xp: number;
-          type: "daily" | "weekly" | "achievement";
-          target_value: number;
-          is_active: boolean;
-          created_at: string;
-        };
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          reward_xp: number | null
+          target_value: number
+          title: string
+          type: string | null
+        }
         Insert: {
-          id?: string;
-          title: string;
-          description?: string | null;
-          reward_xp?: number;
-          type: "daily" | "weekly" | "achievement";
-          target_value: number;
-          is_active?: boolean;
-          created_at?: string;
-        };
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward_xp?: number | null
+          target_value: number
+          title: string
+          type?: string | null
+        }
         Update: {
-          id?: string;
-          title?: string;
-          description?: string | null;
-          reward_xp?: number;
-          type?: "daily" | "weekly" | "achievement";
-          target_value?: number;
-          is_active?: boolean;
-          created_at?: string;
-        };
-      },
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          reward_xp?: number | null
+          target_value?: number
+          title?: string
+          type?: string | null
+        }
+        Relationships: []
+      }
+      moderation_items: {
+        Row: {
+          content_id: string
+          created_at: string | null
+          flagged_by: string | null
+          id: string
+          reason: string
+          reviewed_at: string | null
+          status: string
+          type: string
+        }
+        Insert: {
+          content_id: string
+          created_at?: string | null
+          flagged_by?: string | null
+          id?: string
+          reason: string
+          reviewed_at?: string | null
+          status?: string
+          type: string
+        }
+        Update: {
+          content_id?: string
+          created_at?: string | null
+          flagged_by?: string | null
+          id?: string
+          reason?: string
+          reviewed_at?: string | null
+          status?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderation_items_flagged_by_fkey"
+            columns: ["flagged_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          id: string
+          is_read: boolean
+          recipient_id: string | null
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean
+          recipient_id?: string | null
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean
+          recipient_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      study_sets: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          creator_id: string | null
+          description: string | null
+          id: string
+          is_public: boolean
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          creator_id?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          creator_id?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_sets_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_missions: {
         Row: {
-          id: string;
-          user_id: string;
-          mission_id: string;
-          current_value: number;
-          is_completed: boolean;
-          is_claimed: boolean;
-          completed_at: string | null;
-        };
+          completed_at: string | null
+          current_value: number | null
+          id: string
+          is_claimed: boolean | null
+          is_completed: boolean | null
+          mission_id: string | null
+          user_id: string | null
+        }
         Insert: {
-          id?: string;
-          user_id: string;
-          mission_id: string;
-          current_value?: number;
-          is_completed?: boolean;
-          is_claimed?: boolean;
-          completed_at?: string | null;
-        };
+          completed_at?: string | null
+          current_value?: number | null
+          id?: string
+          is_claimed?: boolean | null
+          is_completed?: boolean | null
+          mission_id?: string | null
+          user_id?: string | null
+        }
         Update: {
-          id?: string;
-          user_id?: string;
-          mission_id?: string;
-          current_value?: number;
-          is_completed?: boolean;
-          is_claimed?: boolean;
-          completed_at?: string | null;
-        };
+          completed_at?: string | null
+          current_value?: number | null
+          id?: string
+          is_claimed?: boolean | null
+          is_completed?: boolean | null
+          mission_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_missions_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_missions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_stats: {
+        Row: {
+          created_at: string | null
+          current_xp: number | null
+          last_activity_at: string | null
+          level: number | null
+          streak_count: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_xp?: number | null
+          last_activity_at?: string | null
+          level?: number | null
+          streak_count?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_xp?: number | null
+          last_activity_at?: string | null
+          level?: number | null
+          streak_count?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string
+          id: string
+          initials: string | null
+          is_banned: boolean | null
+          last_activity_at: string | null
+          level: number
+          name: string
+          status: string | null
+          streak_count: number
+          updated_at: string | null
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          initials?: string | null
+          is_banned?: boolean | null
+          last_activity_at?: string | null
+          level?: number
+          name: string
+          status?: string | null
+          streak_count?: number
+          updated_at?: string | null
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          initials?: string | null
+          is_banned?: boolean | null
+          last_activity_at?: string | null
+          level?: number
+          name?: string
+          status?: string | null
+          streak_count?: number
+          updated_at?: string | null
+          xp?: number
+        }
+        Relationships: []
       }
     }
     Views: {
@@ -176,4 +369,125 @@ export type Database = {
   }
 }
 
-// For Supabase client typing
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
