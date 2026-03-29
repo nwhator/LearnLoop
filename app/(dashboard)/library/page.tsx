@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import DashboardSidebar from "@/components/DashboardSidebar";
@@ -18,7 +18,7 @@ interface StudySet {
   };
 }
 
-export default function LibraryPage() {
+function LibraryContent() {
   const [sets, setSets] = useState<StudySet[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All Topics");
@@ -114,6 +114,18 @@ export default function LibraryPage() {
         <span className="material-symbols-outlined text-3xl font-black group-hover:rotate-180 transition-transform duration-500">add</span>
       </Link>
     </div>
+  );
+}
+
+export default function LibraryPage() {
+  return (
+    <Suspense fallback={
+        <div className="flex bg-surface min-h-screen items-center justify-center">
+             <span className="material-symbols-outlined animate-spin text-5xl text-primary">autorenew</span>
+        </div>
+    }>
+        <LibraryContent />
+    </Suspense>
   );
 }
 
