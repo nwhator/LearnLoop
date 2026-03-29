@@ -46,7 +46,7 @@ export default function LegalPage() {
       {/* Hero Header */}
       <header className="pt-32 pb-16 px-6 md:px-12 bg-white border-b border-surface-container">
         <div className="max-w-7xl mx-auto">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-black text-[10px] mb-6 tracking-[0.2em] uppercase shadow-sm border border-secondary/20">Last Updated: October 24, 2026</span>
+          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-black text-[10px] mb-6 tracking-[0.2em] uppercase shadow-sm border border-secondary/20">Last Updated: March 2026</span>
           <h1 className="text-5xl md:text-7xl font-black font-headline text-surface-on tracking-tighter leading-tight max-w-4xl mb-8">
              Legal & <span className="text-primary italic font-serif">Trust</span> Center
           </h1>
