@@ -31,6 +31,7 @@
   "devDependencies": {
     "@eslint/config-array": "^0.23.3",
     "@eslint/object-schema": "^3.0.3",
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^25",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
