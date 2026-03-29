@@ -7,53 +7,48 @@
     --foreground-rgb: 44, 47, 50;
     --background-rgb: 245, 247, 250;
     --primary-rgb: 74, 144, 226;
+    --color-surface: #f5f7fa;
+    --color-surface-bright: #ffffff;
+    --color-surface-container: #eef1f4;
+    --color-surface-on: #2c2f32;
+    --color-surface-variant: #595c5e;
   }
 
   .dark {
     --foreground-rgb: 245, 247, 250;
     --background-rgb: 10, 12, 16;
     --primary-rgb: 91, 158, 235;
+    --color-surface: #0a0c10;
+    --color-surface-bright: #15181e;
+    --color-surface-container: #1e293b4d;
+    --color-surface-on: #f5f7fa;
+    --color-surface-variant: #94a3b8;
   }
 }
 
+
 body {
-  @apply bg-surface text-surface-on font-body;
+  background-color: var(--color-surface);
+  color: var(--color-surface-on);
+  font-family: var(--font-inter), sans-serif;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+
 .dark body {
-  @apply bg-[#0a0c10] text-[#f5f7fa];
+  background-color: var(--color-surface);
+  color: var(--color-surface-on);
 }
 
-/* Base style overrides for Dark Mode */
-.dark .bg-white {
-  @apply bg-[#15181e] !important;
-}
 
-.dark .text-surface-on {
-  @apply text-[#f5f7fa] !important;
-}
-
-.dark .text-surface-variant {
-  @apply text-[#94a3b8] !important;
-}
-
-.dark .border-surface-container {
-  @apply border-[#1e293b]/50 !important;
-}
-
-.dark .bg-surface {
-  @apply bg-[#0a0c10] !important;
-}
-
-.dark .bg-surface-bright {
-  @apply bg-[#15181e] !important;
-}
-
-.dark .bg-surface-container {
-  @apply bg-[#1e293b]/30 !important;
-}
+/* Custom utility classes for surface colors */
+.bg-surface { background-color: var(--color-surface) !important; }
+.bg-surface-bright { background-color: var(--color-surface-bright) !important; }
+.bg-surface-container { background-color: var(--color-surface-container) !important; }
+.text-surface-on { color: var(--color-surface-on) !important; }
+.text-surface-variant { color: var(--color-surface-variant) !important; }
+.border-surface-container { border-color: var(--color-surface-container) !important; }
 
 @layer utilities {
   .glass-panel {
