@@ -45,6 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="antialiased scroll-smooth">
       <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
       </head>
       <body className={`${jakarta.variable} ${inter.variable} bg-surface text-surface-on font-body min-h-screen selection:bg-primary-container selection:text-primary-on`}>

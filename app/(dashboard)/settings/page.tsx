@@ -24,7 +24,7 @@ export default function SettingsPage() {
       {/* TopNavBar */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 h-16 border-b border-surface-container/50">
         <div className="flex items-center gap-8">
-          <Link href="/" className="text-2xl font-extrabold text-primary font-headline tracking-tight">LearnLoop</Link>
+          <Link href="/" className="text-2xl font-black text-primary font-headline tracking-tighter">LearnLoop</Link>
           <div className="hidden md:flex items-center gap-6">
             <Link href="/dashboard" className="text-surface-variant font-medium hover:text-primary transition-colors px-3 py-1 rounded-md font-headline font-bold">Dashboard</Link>
             <Link href="/library" className="text-surface-variant font-medium hover:text-primary transition-colors px-3 py-1 rounded-md font-headline font-bold">Library</Link>
