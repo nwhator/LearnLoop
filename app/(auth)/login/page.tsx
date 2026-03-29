@@ -156,7 +156,7 @@ export default function LoginPage() {
       {/* Simple Footer for Auth Pages */}
       <footer className="bg-surface py-8 border-t border-surface-container shrink-0">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs font-medium text-surface-variant">© 2024 LearnLoop AI. Elevate your intellect.</p>
+          <p className="text-xs font-medium text-surface-variant">© 2026 LearnLoop Systems. Elevate your intellect.</p>
           <div className="flex gap-6">
             <Link href="/help" className="text-xs font-bold text-surface-variant hover:text-primary transition-colors uppercase tracking-widest">Help Center</Link>
             <Link href="/privacy" className="text-xs font-bold text-surface-variant hover:text-primary transition-colors uppercase tracking-widest">Privacy</Link>
