@@ -1,6 +1,20 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import DashboardSidebar from "@/components/DashboardSidebar";
+import DashboardHeader from "@/components/DashboardHeader";
+import Link from "next/link";
+
+interface StudySet {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  created_at: string;
+  users?: {
+    name: string;
+  };
+}
 
 export default function LibraryPage() {
   const [sets, setSets] = useState<StudySet[]>([]);

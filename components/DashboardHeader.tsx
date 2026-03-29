@@ -1,6 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+
+interface DashboardHeaderProps {
+  title: string;
+}
 
 export default function DashboardHeader({ title }: DashboardHeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
