@@ -173,7 +173,7 @@ export default function RegisterPage() {
       {/* Simple Footer */}
       <footer className="bg-surface py-10 border-t border-surface-container mt-auto">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-xs font-black text-on-surface-variant/40 uppercase tracking-[0.3em]">© 2024 LearnLoop AI. Elevate your intellect.</p>
+          <p className="text-xs font-black text-on-surface-variant/40 uppercase tracking-[0.3em]">© 2026 LearnLoop Systems. Elevate your intellect.</p>
           <div className="flex gap-10">
             <Link href="/help" className="text-xs font-black text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-[0.2em]">Help Center</Link>
             <Link href="/privacy" className="text-xs font-black text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-[0.2em]">Privacy</Link>
