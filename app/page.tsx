@@ -1,8 +1,10 @@
 "use client";
 
+import PublicFooter from "@/components/PublicFooter";
+import PublicHeader from "@/components/PublicHeader";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import PublicFooter from "@/components/PublicFooter";
+
 import { useEffect, useState } from "react";
 
 export default function LandingPage() {
@@ -18,30 +20,8 @@ export default function LandingPage() {
 
   return (
     <div className="bg-surface min-h-screen font-body relative text-on-surface selection:bg-primary/20 selection:text-primary">
-      {/* 1. TopNavBar */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/80 backdrop-blur-xl shadow-sm h-16' : 'bg-transparent h-20'} flex justify-between items-center px-6 md:px-12 border-b border-surface-container/30`}>
-        <div className="flex items-center gap-10 max-w-7xl mx-auto w-full justify-between lg:justify-start">
-          <Link href="/" className="text-2xl font-black text-primary font-headline tracking-tighter">LearnLoop</Link>
-          <div className="hidden lg:flex gap-8 items-center font-headline font-bold text-sm tracking-tight text-on-surface-variant">
-            <Link href="#" className="hover:text-primary transition-colors text-primary border-b-2 border-primary pb-1">Dashboard</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Missions</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Leaderboard</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Pricing</Link>
-          </div>
 
-          <div className="hidden lg:flex items-center gap-6 ml-auto">
-             <div className="flex items-center gap-4 mr-4 text-on-surface-variant/60">
-                <span className="material-symbols-outlined hover:bg-surface-container p-2 rounded-full cursor-pointer transition-all">notifications</span>
-                <span className="material-symbols-outlined text-orange-500 hover:bg-surface-container p-2 rounded-full cursor-pointer transition-all">local_fire_department</span>
-                <span className="material-symbols-outlined text-primary hover:bg-surface-container p-2 rounded-full cursor-pointer transition-all">stars</span>
-             </div>
-             <Link href="/login" className="text-sm font-bold text-on-surface-variant hover:text-primary transition-colors px-4 py-2">Login</Link>
-             <Link href="/register" className="bg-primary text-white font-bold px-8 py-3 rounded-full shadow-[0_10px_30px_rgba(74,144,226,0.3)] hover:scale-105 active:scale-95 transition-all text-sm">
-                Get Started
-             </Link>
-          </div>
-        </div>
-      </nav>
+      <PublicHeader />
 
       <main>
         {/* 2. Hero Section */}
