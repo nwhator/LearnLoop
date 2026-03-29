@@ -1,16 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
-
-interface DashboardHeaderProps {
-  title: string;
-}
+import { useRouter } from "next/navigation";
 
 export default function DashboardHeader({ title }: DashboardHeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [userData, setUserData] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchHeaderData() {
@@ -21,6 +16,13 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
     fetchHeaderData();
   }, []);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/library?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-20 bg-white/90 backdrop-blur-xl border-b border-surface-container/50 shadow-sm flex items-center justify-between px-8 z-40 transition-all duration-300">
       <div className="flex items-center gap-10">
@@ -29,7 +31,7 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
         </h1>
         
         {/* Universal Search */}
-        <div className="hidden sm:flex items-center bg-surface-container rounded-full px-5 py-2.5 border border-surface-container/30 w-72 lg:w-80 group focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-white transition-all">
+        <form onSubmit={handleSearch} className="hidden sm:flex items-center bg-surface-container rounded-full px-5 py-2.5 border border-surface-container/30 w-72 lg:w-80 group focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-white transition-all">
           <span className="material-symbols-outlined text-surface-variant text-sm group-focus-within:text-primary">search</span>
           <input 
             type="text" 
@@ -38,7 +40,7 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
             placeholder="Search resources, topics..." 
             className="bg-transparent border-none focus:ring-0 text-sm w-full font-bold placeholder:font-medium placeholder:text-surface-variant text-surface-on ml-2 outline-none" 
           />
-        </div>
+        </form>
       </div>
 
       <div className="flex items-center gap-6">

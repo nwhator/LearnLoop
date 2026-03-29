@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
       <footer className="w-full py-12 px-6 max-w-7xl mx-auto border-t border-surface-container">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="text-surface-variant text-sm font-medium">
-            © 2026 LearnLoop Systems. Elevate your intellect.
+            &copy; {new Date().getFullYear()} LearnLoop Systems. Elevate your intellect.
           </div>
           <div className="flex gap-8">
             <Link href="/privacy" className="text-surface-variant hover:text-primary transition-all text-sm font-semibold hover:underline decoration-2 underline-offset-4">Privacy Policy</Link>

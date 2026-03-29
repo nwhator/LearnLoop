@@ -297,7 +297,7 @@ export default function SubscriptionPage() {
         </div>
         
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 border-t border-surface-container flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="font-medium text-xs text-surface-variant">© 2026 LearnLoop AI. Elevate your intellect.</p>
+            <p className="font-medium text-xs text-surface-variant">&copy; {new Date().getFullYear()} LearnLoop Systems. Elevate your intellect.</p>
             <div className="flex items-center gap-2 text-xs font-bold text-surface-variant">
                 Made with <span className="material-symbols-outlined text-xs text-error" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span> by LearnLoop Team
             </div>

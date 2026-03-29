@@ -7,13 +7,11 @@ import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardHeader from "@/components/DashboardHeader";
 import Link from "next/link";
 
-interface Stats {
-  current_xp: number;
+interface DashboardStats {
+  name: string;
   level: number;
+  xp: number;
   streak_count: number;
-  users?: {
-    name: string;
-  };
 }
 
 interface MissionProgress {
@@ -29,7 +27,7 @@ interface MissionProgress {
 export default function DashboardPage() {
   const [content, setContent] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [mission, setMission] = useState<MissionProgress | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,22 +35,24 @@ export default function DashboardPage() {
     async function fetchDashboardData() {
       try {
         setLoading(true);
-        // Fetch User and Stats directly from users table
-        const { data: userData } = await supabase
+        // Fetch User and Stats directly from users table (Flat Structure)
+        const { data: userData, error: userError } = await supabase
           .from("users")
           .select("name, level, xp, streak_count")
           .single();
 
+        if (userError) throw userError;
+
         // Fetch the most recent active user mission
-        const { data: missionData } = await supabase
+        const { data: missionData, error: missionError } = await supabase
           .from("user_missions")
-          .select("*, missions(*)")
+          .select("current_value, is_completed, missions(title, target_value, reward_xp)")
           .eq("is_completed", false)
           .limit(1)
           .single();
 
-        setStats(userData as any);
-        setMission(missionData as any);
+        setStats(userData as DashboardStats);
+        if (missionData) setMission(missionData as any);
       } catch (err) {
         console.error("Dashboard data fetch error:", err);
       } finally {
@@ -88,7 +88,7 @@ export default function DashboardPage() {
             
             <header className="space-y-2">
                 <h2 className="text-4xl font-black font-headline text-surface-on tracking-tight">
-                    Greetings, {stats?.users?.name?.split(' ')[0] || 'Scholar'}.
+                    Greetings, {stats?.name?.split(' ')[0] || 'Scholar'}.
                 </h2>
                 <p className="text-surface-variant font-medium text-lg">Ready to engage the loop today?</p>
             </header>

@@ -1,26 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
-import DashboardSidebar from "@/components/DashboardSidebar";
-import DashboardHeader from "@/components/DashboardHeader";
-import Link from "next/link";
-
-interface StudySet {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  created_at: string;
-  users?: {
-    name: string;
-  };
-}
+import { useSearchParams } from "next/navigation";
 
 export default function LibraryPage() {
   const [sets, setSets] = useState<StudySet[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All Topics");
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search")?.toLowerCase() || "";
 
   const categories = ["All Topics", "Computer Science", "Humanities", "Sciences", "Economics", "Medicine"];
 
@@ -43,9 +30,13 @@ export default function LibraryPage() {
     fetchSets();
   }, []);
 
-  const filteredSets = sets.filter(s => 
-    activeCategory === "All Topics" || s.category === activeCategory
-  );
+  const filteredSets = sets.filter(s => {
+    const matchesCategory = activeCategory === "All Topics" || s.category === activeCategory;
+    const matchesSearch = !search || 
+      s.title.toLowerCase().includes(search) || 
+      s.description.toLowerCase().includes(search);
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="flex bg-surface min-h-screen">

@@ -95,7 +95,7 @@ export default function LandingPage() {
         </section>
 
         {/* 3. Product Showcase */}
-        <section className="py-32 px-6 bg-surface-container-low relative">
+        <section className="py-32 px-6 bg-surface-container-low relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-surface to-transparent"></div>
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-24 max-w-2xl mx-auto">
