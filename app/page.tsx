@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import PublicFooter from "@/components/PublicFooter";
 import { useEffect, useState } from "react";
 
 export default function LandingPage() {
@@ -241,42 +242,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* 7. Footer */}
-      <footer className="bg-surface-container-low border-t border-surface-container w-full pt-32">
-        <div className="max-w-7xl mx-auto w-full py-20 px-6 grid grid-cols-1 md:grid-cols-4 gap-16">
-          <div className="col-span-1 md:col-span-1">
-            <div className="text-3xl font-black text-on-surface mb-8 tracking-tighter font-headline">LearnLoop</div>
-            <p className="text-on-surface-variant text-sm mb-10 max-w-xs leading-relaxed font-medium">The AI-driven learning platform designed for the modern intellect. Fast, fun, and effective.</p>
-            <div className="flex gap-6">
-              {['public', 'alternate_email', 'share'].map(icon => (
-                 <span key={icon} className="material-symbols-outlined text-on-surface-variant/40 hover:text-primary cursor-pointer transition-colors text-2xl">{icon}</span>
-              ))}
-            </div>
-          </div>
-          
-            {[
-              { title: "Product", links: ["Features", "Leaderboards", "Missions"] },
-              { title: "Legal", links: [{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms of Service", href: "/terms" }] },
-              { title: "Support", links: ["Help Center", "Contact Us", "Careers"] }
-            ].map((col, idx) => (
-              <div key={idx}>
-                <p className="font-black text-on-surface uppercase tracking-widest text-xs mb-8">{col.title}</p>
-                <ul className="space-y-5">
-                  {col.links.map((link: any) => (
-                    <li key={typeof link === 'string' ? link : link.label}>
-                      <Link className="text-on-surface-variant hover:text-primary font-bold text-sm transition-colors" href={typeof link === 'string' ? "#" : link.href}>
-                        {typeof link === 'string' ? link : link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-        </div>
-        <div className="max-w-7xl mx-auto px-6 py-10 border-t border-surface-container">
-          <p className="text-on-surface-variant/40 text-xs font-black uppercase tracking-[0.3em] text-center">© 2024 LearnLoop AI. Elevate your intellect.</p>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
