@@ -26,13 +26,24 @@ export default function ProfilePage() {
   useEffect(() => {
     async function fetchProfile() {
       try {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (!authUser) return;
+
         const { data, error } = await supabase
           .from("users")
           .select("*")
+          .eq("id", authUser.id)
           .single();
 
         if (error) throw error;
-        setUser(data);
+        
+        const fallbackName = authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || "Scholar";
+        
+        setUser({
+            ...data,
+            name: data.name || fallbackName,
+            email: authUser.email || data.email
+        });
       } catch (err) {
         console.error("Profile fetch error:", err);
       } finally {

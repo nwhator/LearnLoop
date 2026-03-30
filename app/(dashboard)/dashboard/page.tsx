@@ -84,6 +84,10 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [mission, setMission] = useState<MissionProgress | null>(null);
   const [diagnostic, setDiagnostic] = useState<any>(null);
+  const [recentSet, setRecentSet] = useState<any>(null);
+  const [suggestedSet, setSuggestedSet] = useState<any>(null);
+  const [userRank, setUserRank] = useState<number | null>(null);
+  const [totalUsers, setTotalUsers] = useState(0);
   const [loading, setLoading] = useState(true);
   const [resetTime, setResetTime] = useState("");
   const router = useRouter();
@@ -118,11 +122,55 @@ export default function DashboardPage() {
           .select("ai_feedback, question_text, study_sets(title)")
           .order("created_at", { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
 
-        setStats(userData as DashboardStats);
+        // Fetch the most recent study set (In Progress)
+        const { data: recentData } = await supabase
+          .from("study_sets")
+          .select("id, title, description, updated_at")
+          .eq("creator_id", user.id)
+          .order("updated_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        // Fetch a suggested set (different subject or older set)
+        const { data: suggestionData } = await supabase
+          .from("study_sets")
+          .select("id, title, category")
+          .eq("creator_id", user.id)
+          .order("created_at", { ascending: true })
+          .limit(1)
+          .maybeSingle();
+
+        // Fetch user's leaderboard rank
+        const { data: rankData } = await supabase
+          .from("leaderboard")
+          .select("rank")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        const { count } = await supabase
+          .from("users")
+          .select("*", { count: "exact", head: true });
+
+        const fallbackName = user.user_metadata?.full_name || user.email?.split('@')[0] || "Scholar";
+
+        setStats({
+            ...(userData as any),
+            name: userData?.name || fallbackName
+        } as DashboardStats);
+
         if (missionData) setMission(missionData as any);
         if (diagData) setDiagnostic(diagData);
+        if (recentData) setRecentSet(recentData);
+        if (rankData) setUserRank(rankData.rank);
+        if (count) setTotalUsers(count);
+        
+        if (suggestionData && (!recentData || suggestionData.id !== recentData.id)) {
+            setSuggestedSet(suggestionData);
+        } else {
+             setSuggestedSet({ title: "Expand your mind", category: "New Discovery" });
+        }
       } catch (err) {
         console.error("Dashboard data fetch error:", err);
       } finally {
@@ -356,40 +404,46 @@ export default function DashboardPage() {
                   </div>
                   <span className="px-3 py-1 bg-error-container/20 text-on-error-container text-xs font-bold rounded-full">AI Review</span>
                 </div>
-                <h3 className="font-headline font-bold text-xl mb-2">{diagnostic ? (diagnostic.study_sets?.title || "Latest Set") : "Neural Diagnostics"}</h3>
+                <h3 className="font-headline font-bold text-xl mb-2">{diagnostic ? (diagnostic.study_sets?.title || "Academic Insight") : "Concept Clarity"}</h3>
                 <p className="text-on-surface-variant text-sm mb-6">
-                  {diagnostic ? diagnostic.ai_feedback : "No failures detected. Keep up the perfect streak to maintain your rank!"}
+                  {diagnostic ? diagnostic.ai_feedback : "Your recent quiz performance is flawless. No specific conceptual gaps detected yet."}
                 </p>
                 <div className="w-full h-1.5 bg-surface-container-low rounded-full">
                   <div className={`h-full bg-error rounded-full ${diagnostic ? 'w-[75%]' : 'w-0'}`}></div>
                 </div>
               </div>
               {/* Card 2: Suggestion */}
-              <div className="bg-surface-container-lowest p-6 rounded-[1.5rem] hover:shadow-premium transition-all cursor-pointer">
+              <div 
+                onClick={() => suggestedSet?.id && router.push(`/results/${suggestedSet.id}`)}
+                className="bg-surface-container-lowest p-6 rounded-[1.5rem] hover:shadow-premium transition-all cursor-pointer group"
+              >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="p-3 bg-secondary-container rounded-2xl">
-                    <span className="material-symbols-outlined text-on-secondary-container" style={{ fontVariationSettings: "'FILL' 1" }}>lightbulb</span>
+                  <div className="p-3 bg-secondary-container rounded-2xl group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>lightbulb</span>
                   </div>
                   <span className="px-3 py-1 bg-secondary-container/50 text-on-secondary-container text-xs font-bold rounded-full">Suggested</span>
                 </div>
-                <h3 className="font-headline font-bold text-xl mb-2">Intro to Quantum Computing</h3>
-                <p className="text-on-surface-variant text-sm mb-6">Based on your interest in Physics. Explore the foundations of Qubits.</p>
+                <h3 className="font-headline font-bold text-xl mb-2">{suggestedSet?.title || "Ready to explore?"}</h3>
+                <p className="text-on-surface-variant text-sm mb-6">{suggestedSet?.category ? `Explore more in ${suggestedSet.category}.` : "Upload your first source to see AI-powered study suggestions here."}</p>
                 <div className="w-full h-1.5 bg-surface-container-low rounded-full">
-                  <div className="h-full bg-secondary rounded-full w-0"></div>
+                  <div className={`h-full bg-secondary rounded-full ${suggestedSet?.id ? 'w-[20%]' : 'w-0'}`}></div>
                 </div>
               </div>
-              {/* Card 3: Recent Activity */}
-              <div className="bg-surface-container-lowest p-6 rounded-[1.5rem] hover:shadow-premium transition-all cursor-pointer">
+              {/* Card 3: Recent Activity (In Progress) */}
+              <div 
+                onClick={() => recentSet?.id && router.push(`/results/${recentSet.id}`)}
+                className="bg-surface-container-lowest p-6 rounded-[1.5rem] hover:shadow-premium transition-all cursor-pointer group"
+              >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="p-3 bg-primary-container/20 rounded-2xl">
-                    <span className="material-symbols-outlined text-primary">history</span>
+                  <div className="p-3 bg-primary-container/20 rounded-2xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                    <span className="material-symbols-outlined">history</span>
                   </div>
                   <span className="px-3 py-1 bg-primary-container/30 text-on-primary-container text-xs font-bold rounded-full">In Progress</span>
                 </div>
-                <h3 className="font-headline font-bold text-xl mb-2">Macroeconomics 2024</h3>
-                <p className="text-on-surface-variant text-sm mb-6">85% complete. Finish the quiz to unlock the &apos;Economist&apos; badge!</p>
+                <h3 className="font-headline font-bold text-xl mb-2">{recentSet?.title || "No recent activity"}</h3>
+                <p className="text-on-surface-variant text-sm mb-6">{recentSet ? "Resume where you left off. Continue mastering this set." : "Your learning journey begins once you generate your first set."}</p>
                 <div className="w-full h-1.5 bg-surface-container-low rounded-full">
-                  <div className="h-full bg-primary rounded-full w-[85%]"></div>
+                  <div className={`h-full bg-primary rounded-full ${recentSet ? 'w-[45%]' : 'w-0'}`}></div>
                 </div>
               </div>
             </div>
@@ -429,18 +483,27 @@ export default function DashboardPage() {
                 <span className="material-symbols-outlined text-[200px] text-secondary/30 absolute -right-10 -bottom-10" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
               </div>
             </div>
-            <div className="md:col-span-4 bg-tertiary-container rounded-[2rem] p-8 flex flex-col justify-between">
+            <div 
+              onClick={() => router.push('/leaderboard')}
+              className="md:col-span-4 bg-tertiary-container rounded-[2rem] p-8 flex flex-col justify-between hover:shadow-premium transition-all cursor-pointer group"
+            >
               <div>
-                <span className="material-symbols-outlined text-on-tertiary-container text-4xl mb-4">emoji_events</span>
+                <span className="material-symbols-outlined text-on-tertiary-container text-4xl mb-4 group-hover:scale-110 transition-transform">emoji_events</span>
                 <h3 className="text-2xl font-headline font-extrabold text-on-tertiary-container">Weekly Leaderboard</h3>
               </div>
               <div>
-                <p className="text-on-tertiary-container font-medium mb-4">You are in the Top 5% this week. Keep going!</p>
+                <p className="text-on-tertiary-container font-medium mb-4">
+                  {userRank ? `You are ranked #${userRank} out of ${totalUsers} scholars.` : `Start studying to climb the hall of fame!`}
+                </p>
                 <div className="flex -space-x-3">
                   {[1, 2, 3].map(i => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-tertiary-container bg-surface-container-lowest flex items-center justify-center text-xs font-bold">{i}</div>
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-tertiary-container bg-surface-container-lowest flex items-center justify-center text-xs font-black">
+                      {String.fromCharCode(64 + i)}
+                    </div>
                   ))}
-                  <div className="w-10 h-10 rounded-full border-2 border-tertiary-container bg-surface-container-lowest flex items-center justify-center text-xs font-bold">+12</div>
+                  {totalUsers > 3 && (
+                    <div className="w-10 h-10 rounded-full border-2 border-tertiary-container bg-surface-container-lowest flex items-center justify-center text-[10px] font-black">+{totalUsers - 3}</div>
+                  )}
                 </div>
               </div>
             </div>

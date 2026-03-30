@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabaseClient";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardHeader from "@/components/DashboardHeader";
+import { useStore } from "@/lib/store"; // For global XP updates
 
 interface Mission {
   id: string;
@@ -23,18 +24,58 @@ interface Mission {
 export default function MissionsPage() {
   const [missions, setMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [resetTime, setResetTime] = useState("");
 
   useEffect(() => {
+    // 1. Live Countdown Engine (UTC Midnight Reset)
+    const updateCountdown = () => {
+      const now = new Date();
+      const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+      const diff = tomorrow.getTime() - now.getTime();
+      
+      const h = Math.floor(diff / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      setResetTime(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`);
+    };
+
+    const timer = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // 2. Fetch Missions + User Progress
     async function fetchMissions() {
       try {
-        const { data, error } = await supabase
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Fetch user progress for current missions
+        const { data: userMissions } = await supabase
+          .from("user_missions")
+          .select("id, mission_id, current_value, is_completed, is_claimed")
+          .eq("user_id", user.id);
+
+        const { data: allMissions, error } = await supabase
           .from("missions")
           .select("*")
           .eq("is_active", true)
-          .order("created_at", { ascending: false });
+          .order("reward_xp", { ascending: false });
 
         if (error) throw error;
-        setMissions(data || []);
+
+        // Cross-reference progress
+        const enrichedMissions = (allMissions || []).map(m => {
+          const progress = userMissions?.find(um => um.mission_id === m.id);
+          return {
+            ...m,
+            user_mission_id: progress?.id,
+            current_value: progress?.current_value || 0,
+            is_completed: progress?.is_completed || false,
+            is_claimed: progress?.is_claimed || false
+          };
+        });
+
+        setMissions(enrichedMissions);
       } catch (err) {
         console.error("Missions fetch error:", err);
       } finally {
@@ -42,7 +83,55 @@ export default function MissionsPage() {
       }
     }
     fetchMissions();
+    return () => clearInterval(timer);
   }, []);
+
+  const handleInit = async (missionId: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from("user_missions")
+        .insert([{ user_id: user.id, mission_id: missionId, current_value: 0 }])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      setMissions(prev => prev.map(m => m.id === missionId ? { ...m, user_mission_id: data.id } : m));
+      alert("Operation Initialized!");
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  const handleClaim = async (mission: Mission) => {
+    if (!mission.user_mission_id) return;
+    try {
+      // 1. Update user_missions status
+      const { error: claimError } = await supabase
+        .from("user_missions")
+        .update({ is_claimed: true })
+        .eq("id", mission.user_mission_id);
+      
+      if (claimError) throw claimError;
+
+      // 2. Grant XP
+      const { error: xpError } = await supabase.rpc("increment_user_xp", { xp_amount: mission.reward_xp || 0 });
+      if (xpError) throw xpError;
+
+      // 3. Update UI
+      useStore.getState().incrementXP(mission.reward_xp || 0);
+      setMissions(prev => prev.map(m => m.id === mission.id ? { ...m, is_claimed: true } : m));
+      
+      alert(`Success! ${mission.reward_xp} XP added to your core neural network.`);
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  const heroMission = missions.length > 0 ? missions[0] : null;
 
   return (
     <div className="flex bg-surface min-h-screen">
@@ -55,7 +144,7 @@ export default function MissionsPage() {
             
             <header className="space-y-4">
                 <h2 className="text-5xl font-black font-headline text-on-surface tracking-tighter">Daily Operations</h2>
-                <p className="text-on-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Complete synchronized challenges to earn bonus XP and exclusive badges. Operations reset in <span className="text-error font-black">08:42:15</span>.</p>
+                <p className="text-on-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Complete synchronized challenges to earn bonus XP and exclusive badges. Operations reset in <span className="text-error font-black">{resetTime || "00:00:00"}</span>.</p>
             </header>
 
             {/* Event Spotlight */}
@@ -70,15 +159,19 @@ export default function MissionsPage() {
                         Global Event Operation
                     </span>
                     <h2 className="text-4xl md:text-6xl font-black font-headline text-on-primary tracking-tighter mb-4 max-w-2xl leading-none">
-                        The Neural <br /><span className="italic font-serif opacity-70">Architecture</span> Challenge
+                        {heroMission ? heroMission.title : 'Neural Architecture Challenge'}
                     </h2>
                     <p className="text-on-primary/80 max-w-lg font-medium text-lg leading-relaxed">
-                        Generate 5 high-accuracy study sets in under 24 hours to earn the restricted <span className="text-white font-black underline underline-offset-4 decoration-white/30 truncate">Synaptic Master</span> badge.
+                        {heroMission ? heroMission.description : 'Connect your first study materials to unlock the restricted Synaptic Master badge.'}
                     </p>
                     
                     <div className="flex flex-col sm:flex-row gap-6 pt-4">
-                        <button className="bg-white text-primary font-black px-12 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all text-xs uppercase tracking-widest border-2 border-white">
-                            Initialize Mission
+                        <button 
+                            disabled={!!heroMission?.user_mission_id}
+                            onClick={() => heroMission && handleInit(heroMission.id)}
+                            className={`bg-white text-primary font-black px-12 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all text-xs uppercase tracking-widest border-2 border-white ${heroMission?.user_mission_id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            {heroMission?.user_mission_id ? 'Active Operation' : 'Initialize Mission'}
                         </button>
                     </div>
                 </div>
@@ -97,8 +190,8 @@ export default function MissionsPage() {
                         <MissionCard 
                           key={mission.id} 
                           mission={mission} 
-                          onClaim={() => {}} 
-                          onInit={() => {}} 
+                          onClaim={() => handleClaim(mission)} 
+                          onInit={() => handleInit(mission.id)} 
                         />
                     )) : (
                         <div className="col-span-full py-20 bg-white border border-surface-container rounded-[2.5rem] flex flex-col items-center justify-center text-on-surface-variant font-bold">

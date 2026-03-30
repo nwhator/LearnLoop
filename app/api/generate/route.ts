@@ -46,6 +46,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Source text or file is required' }, { status: 400 });
     }
 
+    if (sourceText && sourceText.length < 50 && !file) {
+      return NextResponse.json({ error: 'Source text is too short for meaningful analysis. Please provide at least 50 characters or upload a document.' }, { status: 400 });
+    }
+
     const systemPrompt = `
       You are an expert AI tutor. Your job is to analyze the provided content (text or document) and generate a structured set of study materials.
       You must respond ONLY with a valid JSON object following this exact schema:
