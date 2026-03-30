@@ -23,18 +23,19 @@ export async function POST(req: Request) {
        return NextResponse.json({ error: 'Invalid authentication token.' }, { status: 401 });
     }
 
-    // Use Service Role to reliably check/update user stats
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+    // Use Service Role ONLY for initialization (if it exists)
+    const supabaseAdmin = supabaseServiceKey ? createClient(supabaseUrl, supabaseServiceKey) : null;
 
-    // Checking Subscription Engine
-    let { data: userData, error: userError } = await supabaseAdmin
+    // 1. Prioritize checking using the AUTHENTICATED user client (most reliable with RLS)
+    let { data: userData } = await supabase
        .from('users')
        .select('subscription_tier, daily_credits')
        .eq('id', user.id)
        .single();
     
-    // If user record doesn't exist (new sign up), initialize it
-    if (!userData || userError) {
+    // 2. If not found, attempt to initialize the user record via Admin (if available)
+    if (!userData && supabaseAdmin) {
+       console.log("User record missing. Attempting initialization via Admin...");
        const { data: newData, error: insertError } = await supabaseAdmin
          .from('users')
          .insert([{ 
@@ -48,15 +49,22 @@ export async function POST(req: Request) {
          .single();
        
        if (insertError) {
-          console.error("User initialization error:", insertError);
-          return NextResponse.json({ error: 'Failed to initialize account permissions.' }, { status: 500 });
+          // If conflict (PGRST116/23505), try a final fetch with the Admin client
+          const { data: retryData } = await supabaseAdmin.from('users').select('subscription_tier, daily_credits').eq('id', user.id).single();
+          userData = retryData;
+       } else {
+          userData = newData;
        }
-       userData = newData;
     }
 
+    // 3. Absolute Fallback: If still missing, return a clearer error with instructions
     if (!userData) {
-      return NextResponse.json({ error: 'Failed to verify account permissions.' }, { status: 500 });
+      return NextResponse.json({ 
+        error: 'Account verification failed.', 
+        details: 'The system could not find your user profile in the database. Please ensure you have run the provided setup.sql in your Supabase SQL Editor.' 
+      }, { status: 500 });
     }
+
 
     if (userData.subscription_tier === 'free' && userData.daily_credits <= 0) {
       return NextResponse.json({ error: 'PAYWALL', message: 'You have exhausted your daily AI energy matrix. Upgrade to Scholar Plus to remove limits.' }, { status: 403 });
@@ -133,7 +141,8 @@ export async function POST(req: Request) {
 
     // AI Generation succeeded, trigger the deduction engine
     if (userData.subscription_tier === 'free') {
-       await supabaseAdmin
+       const client = supabaseAdmin || supabase;
+       await client
          .from('users')
          .update({ 
            daily_credits: Math.max(userData.daily_credits - 1, 0),

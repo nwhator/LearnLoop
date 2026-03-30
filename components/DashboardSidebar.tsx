@@ -93,19 +93,23 @@ export default function DashboardSidebar() {
         })}
       </nav>
 
-      <div className="p-4 mt-auto border-t border-outline-variant/20 bg-white">
+      <div className="p-4 mt-auto border-t border-outline-variant/20 bg-white space-y-2">
         <Link 
           href="/settings"
           className="flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-xs tracking-widest uppercase text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all outline-none"
         >
           <span className="material-symbols-outlined text-xl">settings</span> Settings
         </Link>
-        <Link 
-          href="/support"
-          className="flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-xs tracking-widest uppercase text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all outline-none"
+        <button 
+          onClick={async () => {
+            const supabase = createClient();
+            await supabase.auth.signOut();
+            window.location.href = "/login";
+          }}
+          className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black text-xs tracking-widest uppercase text-error hover:bg-error/5 transition-all outline-none"
         >
-          <span className="material-symbols-outlined text-xl">help</span> Support
-        </Link>
+          <span className="material-symbols-outlined text-xl">logout</span> Logout
+        </button>
       </div>
     </aside>
    </>

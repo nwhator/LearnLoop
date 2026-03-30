@@ -14,6 +14,23 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [userData, setUserData] = useState<any>(null);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const { toggleMobileMenu } = useStore();
+  const [notifications, setNotifications] = useState([
+    { id: 1, icon: 'bolt', title: 'Daily Credits Reset', desc: 'Your account has been topped up with 3 fresh generation credits.', time: '2m ago', color: 'text-secondary bg-secondary/10', isRead: false },
+    { id: 2, icon: 'psychology', title: 'AI Concept Mapping', desc: "Gemini analyzed your last quiz and found a gap in 'Neural Layers'.", time: '1h ago', color: 'text-primary bg-primary/10', isRead: false },
+    { id: 3, icon: 'rocket_launch', title: 'Mission Initialized', desc: 'Complete 5 quizzes today to unlock the Scholar badge!', time: '3h ago', color: 'text-tertiary bg-tertiary/10', isRead: true },
+  ]);
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
+
+  const markAllRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+  };
+
+  const markRead = (id: number) => {
+    setNotifications(notifications.map(n => n.id === id ? { ...n, isRead: true } : n));
+  };
+
   const router = useRouter();
 
   useEffect(() => {
@@ -42,7 +59,7 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   return (
     <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-20 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm flex items-center justify-between px-6 lg:px-8 z-40 transition-all duration-300">
       <div className="flex items-center gap-6 lg:gap-10">
-        <button onClick={() => useStore.getState().toggleMobileMenu()} className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-on-surface">
+        <button onClick={toggleMobileMenu} className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-on-surface">
             <span className="material-symbols-outlined">menu</span>
         </button>
         <h1 className="text-2xl font-black font-headline text-on-surface tracking-tighter leading-none hidden md:block">
@@ -67,7 +84,7 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
           <div className="relative">
             <HeaderAction 
               icon="notifications" 
-              badge="2" 
+              badge={unreadCount.toString()} 
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
               active={isNotificationsOpen}
             />
@@ -75,30 +92,21 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
               <div className="absolute top-14 right-0 w-80 bg-white rounded-[2rem] shadow-premium border border-outline-variant/20 p-4 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
                 <div className="flex items-center justify-between px-4 py-2 border-b border-surface-container mb-4">
                   <h4 className="font-black font-headline text-on-surface tracking-tight">Intelligence Feed</h4>
-                  <button onClick={() => setIsNotificationsOpen(false)} className="text-[10px] font-black uppercase text-primary tracking-widest hover:underline">Clear all</button>
+                  <button onClick={markAllRead} className="text-[10px] font-black uppercase text-primary tracking-widest hover:underline">Mark all read</button>
                 </div>
                 <div className="space-y-2">
-                  <NotificationItem 
-                    icon="bolt" 
-                    title="Daily Credits Reset" 
-                    desc="Your account has been topped up with 3 fresh generation credits."
-                    time="2m ago"
-                    color="text-secondary bg-secondary/10"
-                  />
-                  <NotificationItem 
-                    icon="psychology" 
-                    title="AI Concept Mapping" 
-                    desc="Gemini analyzed your last quiz and found a gap in 'Neural Layers'."
-                    time="1h ago"
-                    color="text-primary bg-primary/10"
-                  />
-                  <NotificationItem 
-                    icon="rocket_launch" 
-                    title="Mission Initialized" 
-                    desc="Complete 5 quizzes today to unlock the 'Scholar' badge!"
-                    time="3h ago"
-                    color="text-tertiary bg-tertiary/10"
-                  />
+                  {notifications.map((n) => (
+                    <div key={n.id} onClick={() => markRead(n.id)} className={`relative ${n.isRead ? 'opacity-50' : 'opacity-100'}`}>
+                      <NotificationItem 
+                        icon={n.icon} 
+                        title={n.title} 
+                        desc={n.desc}
+                        time={n.time}
+                        color={n.color}
+                      />
+                      {!n.isRead && <div className="absolute top-4 right-4 w-2 h-2 bg-primary rounded-full ring-2 ring-white"></div>}
+                    </div>
+                  ))}
                 </div>
                 <button className="w-full mt-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-colors">See all history</button>
               </div>

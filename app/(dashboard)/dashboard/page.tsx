@@ -222,7 +222,9 @@ export default function DashboardPage() {
            router.push("/premium");
            return;
         }
-        throw new Error(errJson.error || 'API request failed');
+        const err = new Error(errJson.error || 'API request failed');
+        (err as any).details = errJson.details;
+        throw err;
       }
 
       const aiData = await apiRes.json();
@@ -275,7 +277,9 @@ export default function DashboardPage() {
 
     } catch (e: any) {
       console.error(e);
-      alert("Something went wrong generating your content: " + e.message);
+      // Try to parse more detailed error if provided
+      const errorMessage = e.details ? `${e.message} (${e.details})` : e.message;
+      alert("Something went wrong generating your content: " + errorMessage);
       setIsGenerating(false);
       setFile(null);
     }

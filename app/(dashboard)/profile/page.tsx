@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardHeader from "@/components/DashboardHeader";
-import Link from "next/link";
 
 interface UserProfile {
     name: string;
@@ -16,6 +17,7 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -164,9 +166,16 @@ export default function ProfilePage() {
                 </section>
 
                 <div className="flex flex-col sm:flex-row gap-6">
-                    <Link href="/login" className="flex-1 bg-white border border-surface-container text-on-surface py-6 rounded-full font-black text-xs uppercase tracking-widest text-center shadow-sm hover:bg-surface active:scale-95 transition-all">
-                        Terminate Session
-                    </Link>
+                    <button 
+                      onClick={async () => {
+                        const { error } = await supabase.auth.signOut();
+                        if (error) console.error("Logout error:", error);
+                        router.push("/login");
+                      }} 
+                      className="flex-1 bg-white border border-surface-container text-on-surface py-6 rounded-full font-black text-xs uppercase tracking-widest text-center shadow-sm hover:bg-surface active:scale-95 transition-all"
+                    >
+                        Logout
+                    </button>
                     <button className="flex-1 bg-error/5 border border-error/20 text-error py-6 rounded-full font-black text-xs uppercase tracking-widest text-center shadow-sm hover:bg-error hover:text-white active:scale-95 transition-all">
                         Delete Profile
                     </button>
