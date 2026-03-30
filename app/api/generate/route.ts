@@ -120,9 +120,9 @@ export async function POST(req: Request) {
       });
     }
 
-    // Call Gemini 1.5 Flash (stable and fast for extraction)
+    // Call Gemini 1.5 Flash (stable latest version for free tier)
     const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-1.5-flash-latest',
       contents: [{ role: 'user', parts }],
       config: {
         responseMimeType: 'application/json',
