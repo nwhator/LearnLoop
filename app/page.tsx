@@ -103,8 +103,6 @@ export default function LandingPage() {
               <p className="text-on-surface-variant text-lg md:text-xl font-medium">Your study materials shouldn't just sit there. They should challenge you.</p>
             </div>
           </div>
-          </div>
-            <
         </section>
 
         {/* 4. Features Section */}
