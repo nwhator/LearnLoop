@@ -23,14 +23,38 @@ export async function POST(req: Request) {
        return NextResponse.json({ error: 'Invalid authentication token.' }, { status: 401 });
     }
 
+    // Use Service Role to reliably check/update user stats
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+
     // Checking Subscription Engine
-    const { data: userData, error: userError } = await supabase
+    let { data: userData, error: userError } = await supabaseAdmin
        .from('users')
        .select('subscription_tier, daily_credits')
        .eq('id', user.id)
        .single();
     
-    if (userError || !userData) {
+    // If user record doesn't exist (new sign up), initialize it
+    if (!userData || userError) {
+       const { data: newData, error: insertError } = await supabaseAdmin
+         .from('users')
+         .insert([{ 
+           id: user.id, 
+           email: user.email, 
+           name: user.user_metadata?.full_name || user.email?.split('@')[0] || "Scholar",
+           daily_credits: 3, 
+           subscription_tier: 'free' 
+         }])
+         .select()
+         .single();
+       
+       if (insertError) {
+          console.error("User initialization error:", insertError);
+          return NextResponse.json({ error: 'Failed to initialize account permissions.' }, { status: 500 });
+       }
+       userData = newData;
+    }
+
+    if (!userData) {
       return NextResponse.json({ error: 'Failed to verify account permissions.' }, { status: 500 });
     }
 
@@ -108,7 +132,15 @@ export async function POST(req: Request) {
     const data = JSON.parse(responseText);
 
     // AI Generation succeeded, trigger the deduction engine
-    await supabase.rpc('deduct_credit');
+    if (userData.subscription_tier === 'free') {
+       await supabaseAdmin
+         .from('users')
+         .update({ 
+           daily_credits: Math.max(userData.daily_credits - 1, 0),
+           updated_at: new Date().toISOString()
+         })
+         .eq('id', user.id);
+    }
 
     return NextResponse.json(data);
 
