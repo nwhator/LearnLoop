@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { createClient } from '@supabase/supabase-js';
 
-const ai = new GoogleGenAI({});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // Must use service role to bypass RLS for credit checking or just normal client
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export async function POST(req: Request) {
   try {
@@ -78,16 +78,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Source text or file is required' }, { status: 400 });
     }
 
-    if (sourceText && sourceText.length < 50 && !file) {
+    const isUrl = sourceText && /^(http|https):\/\/[^ "]+$/.test(sourceText.trim());
+
+    if (sourceText && sourceText.length < 50 && !file && !isUrl) {
       return NextResponse.json({ error: 'Source text is too short for meaningful analysis. Please provide at least 50 characters or upload a document.' }, { status: 400 });
     }
-
     const systemPrompt = `
-      You are an expert AI tutor. Your job is to analyze the provided content (text or document) and generate a structured set of study materials.
+      You are an expert AI tutor. Your job is to analyze the provided source content—which may be raw text, a document file, or a direct URL link—and generate a structured set of study materials.
+      If a URL is provided, please attempt to extract context and knowledge from its destination for analysis.
       You must respond ONLY with a valid JSON object following this exact schema:
       {
         "summary_notes": [
-          "A high-level key concept extracted from the text",
+          "A high-level key concept extracted from the source",
           "Another critical structural bullet point"
         ],
         "flashcards": [
@@ -118,13 +120,13 @@ export async function POST(req: Request) {
       });
     }
 
-    // Call Gemini 2.5 Flash
+    // Call Gemini 1.5 Flash (stable and fast for extraction)
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       contents: [{ role: 'user', parts }],
       config: {
         responseMimeType: 'application/json',
-        temperature: 0.2, // Low temperature for factual extraction
+        temperature: 0.1, // Even lower for maximum JSON consistency
       }
     });
 
