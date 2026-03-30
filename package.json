@@ -29,17 +29,15 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/config-array": "^0.23.3",
+    "@eslint/object-schema": "^3.0.3",
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-
-    "tailwindcss": "^4.2.2",
-
+    "autoprefixer": "^10.4.27",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
-    "@eslint/config-array": "^0.23.3",
-    "@eslint/object-schema": "^3.0.3",
-    "autoprefixer": "^10.4.27",
     "glob": "^10.3.10",
     "rimraf": "6.0.1",
     "tailwindcss": "^4.2.2",
