@@ -1,6 +1,9 @@
 import PublicHeader from "../../components/PublicHeader";
 import PublicFooter from "../../components/PublicFooter";
 import { Button } from "../../components/ui/Button";
+import Link from "next/link";
+import { Metadata } from "next";
+
 export const metadata: Metadata = {
   title: "About Us | LearnLoop",
   description: "Meet the team making learning fun again. Discover our mission to end boring study sessions and turn education into an adventure.",
