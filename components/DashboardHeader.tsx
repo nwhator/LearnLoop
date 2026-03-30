@@ -13,6 +13,7 @@ interface DashboardHeaderProps {
 export default function DashboardHeader({ title }: DashboardHeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [userData, setUserData] = useState<any>(null);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -62,8 +63,47 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-3">
-          <HeaderAction icon="notifications" badge="2" />
+        <div className="flex items-center gap-3 relative">
+          <div className="relative">
+            <HeaderAction 
+              icon="notifications" 
+              badge="2" 
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
+              active={isNotificationsOpen}
+            />
+            {isNotificationsOpen && (
+              <div className="absolute top-14 right-0 w-80 bg-white rounded-[2rem] shadow-premium border border-outline-variant/20 p-4 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-surface-container mb-4">
+                  <h4 className="font-black font-headline text-on-surface tracking-tight">Intelligence Feed</h4>
+                  <button onClick={() => setIsNotificationsOpen(false)} className="text-[10px] font-black uppercase text-primary tracking-widest hover:underline">Clear all</button>
+                </div>
+                <div className="space-y-2">
+                  <NotificationItem 
+                    icon="bolt" 
+                    title="Daily Credits Reset" 
+                    desc="Your account has been topped up with 3 fresh generation credits."
+                    time="2m ago"
+                    color="text-secondary bg-secondary/10"
+                  />
+                  <NotificationItem 
+                    icon="psychology" 
+                    title="AI Concept Mapping" 
+                    desc="Gemini analyzed your last quiz and found a gap in 'Neural Layers'."
+                    time="1h ago"
+                    color="text-primary bg-primary/10"
+                  />
+                  <NotificationItem 
+                    icon="rocket_launch" 
+                    title="Mission Initialized" 
+                    desc="Complete 5 quizzes today to unlock the 'Scholar' badge!"
+                    time="3h ago"
+                    color="text-tertiary bg-tertiary/10"
+                  />
+                </div>
+                <button className="w-full mt-4 py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-colors">See all history</button>
+              </div>
+            )}
+          </div>
           <HeaderAction icon="local_fire_department" color="text-tertiary" badge={userData?.streak_count?.toString() || "0"} />
           <HeaderAction icon="workspace_premium" color="text-secondary" />
         </div>
@@ -78,13 +118,33 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   );
 }
 
-function HeaderAction({ icon, color = "text-on-surface-variant", badge }: { icon: string; color?: string; badge?: string }) {
+function HeaderAction({ icon, color = "text-on-surface-variant", badge, onClick, active }: { icon: string; color?: string; badge?: string; onClick?: () => void; active?: boolean }) {
   return (
-    <button className="relative w-10 h-10 rounded-full border border-outline-variant/20 bg-white flex items-center justify-center hover:bg-surface-container-low transition-all active:scale-90 group outline-none">
-      <span className={`material-symbols-outlined text-xl transition-colors ${color} group-hover:text-primary`}>{icon}</span>
+    <button 
+      onClick={onClick}
+      className={`relative w-10 h-10 rounded-full border border-outline-variant/20 bg-white flex items-center justify-center transition-all active:scale-90 group outline-none ${active ? 'bg-primary/10 border-primary/20 ring-2 ring-primary/10' : 'hover:bg-surface-container-low'}`}
+    >
+      <span className={`material-symbols-outlined text-xl transition-colors ${active ? 'text-primary' : color} group-hover:text-primary`}>{icon}</span>
       {badge && parseInt(badge) > 0 && (
         <span className="absolute -top-1 -right-1 bg-primary text-on-primary text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">{badge}</span>
       )}
     </button>
+  );
+}
+
+function NotificationItem({ icon, title, desc, time, color }: { icon: string; title: string; desc: string; time: string; color: string }) {
+  return (
+    <div className="flex items-start gap-4 p-4 rounded-2xl hover:bg-surface-container-lowest transition-all cursor-pointer group">
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 ${color}`}>
+        <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex justify-between items-start mb-0.5">
+          <p className="font-black font-headline text-sm text-on-surface tracking-tight leading-none truncate">{title}</p>
+          <span className="text-[9px] font-black text-on-surface-variant opacity-40 uppercase tracking-tighter whitespace-nowrap">{time}</span>
+        </div>
+        <p className="text-[11px] text-on-surface-variant leading-relaxed line-clamp-2">{desc}</p>
+      </div>
+    </div>
   );
 }

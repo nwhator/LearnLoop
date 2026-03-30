@@ -302,12 +302,12 @@ export default function DashboardPage() {
             <p className="text-on-surface-variant font-medium text-lg max-w-2xl mt-1">Transform your notes, recordings, or links into an interactive gamified learning adventure instantly.</p>
           </header>
 
-          {/* AI Generation Hub */}
-          <section className="relative w-full">
-            <div className="relative z-10 bg-surface-container-lowest rounded-[2rem] shadow-premium p-8 overflow-hidden">
-
-              {/* Credit Status */}
-              <div className="flex justify-between items-center mb-6 border-b border-surface-container pb-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* AI Generation Hub */}
+            <div className="lg:col-span-8 relative z-10 bg-surface-container-lowest rounded-[3rem] shadow-premium p-8 lg:p-10 border border-surface-container/10 overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
+              
+              <div className="flex justify-between items-center mb-8 border-b border-surface-container pb-6">
                   <div className="text-sm font-bold text-on-surface-variant">
                     {stats?.subscription_tier === 'scholar_plus' ? (
                        <span className="flex items-center gap-2 text-primary font-black"><span className="material-symbols-outlined text-sm">workspace_premium</span> Unlimited Generation</span>
@@ -315,26 +315,25 @@ export default function DashboardPage() {
                        <span className="flex items-center gap-2">Daily Limits: <span className="text-secondary font-black">{stats?.daily_credits || 0} / 3</span></span>
                     )}
                   </div>
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></span>
+                    Gemini 1.5 Flash Active
+                  </div>
               </div>
               
-              <div className="flex flex-wrap gap-4 mb-6">
-                <button onClick={() => setIsLinkMode(false)} className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${!isLinkMode && !file ? 'bg-primary-container text-on-primary-container ring-2 ring-primary/40 shadow-primary/20' : 'bg-surface-container-low hover:bg-primary/10 hover:text-primary border border-transparent hover:border-primary/20'}`}>
-                  <span className={`material-symbols-outlined ${!isLinkMode && !file ? 'text-primary' : 'text-on-surface-variant group-hover:text-primary'}`}>note_add</span>
+              <div className="flex flex-wrap gap-4 mb-8">
+                <button onClick={() => setIsLinkMode(false)} className={`flex items-center justify-center gap-3 py-3 px-6 rounded-2xl text-sm font-black cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${!isLinkMode && !file ? 'bg-primary-container text-on-primary-container ring-2 ring-primary/40 shadow-primary/20' : 'bg-surface-container-low hover:bg-primary/10 hover:text-primary border border-transparent hover:border-primary/20'}`}>
+                  <span className="material-symbols-outlined text-xl">note_add</span>
                   Paste Notes
                 </button>
-                <button onClick={() => { setIsLinkMode(true); setFile(null); }} className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${isLinkMode && !file ? 'bg-secondary-container text-on-secondary-container ring-2 ring-secondary/40 shadow-secondary/20' : 'bg-surface-container-low hover:bg-secondary/10 hover:text-secondary border border-transparent hover:border-secondary/20'}`}>
-                  <span className={`material-symbols-outlined ${isLinkMode && !file ? 'text-secondary' : 'text-on-surface-variant group-hover:text-secondary'}`}>link</span>
+                <button onClick={() => { setIsLinkMode(true); setFile(null); }} className={`flex items-center justify-center gap-3 py-3 px-6 rounded-2xl text-sm font-black cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${isLinkMode && !file ? 'bg-secondary-container text-on-secondary-container ring-2 ring-secondary/40 shadow-secondary/20' : 'bg-surface-container-low hover:bg-secondary/10 hover:text-secondary border border-transparent hover:border-secondary/20'}`}>
+                  <span className="material-symbols-outlined text-xl">link</span>
                   Paste Link
                 </button>
-                <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${file && file.type.startsWith('application/pdf') ? 'bg-tertiary-container text-on-tertiary-container ring-2 ring-tertiary/40 shadow-tertiary/20' : 'bg-surface-container-low hover:bg-tertiary/10 hover:text-tertiary border border-transparent hover:border-tertiary/20'}`}>
+                <label className={`flex items-center justify-center gap-3 py-3 px-6 rounded-2xl text-sm font-black cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${file && file.type.startsWith('application/pdf') ? 'bg-tertiary-container text-on-tertiary-container ring-2 ring-tertiary/40 shadow-tertiary/20' : 'bg-surface-container-low hover:bg-tertiary/10 hover:text-tertiary border border-transparent hover:border-tertiary/20'}`}>
                   <input type="file" accept="application/pdf" className="hidden" onChange={(e) => { if (e.target.files?.[0]) setFile(e.target.files[0]) }} />
-                  <span className="material-symbols-outlined text-tertiary">upload_file</span>
+                  <span className="material-symbols-outlined text-xl">upload_file</span>
                   {file && file.type.startsWith('application/pdf') ? file.name.slice(0, 15) + '...' : 'Upload PDF'}
-                </label>
-                <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${file && file.type.startsWith('audio') ? 'bg-error-container text-on-error-container ring-2 ring-error/40 shadow-error/20' : 'bg-surface-container-low hover:bg-error/10 hover:text-error border border-transparent hover:border-error/20'}`}>
-                  <input type="file" accept="audio/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) setFile(e.target.files[0]) }} />
-                  <span className="material-symbols-outlined text-error">mic</span>
-                  {file && file.type.startsWith('audio') ? file.name.slice(0, 15) + '...' : 'Upload Audio'}
                 </label>
               </div>
 
@@ -343,14 +342,14 @@ export default function DashboardPage() {
                     type="url"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="w-full rounded-xl bg-surface-container-low p-5 lg:p-6 text-base lg:text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-secondary/20 transition-all outline-none mb-8"
+                    className="w-full rounded-2xl bg-surface-container-low p-6 text-base lg:text-lg font-bold text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-secondary/20 transition-all outline-none mb-8"
                     placeholder="Paste an article or webpage URL here... (e.g. https://en.wikipedia.org/wiki/Neural_network)"
                   />
               ) : (
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="w-full h-32 lg:h-48 resize-none rounded-xl bg-surface-container-low p-5 lg:p-6 text-base lg:text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-primary/20 transition-all outline-none mb-8"
+                    className="w-full h-32 lg:h-48 resize-none rounded-2xl bg-surface-container-low p-6 text-base lg:text-lg font-bold text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-primary/20 transition-all outline-none mb-8"
                     placeholder={file ? `Attached Document: ${file.name}. You can add supplementary text instructions here...` : "Drop your content here or describe what you want to learn about..."}
                   />
               )}
@@ -359,35 +358,51 @@ export default function DashboardPage() {
                 <button
                   disabled={!content.trim() && !file}
                   onClick={handleGenerate}
-                  className="flex items-center gap-3 bg-primary text-on-primary px-12 py-5 rounded-full font-headline font-bold text-lg shadow-lg hover:shadow-primary/40 hover:brightness-110 hover:-translate-y-1 active:scale-95 active:brightness-90 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:brightness-100"
+                  className="flex items-center gap-3 bg-primary text-on-primary px-12 py-5 rounded-full font-headline font-black text-xl shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:brightness-110 hover:-translate-y-1 active:scale-95 active:brightness-90 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:brightness-100"
                 >
                   <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                  Generate Learning Set
+                  Initialize Quest
                 </button>
               </div>
             </div>
 
-            {/* Floating Gamification Badge */}
-            <div className="absolute -top-12 -right-8 glass-panel border border-white p-4 rounded-2xl shadow-xl hidden lg:block">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <svg className="w-16 h-16 transform -rotate-90">
-                    <circle className="text-surface-container-high" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" strokeWidth="6"></circle>
-                    <circle className="text-secondary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" strokeDasharray="175" strokeDashoffset="40" strokeWidth="6"></circle>
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center font-bold text-on-surface">{stats?.streak_count || 0}</div>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Active Streak</p>
-                  <div className="flex gap-1 mt-1">
-                    {[1, 2, 3, 4].map(i => (
-                      <span key={i} className={`w-2 h-2 rounded-full ${i <= (stats?.streak_count || 0) ? 'bg-tertiary' : 'bg-surface-container-high'}`}></span>
+            {/* Streak & Level Column */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="bg-surface-container-lowest p-8 rounded-[3rem] border border-surface-container/10 shadow-premium relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-tertiary/5 rounded-full -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-1000"></div>
+                <div className="flex flex-col items-center text-center">
+                  <div className="relative mb-6">
+                    <svg className="w-32 h-32 transform -rotate-90">
+                      <circle className="text-surface-container-high" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" strokeWidth="8"></circle>
+                      <circle className="text-tertiary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" strokeDasharray="364.4" strokeDashoffset={364.4 - (364.4 * ((stats?.streak_count || 0) % 7) / 7)} strokeWidth="8" strokeLinecap="round"></circle>
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-4xl font-black font-headline text-on-surface">{stats?.streak_count || 0}</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-60 leading-none">Days</span>
+                    </div>
+                  </div>
+                  <h3 className="text-2xl font-black font-headline text-on-surface mb-2">Active Streak</h3>
+                  <p className="text-on-surface-variant text-sm font-medium mb-6">You&apos;re crushing it! Don&apos;t let the flame go out.</p>
+                  
+                  <div className="flex justify-center gap-2">
+                    {[...Array(7)].map((_, i) => (
+                      <div key={i} className={`w-3 h-3 rounded-full ${i < (stats?.streak_count || 0) % 7 ? 'bg-tertiary scale-110 shadow-lg shadow-tertiary/20' : 'bg-surface-container-high opacity-50'}`}></div>
                     ))}
                   </div>
                 </div>
               </div>
+
+              <div className="bg-secondary/10 p-8 rounded-[3rem] border border-secondary/10 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-70 mb-1">Current Level</p>
+                  <p className="text-3xl font-black font-headline text-on-surface">Lv. {stats?.level || 1}</p>
+                </div>
+                <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center shadow-lg border border-secondary/20">
+                  <span className="material-symbols-outlined text-3xl text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
+                </div>
+              </div>
             </div>
-          </section>
+          </div>
 
           {/* Pick up where you left off */}
           <section>
