@@ -241,10 +241,10 @@ export default function DashboardPage() {
     <div className="flex bg-surface min-h-screen">
       <DashboardSidebar />
 
-      <main className="flex-1 flex flex-col lg:ml-72 min-h-screen">
+      <main className="flex-1 flex flex-col lg:ml-72 min-h-screen pt-20">
         <DashboardHeader title="Dashboard" />
 
-        <div className="flex-1 p-6 lg:p-12 mt-20 space-y-12 max-w-7xl mx-auto w-full">
+        <div className="flex-1 p-6 lg:p-12 space-y-12 max-w-7xl mx-auto w-full">
 
           <header className="space-y-2">
             <h2 className="text-4xl font-black font-headline text-on-surface tracking-tight">
@@ -295,14 +295,14 @@ export default function DashboardPage() {
                     type="url"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="w-full rounded-xl bg-surface-container-low p-6 text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-secondary/20 transition-all outline-none mb-8"
+                    className="w-full rounded-xl bg-surface-container-low p-5 lg:p-6 text-base lg:text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-secondary/20 transition-all outline-none mb-8"
                     placeholder="Paste an article or webpage URL here... (e.g. https://en.wikipedia.org/wiki/Neural_network)"
                   />
               ) : (
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="w-full h-48 resize-none rounded-xl bg-surface-container-low p-6 text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-primary/20 transition-all outline-none mb-8"
+                    className="w-full h-32 lg:h-48 resize-none rounded-xl bg-surface-container-low p-5 lg:p-6 text-base lg:text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-primary/20 transition-all outline-none mb-8"
                     placeholder={file ? `Attached Document: ${file.name}. You can add supplementary text instructions here...` : "Drop your content here or describe what you want to learn about..."}
                   />
               )}

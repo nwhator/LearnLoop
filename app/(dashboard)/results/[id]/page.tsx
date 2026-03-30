@@ -155,7 +155,7 @@ export default function ResultsPage() {
     <div className="flex bg-surface text-surface-on min-h-screen">
       <DashboardSidebar />
 
-      <main className="flex-1 flex flex-col lg:ml-72 min-h-screen pt-16">
+      <main className="flex-1 flex flex-col lg:ml-72 min-h-screen pt-20">
         <DashboardHeader title="Results & Mastery" />
 
         <div className="p-6 lg:p-12 max-w-7xl mx-auto w-full">
