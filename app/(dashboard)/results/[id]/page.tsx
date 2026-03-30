@@ -29,7 +29,7 @@ export default function ResultsPage() {
         const { data, error } = await supabase
           .from("flashcards")
           .select("*")
-          .eq("study_set_id", params.id);
+          .eq("study_set_id", params.id as string);
           
         if (error) throw error;
         if (data) setFlashcards(data);

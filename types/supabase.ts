@@ -43,6 +43,38 @@ export type Database = {
           },
         ]
       }
+      flashcards: {
+        Row: {
+          id: string
+          study_set_id: string
+          front: string
+          back: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          study_set_id: string
+          front: string
+          back: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          study_set_id?: string
+          front?: string
+          back?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcards_study_set_id_fkey"
+            columns: ["study_set_id"]
+            isOneToOne: false
+            referencedRelation: "study_sets"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       leaderboard: {
         Row: {
           rank: number
@@ -179,6 +211,41 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      quizzes: {
+        Row: {
+          id: string
+          study_set_id: string
+          question: string
+          options: Json
+          correct_answer: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          study_set_id: string
+          question: string
+          options: Json
+          correct_answer: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          study_set_id?: string
+          question?: string
+          options?: Json
+          correct_answer?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quizzes_study_set_id_fkey"
+            columns: ["study_set_id"]
+            isOneToOne: false
+            referencedRelation: "study_sets"
+            referencedColumns: ["id"]
+          }
         ]
       }
       study_sets: {
