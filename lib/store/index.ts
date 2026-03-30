@@ -8,6 +8,8 @@ interface GamificationState {
   resetStreak: () => void;
   incrementStreak: () => void;
   setLevel: (level: number) => void;
+  isMobileMenuOpen: boolean;
+  toggleMobileMenu: () => void;
 }
 
 export const useStore = create<GamificationState>()((set) => ({
@@ -25,4 +27,7 @@ export const useStore = create<GamificationState>()((set) => ({
   resetStreak: () => set({ currentStreak: 0 }),
   incrementStreak: () => set((state) => ({ currentStreak: state.currentStreak + 1 })),
   setLevel: (level) => set({ level }),
+  
+  isMobileMenuOpen: false,
+  toggleMobileMenu: () => set((state) => ({ isMobileMenuOpen: !state.isMobileMenuOpen })),
 }));

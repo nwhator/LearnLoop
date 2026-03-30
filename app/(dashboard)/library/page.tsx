@@ -150,7 +150,7 @@ function StudyCard({ set }: { set: StudySet }) {
                 <span className="material-symbols-outlined text-tertiary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
                 <span className="text-[10px] font-black uppercase text-on-surface-variant tracking-widest">Mastery: 0%</span>
             </div>
-            <Link href={`/sets/${set.id}`} className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest group/btn px-4 py-2 bg-primary/10 rounded-full hover:bg-primary hover:text-white transition-all">
+            <Link href={`/results/${set.id}`} className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest group/btn px-4 py-2 bg-primary/10 rounded-full hover:bg-primary hover:text-white transition-all">
                 Enter <span className="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
             </Link>
         </div>

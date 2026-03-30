@@ -2,17 +2,67 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { Database } from "@/types/supabase";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import DashboardHeader from "@/components/DashboardHeader";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+// The full-screen overlay component used while generating
+function GeneratingOverlay({ onCancel }: { onCancel: () => void }) {
+  const [level, setLevel] = useState(1);
+  
+  useEffect(() => {
+    // Optionally fetch level from localstorage or keep it static for the overlay
+    setLevel(1);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-50 bg-surface text-on-surface flex flex-col">
+      {/* TopNavBar */}
+      <nav className="w-full bg-white/80 backdrop-blur-xl shadow-sm flex items-center px-6 h-16 shrink-0 z-50 relative">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="text-2xl font-black text-primary font-headline tracking-tight">LearnLoop</Link>
+        </div>
+      </nav>
+
+      {/* Main Content Canvas */}
+      <main className="flex-1 flex flex-col items-center justify-center p-6 relative">
+        <div className="w-full max-w-lg bg-white border border-surface-container rounded-3xl p-10 flex flex-col items-center text-center shadow-premium relative z-10">
+            <div className="w-full aspect-square relative mb-8 flex items-center justify-center max-h-[200px]">
+                <div className="absolute w-48 h-48 bg-primary/10 rounded-full blur-2xl animate-pulse transition-transform duration-500"></div>
+                <div className="relative">
+                    <span className="material-symbols-outlined text-primary text-7xl animate-bounce" style={{ fontVariationSettings: "'FILL' 1" }}>history_edu</span>
+                </div>
+            </div>
+            
+            <h3 className="text-2xl font-bold text-on-surface mb-3 font-headline">Cooking New Content</h3>
+            <p className="text-on-surface-variant text-base leading-relaxed mb-10">
+                Our AI architectures are currently drafting your personalized notes, quizzes, and flashcards. This usually takes less than a minute.
+            </p>
+            
+            <div className="w-full flex flex-col gap-4">
+                <div className="flex items-center justify-center gap-3 py-4 px-6 bg-primary/10 text-primary border border-primary/20 rounded-full font-bold text-sm shadow-inner">
+                    <span className="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+                    Processing Neural Weights
+                </div>
+            </div>
+        </div>
+        
+        {/* Decorative background elements */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl -z-10"></div>
+      </main>
+    </div>
+  );
+}
 
 interface DashboardStats {
   name: string;
   level: number;
   xp: number;
   streak_count: number;
+  daily_credits: number;
+  subscription_tier: string;
 }
 
 interface MissionProgress {
@@ -28,9 +78,12 @@ interface MissionProgress {
 export default function DashboardPage() {
   const [content, setContent] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [isLinkMode, setIsLinkMode] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [mission, setMission] = useState<MissionProgress | null>(null);
+  const [diagnostic, setDiagnostic] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [resetTime, setResetTime] = useState("");
   const router = useRouter();
@@ -43,16 +96,14 @@ export default function DashboardPage() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Fetch User and Stats directly from users table
         const { data: userData, error: userError } = await supabase
           .from("users")
-          .select("name, level, xp, streak_count")
+          .select("name, level, xp, streak_count, daily_credits, subscription_tier")
           .eq("id", user.id)
           .single();
 
         if (userError) throw userError;
 
-        // Fetch the most recent active user mission
         const { data: missionData } = await supabase
           .from("user_missions")
           .select("current_value, is_completed, missions(title, target_value, reward_xp)")
@@ -61,8 +112,17 @@ export default function DashboardPage() {
           .limit(1)
           .single();
 
+        // Fetch the latest AI Diagnostic
+        const { data: diagData } = await supabase
+          .from("user_diagnostics")
+          .select("ai_feedback, question_text, study_sets(title)")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single();
+
         setStats(userData as DashboardStats);
         if (missionData) setMission(missionData as any);
+        if (diagData) setDiagnostic(diagData);
       } catch (err) {
         console.error("Dashboard data fetch error:", err);
       } finally {
@@ -92,32 +152,50 @@ export default function DashboardPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // 1. Process AI Generation using Gemini
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
       const formData = new FormData();
       if (content.trim()) formData.append('source_text', content);
       if (file) formData.append('file', file);
 
       const apiRes = await fetch('/api/generate', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        },
         body: formData,
       });
 
       if (!apiRes.ok) {
         const errJson = await apiRes.json();
+        if (apiRes.status === 403) {
+           alert("You have exhausted your daily limit! Upgrade to Premium.");
+           router.push("/premium");
+           return;
+        }
         throw new Error(errJson.error || 'API request failed');
       }
 
       const aiData = await apiRes.json();
 
-      // 2. Create Study Set row
-      const extractTitle = file ? file.name.slice(0, 40) : content.slice(0, 40) + "...";
+      let extractTitle = "Generated Study Set";
+      if (file) {
+          extractTitle = file.name.slice(0, 40);
+      } else if (isLinkMode) {
+          extractTitle = "Website Extraction";
+      } else if (content) {
+          extractTitle = content.slice(0, 40) + "...";
+      }
+
       const { data: studySetData, error: studySetError } = await supabase
         .from("study_sets")
         .insert([{
           creator_id: user.id,
           title: extractTitle,
-          description: "Created by LearnLoop AI.",
+          description: "Created dynamically by LearnLoop AI.",
           category: "General Intelligence",
+          summary_notes: aiData.summary_notes || [],
           is_public: false
         }])
         .select();
@@ -125,18 +203,15 @@ export default function DashboardPage() {
       if (studySetError) throw studySetError;
       const studySetId = studySetData[0].id;
 
-      // 3. Pipe Flashcards into Database
       if (aiData.flashcards && aiData.flashcards.length > 0) {
         const fcPayload = aiData.flashcards.map((f: any) => ({
           study_set_id: studySetId,
           front: f.front,
           back: f.back
         }));
-        const { error: fcErr } = await supabase.from("flashcards").insert(fcPayload);
-        if (fcErr) console.error("Flashcards insert error:", fcErr);
+        await supabase.from("flashcards").insert(fcPayload);
       }
 
-      // 4. Pipe Quizzes into Database
       if (aiData.quizzes && aiData.quizzes.length > 0) {
         const qzPayload = aiData.quizzes.map((q: any) => ({
           study_set_id: studySetId,
@@ -144,21 +219,23 @@ export default function DashboardPage() {
           options: q.options,
           correct_answer: q.correctAnswer || q.correct_answer
         }));
-        const { error: qzErr } = await supabase.from("quizzes").insert(qzPayload);
-        if (qzErr) console.error("Quizzes insert error:", qzErr);
+        await supabase.from("quizzes").insert(qzPayload);
       }
 
-      // 5. Navigate to the new set
+      // Automatically push user to the newly generated studio dashboard results
       router.push(`/results/${studySetId}`);
 
     } catch (e: any) {
       console.error(e);
       alert("Something went wrong generating your content: " + e.message);
-    } finally {
       setIsGenerating(false);
       setFile(null);
     }
   };
+
+  if (isGenerating) {
+      return <GeneratingOverlay onCancel={() => setIsGenerating(false)} />;
+  }
 
   return (
     <div className="flex bg-surface min-h-screen">
@@ -171,45 +248,73 @@ export default function DashboardPage() {
 
           <header className="space-y-2">
             <h2 className="text-4xl font-black font-headline text-on-surface tracking-tight">
-              What do you want to learn today?
+              Welcome back, {stats?.name ? stats.name.split(' ')[0] : 'Scholar'}!
             </h2>
-            <p className="text-on-surface-variant font-medium text-lg max-w-2xl">Transform your notes, recordings, or links into an interactive gamified learning adventure instantly.</p>
+            <p className="text-primary font-bold text-lg mt-2 font-headline tracking-tighter">What do you want to learn today?</p>
+            <p className="text-on-surface-variant font-medium text-lg max-w-2xl mt-1">Transform your notes, recordings, or links into an interactive gamified learning adventure instantly.</p>
           </header>
 
           {/* AI Generation Hub */}
           <section className="relative w-full">
             <div className="relative z-10 bg-surface-container-lowest rounded-[2rem] shadow-premium p-8 overflow-hidden">
 
+              {/* Credit Status */}
+              <div className="flex justify-between items-center mb-6 border-b border-surface-container pb-4">
+                  <div className="text-sm font-bold text-on-surface-variant">
+                    {stats?.subscription_tier === 'scholar_plus' ? (
+                       <span className="flex items-center gap-2 text-primary font-black"><span className="material-symbols-outlined text-sm">workspace_premium</span> Unlimited Generation</span>
+                    ) : (
+                       <span className="flex items-center gap-2">Daily Limits: <span className="text-secondary font-black">{stats?.daily_credits || 0} / 3</span></span>
+                    )}
+                  </div>
+              </div>
+              
               <div className="flex flex-wrap gap-4 mb-6">
-                <ActionButton icon="note_add" label="Paste Notes" color="text-primary" active={!file} />
-                <ActionButton icon="link" label="Paste Link" color="text-secondary" />
-                <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${file ? 'bg-tertiary-container text-on-tertiary-container ring-2 ring-tertiary/20' : 'bg-surface-container-low hover:bg-surface-container-high'}`}>
+                <button onClick={() => setIsLinkMode(false)} className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${!isLinkMode && !file ? 'bg-primary-container text-on-primary-container ring-2 ring-primary/40 shadow-primary/20' : 'bg-surface-container-low hover:bg-primary/10 hover:text-primary border border-transparent hover:border-primary/20'}`}>
+                  <span className={`material-symbols-outlined ${!isLinkMode && !file ? 'text-primary' : 'text-on-surface-variant group-hover:text-primary'}`}>note_add</span>
+                  Paste Notes
+                </button>
+                <button onClick={() => { setIsLinkMode(true); setFile(null); }} className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${isLinkMode && !file ? 'bg-secondary-container text-on-secondary-container ring-2 ring-secondary/40 shadow-secondary/20' : 'bg-surface-container-low hover:bg-secondary/10 hover:text-secondary border border-transparent hover:border-secondary/20'}`}>
+                  <span className={`material-symbols-outlined ${isLinkMode && !file ? 'text-secondary' : 'text-on-surface-variant group-hover:text-secondary'}`}>link</span>
+                  Paste Link
+                </button>
+                <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${file && file.type.startsWith('application/pdf') ? 'bg-tertiary-container text-on-tertiary-container ring-2 ring-tertiary/40 shadow-tertiary/20' : 'bg-surface-container-low hover:bg-tertiary/10 hover:text-tertiary border border-transparent hover:border-tertiary/20'}`}>
                   <input type="file" accept="application/pdf" className="hidden" onChange={(e) => { if (e.target.files?.[0]) setFile(e.target.files[0]) }} />
                   <span className="material-symbols-outlined text-tertiary">upload_file</span>
-                  {file ? file.name.slice(0, 15) + '...' : 'Upload PDF'}
+                  {file && file.type.startsWith('application/pdf') ? file.name.slice(0, 15) + '...' : 'Upload PDF'}
                 </label>
-                <ActionButton icon="mic" label="Record Audio" color="text-error" />
+                <label className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all ${file && file.type.startsWith('audio') ? 'bg-error-container text-on-error-container ring-2 ring-error/40 shadow-error/20' : 'bg-surface-container-low hover:bg-error/10 hover:text-error border border-transparent hover:border-error/20'}`}>
+                  <input type="file" accept="audio/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) setFile(e.target.files[0]) }} />
+                  <span className="material-symbols-outlined text-error">mic</span>
+                  {file && file.type.startsWith('audio') ? file.name.slice(0, 15) + '...' : 'Upload Audio'}
+                </label>
               </div>
 
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full h-48 resize-none rounded-xl bg-surface-container-low p-6 text-lg font-medium text-on-surface placeholder:text-outline border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none mb-8"
-                placeholder="Drop your content here or describe what you want to learn about..."
-              />
+              {isLinkMode ? (
+                  <input
+                    type="url"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full rounded-xl bg-surface-container-low p-6 text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-secondary/20 transition-all outline-none mb-8"
+                    placeholder="Paste an article or webpage URL here... (e.g. https://en.wikipedia.org/wiki/Neural_network)"
+                  />
+              ) : (
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full h-48 resize-none rounded-xl bg-surface-container-low p-6 text-lg font-medium text-on-surface placeholder:text-outline border border-surface-container focus:ring-2 focus:ring-primary/20 transition-all outline-none mb-8"
+                    placeholder={file ? `Attached Document: ${file.name}. You can add supplementary text instructions here...` : "Drop your content here or describe what you want to learn about..."}
+                  />
+              )}
 
               <div className="flex justify-center">
                 <button
-                  disabled={isGenerating || (!content.trim() && !file)}
+                  disabled={!content.trim() && !file}
                   onClick={handleGenerate}
-                  className="flex items-center gap-3 bg-primary text-on-primary px-12 py-5 rounded-full font-headline font-bold text-lg shadow-lg hover:shadow-primary/25 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex items-center gap-3 bg-primary text-on-primary px-12 py-5 rounded-full font-headline font-bold text-lg shadow-lg hover:shadow-primary/40 hover:brightness-110 hover:-translate-y-1 active:scale-95 active:brightness-90 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:brightness-100"
                 >
-                  {isGenerating ? (
-                    <span className="material-symbols-outlined animate-spin text-2xl">autorenew</span>
-                  ) : (
-                    <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                  )}
-                  {isGenerating ? "Generating..." : "Generate Learning Set"}
+                  <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                  Generate Learning Set
                 </button>
               </div>
             </div>
@@ -243,18 +348,20 @@ export default function DashboardPage() {
               <Link href="/library" className="text-primary font-bold hover:underline">View Library</Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Card 1: Weak Area */}
+              {/* Card 1: Weak Area / Dynamic Diagnostic */}
               <div className="bg-surface-container-lowest p-6 rounded-[1.5rem] hover:shadow-premium transition-all cursor-pointer border border-error-container/10">
                 <div className="flex justify-between items-start mb-6">
                   <div className="p-3 bg-error-container/10 rounded-2xl">
                     <span className="material-symbols-outlined text-error">trending_down</span>
                   </div>
-                  <span className="px-3 py-1 bg-error-container/20 text-on-error-container text-xs font-bold rounded-full">Review Needed</span>
+                  <span className="px-3 py-1 bg-error-container/20 text-on-error-container text-xs font-bold rounded-full">AI Review</span>
                 </div>
-                <h3 className="font-headline font-bold text-xl mb-2">Molecular Biology 101</h3>
-                <p className="text-on-surface-variant text-sm mb-6">You&apos;re struggling with the &apos;Protein Synthesis&apos; section. 4 new flashcards ready.</p>
+                <h3 className="font-headline font-bold text-xl mb-2">{diagnostic ? (diagnostic.study_sets?.title || "Latest Set") : "Neural Diagnostics"}</h3>
+                <p className="text-on-surface-variant text-sm mb-6">
+                  {diagnostic ? diagnostic.ai_feedback : "No failures detected. Keep up the perfect streak to maintain your rank!"}
+                </p>
                 <div className="w-full h-1.5 bg-surface-container-low rounded-full">
-                  <div className="h-full bg-error rounded-full w-[35%]"></div>
+                  <div className={`h-full bg-error rounded-full ${diagnostic ? 'w-[75%]' : 'w-0'}`}></div>
                 </div>
               </div>
               {/* Card 2: Suggestion */}
@@ -341,14 +448,5 @@ export default function DashboardPage() {
         </div>
       </main>
     </div>
-  );
-}
-
-function ActionButton({ icon, label, color, active = false }: { icon: string; label: string; color: string; active?: boolean }) {
-  return (
-    <button className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold transition-colors ${active ? 'bg-surface-container-low hover:bg-surface-container-high' : 'bg-surface-container-low hover:bg-surface-container-high'}`}>
-      <span className={`material-symbols-outlined ${color}`}>{icon}</span>
-      {label}
-    </button>
   );
 }

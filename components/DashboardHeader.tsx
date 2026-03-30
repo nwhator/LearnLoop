@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useStore } from "@/lib/store";
 
 interface DashboardHeaderProps {
   title: string;
@@ -38,8 +39,11 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   };
 
   return (
-    <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-20 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm flex items-center justify-between px-8 z-40 transition-all duration-300">
-      <div className="flex items-center gap-10">
+    <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-20 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm flex items-center justify-between px-6 lg:px-8 z-40 transition-all duration-300">
+      <div className="flex items-center gap-6 lg:gap-10">
+        <button onClick={() => useStore.getState().toggleMobileMenu()} className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors text-on-surface">
+            <span className="material-symbols-outlined">menu</span>
+        </button>
         <h1 className="text-2xl font-black font-headline text-on-surface tracking-tighter leading-none hidden md:block">
           {title}
         </h1>

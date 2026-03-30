@@ -111,26 +111,6 @@ export default function ProfilePage() {
                     <h2 className="font-headline font-black text-4xl mb-12 text-on-surface tracking-tighter">Identity & Preferences</h2>
                     
                     <div className="space-y-12">
-                        {/* Appearance settings */}
-                        <div className="space-y-6">
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant border-b border-surface-container pb-4">Aesthetics</h4>
-                            
-                            <div className="flex items-center justify-between p-6 hover:bg-surface rounded-3xl transition-all border border-transparent hover:border-surface-container group cursor-pointer" onClick={() => setDarkMode(!darkMode)}>
-                                <div className="flex items-center gap-6">
-                                    <div className={`w-14 h-14 rounded-3xl flex items-center justify-center transition-all ${darkMode ? 'bg-primary text-white shadow-lg' : 'bg-surface-container text-on-surface shadow-inner'}`}>
-                                        <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>dark_mode</span>
-                                    </div>
-                                    <div>
-                                        <p className="font-black font-headline text-lg text-on-surface tracking-tight">Eclipse Mode</p>
-                                        <p className="text-sm text-on-surface-variant font-medium opacity-60">Synchronize UI with cosmic darkness</p>
-                                    </div>
-                                </div>
-                                <div className={`w-16 h-8 rounded-full relative p-1 transition-all shadow-inner flex items-center ${darkMode ? 'bg-primary' : 'bg-surface-container'}`}>
-                                    <div className={`w-6 h-6 bg-white rounded-full shadow-premium transition-transform duration-500 ease-in-out ${darkMode ? 'translate-x-8' : 'translate-x-0'}`}></div>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Comms */}
                         <div className="space-y-6">
                             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant border-b border-surface-container pb-4">Communications</h4>

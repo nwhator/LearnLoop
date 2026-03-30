@@ -256,6 +256,7 @@ export type Database = {
           description: string | null
           id: string
           is_public: boolean
+          summary_notes: Json | null
           tags: string[] | null
           title: string
           updated_at: string | null
@@ -267,6 +268,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_public?: boolean
+          summary_notes?: Json | null
           tags?: string[] | null
           title: string
           updated_at?: string | null
@@ -278,6 +280,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_public?: boolean
+          summary_notes?: Json | null
           tags?: string[] | null
           title?: string
           updated_at?: string | null
@@ -290,6 +293,48 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      user_diagnostics: {
+        Row: {
+          id: string
+          user_id: string
+          study_set_id: string | null
+          question_text: string
+          ai_feedback: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          study_set_id?: string | null
+          question_text: string
+          ai_feedback: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          study_set_id?: string | null
+          question_text?: string
+          ai_feedback?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_diagnostics_study_set_id_fkey"
+            columns: ["study_set_id"]
+            isOneToOne: false
+            referencedRelation: "study_sets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_diagnostics_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
         ]
       }
       user_missions: {
@@ -387,6 +432,8 @@ export type Database = {
           streak_count: number
           updated_at: string | null
           xp: number
+          subscription_tier: string
+          daily_credits: number
         }
         Insert: {
           avatar_url?: string | null
@@ -402,6 +449,8 @@ export type Database = {
           streak_count?: number
           updated_at?: string | null
           xp?: number
+          subscription_tier?: string
+          daily_credits?: number
         }
         Update: {
           avatar_url?: string | null
@@ -417,6 +466,8 @@ export type Database = {
           streak_count?: number
           updated_at?: string | null
           xp?: number
+          subscription_tier?: string
+          daily_credits?: number
         }
         Relationships: []
       }
@@ -425,7 +476,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_user_xp: {
+        Args: {
+          xp_amount: number
+        }
+        Returns: undefined
+      }
+      deduct_credit: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

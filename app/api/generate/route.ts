@@ -1,10 +1,43 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import { createClient } from '@supabase/supabase-js';
 
 const ai = new GoogleGenAI({});
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; // Must use service role to bypass RLS for credit checking or just normal client
 
 export async function POST(req: Request) {
   try {
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return NextResponse.json({ error: 'Unauthorized. Mission failed.' }, { status: 401 });
+    }
+    const token = authHeader.replace('Bearer ', '');
+
+    const supabase = createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+       return NextResponse.json({ error: 'Invalid authentication token.' }, { status: 401 });
+    }
+
+    // Checking Subscription Engine
+    const { data: userData, error: userError } = await supabase
+       .from('users')
+       .select('subscription_tier, daily_credits')
+       .eq('id', user.id)
+       .single();
+    
+    if (userError || !userData) {
+      return NextResponse.json({ error: 'Failed to verify account permissions.' }, { status: 500 });
+    }
+
+    if (userData.subscription_tier === 'free' && userData.daily_credits <= 0) {
+      return NextResponse.json({ error: 'PAYWALL', message: 'You have exhausted your daily AI energy matrix. Upgrade to Scholar Plus to remove limits.' }, { status: 403 });
+    }
+
     const formData = await req.formData();
     const sourceText = formData.get('source_text') as string | null;
     const file = formData.get('file') as File | null;
@@ -17,6 +50,10 @@ export async function POST(req: Request) {
       You are an expert AI tutor. Your job is to analyze the provided content (text or document) and generate a structured set of study materials.
       You must respond ONLY with a valid JSON object following this exact schema:
       {
+        "summary_notes": [
+          "A high-level key concept extracted from the text",
+          "Another critical structural bullet point"
+        ],
         "flashcards": [
           { "front": "A clear, concise question", "back": "The exact, simple answer" }
         ],
@@ -25,7 +62,7 @@ export async function POST(req: Request) {
         ]
       }
       
-      Extract the most important concepts. Create exactly 5 flashcards and 5 quiz questions. Ensure the JSON is well-formed. Do NOT use markdown code blocks like \`\`\`json, just return raw JSON string.
+      Extract the most important concepts. Create exactly 5 summary_notes, 10 flashcards, and 10 quiz questions. Ensure the JSON is well-formed. Do NOT use markdown code blocks like \`\`\`json, just return raw JSON string.
     `;
 
     const parts: any[] = [{ text: systemPrompt }];
@@ -65,6 +102,9 @@ export async function POST(req: Request) {
     responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
 
     const data = JSON.parse(responseText);
+
+    // AI Generation succeeded, trigger the deduction engine
+    await supabase.rpc('deduct_credit');
 
     return NextResponse.json(data);
 

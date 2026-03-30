@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useStore } from "@/lib/store";
 
 const NAVIGATION_ITEMS = [
   { label: "Dashboard", href: "/dashboard", icon: "dashboard" },
@@ -16,6 +17,7 @@ const NAVIGATION_ITEMS = [
 export default function DashboardSidebar() {
   const pathname = usePathname();
   const [userData, setUserData] = useState<any>(null);
+  const { isMobileMenuOpen, toggleMobileMenu } = useStore();
 
   useEffect(() => {
     async function fetchSidebarData() {
@@ -29,13 +31,33 @@ export default function DashboardSidebar() {
         .eq("id", user.id)
         .single();
       
-      if (data) setUserData(data);
+      const fallbackName = user.user_metadata?.full_name || user.email?.split('@')[0] || "Guest Scholar";
+      const fallbackInitials = fallbackName.charAt(0).toUpperCase();
+
+      if (data && data.name) {
+          setUserData(data);
+      } else {
+          setUserData({ name: fallbackName, initials: data?.initials || fallbackInitials, level: data?.level || 1 });
+      }
     }
     fetchSidebarData();
   }, []);
 
   return (
-    <aside className="hidden lg:flex flex-col h-full w-72 fixed left-0 top-0 pt-20 bg-surface-container-lowest border-r border-outline-variant/20 z-40 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+    <>
+      {/* Mobile Backdrop */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-surface-on/20 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          onClick={toggleMobileMenu}
+        />
+      )}
+      
+      <aside className={`fixed inset-y-0 left-0 bg-surface-container-lowest border-r border-outline-variant/20 z-50 flex flex-col h-full w-72 pt-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* Close Button Mobile */}
+        <button onClick={toggleMobileMenu} className="lg:hidden absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+            <span className="material-symbols-outlined">close</span>
+        </button>
       <div className="px-8 mb-10 mt-10">
         <div className="flex flex-col items-center gap-4 p-6 bg-white rounded-[2rem] border border-outline-variant/20 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary"></div>
@@ -86,5 +108,6 @@ export default function DashboardSidebar() {
         </Link>
       </div>
     </aside>
+   </>
   );
 }

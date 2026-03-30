@@ -6,115 +6,165 @@ import { useParams, useRouter } from "next/navigation";
 import { useStore } from "@/lib/store";
 import Flashcard, { FlashcardData } from "@/components/ui/Flashcard";
 import { createClient } from "@/lib/supabase/client";
+import DashboardSidebar from "@/components/DashboardSidebar";
+import DashboardHeader from "@/components/DashboardHeader";
+
+interface QuizData {
+  id: string;
+  question: string;
+  options: string[];
+  correct_answer: string;
+}
 
 export default function ResultsPage() {
   const params = useParams();
   const router = useRouter();
-  
-  const level = useStore((state) => state.level);
+
   const xp = useStore((state) => state.xp);
   const incrementXP = useStore((state) => state.incrementXP);
 
   const [flashcards, setFlashcards] = useState<FlashcardData[]>([]);
+  const [quizzes, setQuizzes] = useState<QuizData[]>([]);
+  const [summaryNotes, setSummaryNotes] = useState<string[]>([]);
+  const [studyTitle, setStudyTitle] = useState("Generated Suite");
   const [masteredIds, setMasteredIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
+  // Quiz State
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [quizStatus, setQuizStatus] = useState<"idle" | "correct" | "incorrect">("idle");
+  const [quizMastery, setQuizMastery] = useState<Set<string>>(new Set());
+
   // Fetch data dynamically
   useEffect(() => {
-    async function fetchCards() {
+    async function fetchCardsAndQuizzes() {
       if (!params.id) return;
       try {
         setLoading(true);
         const supabase = createClient();
-        const { data, error } = await supabase
-          .from("flashcards")
-          .select("*")
-          .eq("study_set_id", params.id as string);
-          
-        if (error) throw error;
-        if (data) setFlashcards(data);
+
+        const [fcRes, qzRes, setRes] = await Promise.all([
+          supabase.from("flashcards").select("*").eq("study_set_id", params.id as string),
+          supabase.from("quizzes").select("*").eq("study_set_id", params.id as string),
+          supabase.from("study_sets").select("*").eq("id", params.id as string).single()
+        ]);
+
+        if (fcRes.error) throw fcRes.error;
+        if (fcRes.data) setFlashcards(fcRes.data);
+
+        if (setRes.data) {
+          setStudyTitle(setRes.data.title);
+          const rawNotes = setRes.data.summary_notes;
+          if (rawNotes && Array.isArray(rawNotes)) {
+            setSummaryNotes(rawNotes as string[]);
+          } else if (typeof rawNotes === 'string') {
+            try { setSummaryNotes(JSON.parse(rawNotes)); } catch (e) { }
+          }
+        }
+
+        if (qzRes.data) {
+          // Normalize JSONb options array
+          const rawQuizzes = qzRes.data.map((q: any) => ({
+            ...q,
+            options: Array.isArray(q.options) ? q.options : JSON.parse(q.options || "[]")
+          }));
+          setQuizzes(rawQuizzes);
+        }
+
       } catch (err) {
-        console.error("Failed to load flashcards:", err);
+        console.error("Failed to load study material:", err);
       } finally {
         setLoading(false);
       }
     }
-    fetchCards();
+    fetchCardsAndQuizzes();
   }, [params.id]);
+
+  const handleApplyXP = async (amount: number) => {
+    incrementXP(amount); // Update visual Zustand state instantly
+    try {
+      const supabase = createClient();
+      await supabase.rpc('increment_user_xp', { xp_amount: amount });
+    } catch (err) {
+      console.error("Failed to commit XP to database", err);
+    }
+  };
 
   const handleMastered = (id: string) => {
     if (!masteredIds.has(id)) {
       setMasteredIds((prev) => new Set(prev).add(id));
-      incrementXP(50);
+      handleApplyXP(50);
     }
   };
 
-  const progressPercent = flashcards.length > 0 
-    ? (masteredIds.size / flashcards.length) * 100 
+  const handleQuizSelect = (option: string) => {
+    if (quizStatus === "correct") return; // Prevent changing after correct
+
+    setSelectedOption(option);
+    const activeQuiz = quizzes[currentQuizIndex];
+    if (!activeQuiz) return;
+
+    if (option === activeQuiz.correct_answer) {
+      setQuizStatus("correct");
+      if (!quizMastery.has(activeQuiz.id)) {
+        setQuizMastery(prev => new Set(prev).add(activeQuiz.id));
+        handleApplyXP(100);
+      }
+    } else {
+      setQuizStatus("incorrect");
+      
+      // Fire background AI Diagnostic
+      (async () => {
+        const supabase = createClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          fetch('/api/diagnose', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify({
+              study_set_id: params.id as string,
+              question_text: activeQuiz.question,
+              user_answer: option,
+              correct_answer: activeQuiz.correct_answer
+            })
+          }).catch(err => console.error("Silent diagnostic error", err));
+        }
+      })();
+    }
+  };
+
+  const nextQuiz = () => {
+    if (currentQuizIndex < quizzes.length - 1) {
+      setCurrentQuizIndex(prev => prev + 1);
+      setSelectedOption(null);
+      setQuizStatus("idle");
+    }
+  };
+
+  const progressPercent = flashcards.length > 0
+    ? (masteredIds.size / flashcards.length) * 100
     : 0;
 
+  const activeQuiz = quizzes[currentQuizIndex];
+
   return (
-    <div className="bg-surface text-surface-on min-h-screen">
-      
-      {/* TopNavBar */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 h-16">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="text-2xl font-extrabold text-primary font-headline tracking-tight">LearnLoop</Link>
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/dashboard" className="text-on-surface-variant font-medium font-headline hover:bg-surface-container/50 transition-colors px-3 py-1 rounded-lg">Dashboard</Link>
-            <Link href="/library" className="text-on-surface-variant font-medium font-headline hover:bg-surface-container/50 transition-colors px-3 py-1 rounded-lg">Library</Link>
-            <Link href={`/results/${params.id}`} className="text-primary font-bold border-b-2 border-primary font-headline px-3 py-1">Results</Link>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full transition-all active:scale-95">bolt</button>
-            <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full transition-all active:scale-95">workspace_premium</button>
-            <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full transition-all active:scale-95">local_fire_department</button>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-surface-container overflow-hidden ring-2 ring-primary/10 flex items-center justify-center font-bold text-on-surface-variant">
-             A
-          </div>
-        </div>
-      </nav>
+    <div className="flex bg-surface text-surface-on min-h-screen">
+      <DashboardSidebar />
 
-      {/* SideNavBar */}
-      <aside className="hidden lg:flex flex-col h-full w-64 fixed left-0 top-0 pt-20 bg-surface-bright border-r border-surface-container z-40">
-        <div className="px-6 mb-8 flex flex-col gap-1">
-          <span className="text-surface-on font-bold text-lg font-headline">Alex Chen</span>
-          <span className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider">Level {level} Architect</span>
-          <button className="mt-6 w-full bg-primary text-primary-on font-bold py-3 px-4 rounded-full shadow-md active:translate-x-1 transition-all duration-150 text-sm flex items-center justify-center gap-2 hover:brightness-110">
-             Start Daily Quiz
-          </button>
-        </div>
-        <nav className="flex-1 flex flex-col gap-1">
-          <Link href="/dashboard" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
-             <span className="material-symbols-outlined">dashboard</span> Dashboard
-          </Link>
-          <Link href="/library" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
-             <span className="material-symbols-outlined">local_library</span> Library
-          </Link>
-          <Link href="/leaderboard" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
-             <span className="material-symbols-outlined">leaderboard</span> Leaderboard
-          </Link>
-          <Link href={`/results/${params.id}`} className="bg-primary/10 text-primary rounded-full px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm">
-             <span className="material-symbols-outlined">analytics</span> Results
-          </Link>
-          <Link href="/profile" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
-             <span className="material-symbols-outlined">person</span> Profile
-          </Link>
-        </nav>
-      </aside>
+      <main className="flex-1 flex flex-col lg:ml-72 min-h-screen pt-16">
+        <DashboardHeader title="Results & Mastery" />
 
-      {/* Main Content Area */}
-      <main className="pt-24 pb-12 px-6 lg:ml-64 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-          
+        <div className="p-6 lg:p-12 max-w-7xl mx-auto w-full">
+
           {/* Header Info */}
           <div className="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
             <div>
-              <span className="text-secondary font-bold text-sm tracking-widest uppercase">Course Module 04</span>
-              <h1 className="text-4xl font-extrabold font-headline tracking-tight text-surface-on mt-1">Foundations of Neural Networks</h1>
+              <span className="text-secondary font-bold text-sm tracking-widest uppercase">Target Focus</span>
+              <h1 className="text-4xl font-extrabold font-headline tracking-tight text-surface-on mt-1">{studyTitle}</h1>
             </div>
             <div className="flex gap-4">
               <div className="bg-tertiary-container/20 px-6 py-3 rounded-xl flex items-center gap-3 shadow-sm border border-tertiary/20">
@@ -129,127 +179,130 @@ export default function ResultsPage() {
 
           {/* 3-Panel Layout */}
           <div className="grid grid-cols-12 gap-8 items-start">
-            
+
             {/* Left Panel: Structured Notes */}
             <section className="col-span-12 xl:col-span-3 space-y-6">
               <div className="bg-white border border-surface-container p-6 rounded-2xl md:sticky md:top-28 shadow-sm">
                 <h2 className="font-headline font-bold text-lg mb-6 flex items-center gap-2 text-surface-on">
-                  <span className="material-symbols-outlined text-primary">description</span> Structured Notes
+                  <span className="material-symbols-outlined text-primary">description</span> Extraction Map
                 </h2>
                 <div className="space-y-4 max-h-[600px] overflow-y-auto no-scrollbar">
-                  
-                  <div className="group border border-surface-container/50 rounded-xl bg-surface">
-                    <details className="cursor-pointer" open>
-                      <summary className="flex justify-between items-center p-3 font-bold text-primary transition-colors">
-                        <span>The Perceptron</span>
-                        <span className="material-symbols-outlined text-sm">expand_more</span>
-                      </summary>
-                      <div className="px-4 pb-3 pt-1 text-sm text-on-surface-variant border-t border-surface-container/50 space-y-2">
-                        <p>The simplest type of artificial neural network, a linear classifier.</p>
-                        <ul className="list-disc pl-4 space-y-1">
-                          <li>Input weights</li>
-                          <li>Summation function</li>
-                          <li>Activation function</li>
-                        </ul>
+                  {summaryNotes.length === 0 ? (
+                    <div className="text-center p-6 text-on-surface-variant text-sm font-bold">No structured notes extracted for this set.</div>
+                  ) : (
+                    summaryNotes.map((note, index) => (
+                      <div key={index} className="group border border-surface-container/50 rounded-xl bg-surface">
+                        <details className="cursor-pointer" open={index === 0}>
+                          <summary className="flex justify-between items-center p-3 font-bold text-primary transition-colors">
+                            <span>Key Concept {index + 1}</span>
+                            <span className="material-symbols-outlined text-sm">expand_more</span>
+                          </summary>
+                          <div className="px-4 pb-3 pt-1 text-sm text-on-surface-variant border-t border-surface-container/50 space-y-2">
+                            <p>{note}</p>
+                          </div>
+                        </details>
                       </div>
-                    </details>
-                  </div>
-                  
-                  <div className="group border border-surface-container/50 rounded-xl bg-surface">
-                    <details className="cursor-pointer">
-                      <summary className="flex justify-between items-center p-3 font-bold text-surface-on transition-colors">
-                        <span>Activation Functions</span>
-                        <span className="material-symbols-outlined text-sm">expand_more</span>
-                      </summary>
-                      <div className="px-4 pb-3 pt-1 text-sm text-on-surface-variant border-t border-surface-container/50 space-y-2">
-                        <p>Non-linear transformations applied to the output of a neuron.</p>
-                        <ul className="list-disc pl-4 space-y-1">
-                          <li>Sigmoid (0 to 1)</li>
-                          <li>ReLU (Rectified Linear Unit)</li>
-                          <li>Tanh (-1 to 1)</li>
-                        </ul>
-                      </div>
-                    </details>
-                  </div>
-
-                  <div className="p-4 bg-error-container/10 border border-error/20 rounded-xl shadow-sm">
-                    <div className="flex items-center gap-2 mb-2 text-error">
-                      <span className="material-symbols-outlined text-lg">warning</span>
-                      <span className="font-bold text-sm">Weak Area</span>
-                    </div>
-                    <p className="text-xs text-on-surface-variant">You missed 2 questions regarding the chain rule in gradient descent. Review this section.</p>
-                  </div>
-
+                    ))
+                  )}
                 </div>
               </div>
             </section>
 
             {/* Center Panel: Quiz Section */}
             <section className="col-span-12 xl:col-span-5 space-y-8">
-              <div className="bg-white border border-surface-container rounded-2xl p-8 shadow-premium">
-                <div className="flex justify-between items-center mb-10">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary shadow-inner">
-                      <span className="font-bold">Q4</span>
-                    </div>
-                    <div>
-                      <h3 className="font-headline font-bold text-xl text-surface-on">Assessment Quiz</h3>
-                      <p className="text-sm text-on-surface-variant">Progress: 4 of 10</p>
-                    </div>
+              <div className="bg-white border border-surface-container rounded-2xl p-8 shadow-premium min-h-[500px]">
+                {loading ? (
+                  <div className="flex items-center justify-center h-full text-on-surface-variant animate-pulse font-bold">
+                    Loading Quizzes...
                   </div>
-                  <span className="px-3 py-1 bg-surface rounded-full text-xs font-bold text-on-surface-variant border border-surface-container text-center hidden sm:block">Topic: Gradients</span>
-                </div>
-                
-                <div className="mb-10">
-                  <p className="text-lg font-medium leading-relaxed text-surface-on">
-                    Which mathematical principle is primarily used to calculate the gradients during the backpropagation process in deep learning models?
-                  </p>
-                </div>
-                
-                <div className="space-y-4 flex flex-col items-stretch">
-                  <button className="w-full text-left p-5 rounded-2xl border-2 border-error/50 bg-error/5 flex justify-between items-center transition-all">
-                    <span className="font-medium text-error">Linear Regression Formula</span>
-                    <span className="material-symbols-outlined text-error">cancel</span>
-                  </button>
-                  <button className="w-full text-left p-5 rounded-2xl border-2 border-primary bg-primary/5 flex justify-between items-center transition-all shadow-sm">
-                    <span className="font-medium text-primary font-bold">The Chain Rule</span>
-                    <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-                  </button>
-                  <button className="w-full text-left p-5 rounded-2xl border-2 border-surface-container hover:border-surface-variant hover:bg-surface transition-all">
-                    <span className="font-medium text-on-surface-variant">Fourier Transformation</span>
-                  </button>
-                  <button className="w-full text-left p-5 rounded-2xl border-2 border-surface-container hover:border-surface-variant hover:bg-surface transition-all">
-                    <span className="font-medium text-on-surface-variant">Bayesian Probability</span>
-                  </button>
-                </div>
-                
-                <div className="mt-10 p-6 bg-surface border border-surface-container rounded-2xl shadow-inner">
-                  <h4 className="font-bold text-sm mb-2 flex items-center gap-2 text-surface-on">
-                    <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>lightbulb</span> Instant Feedback
-                  </h4>
-                  <p className="text-sm text-on-surface-variant">
-                    <strong className="text-surface-on">The Chain Rule</strong> is the core mechanism. It allows the network to distribute the error from the output layer back through each weight in the preceding layers.
-                  </p>
-                </div>
-                
-                <div className="mt-8 flex justify-end">
-                  <button className="bg-primary text-primary-on px-8 py-4 rounded-full font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-2">
-                    Next Question <span className="material-symbols-outlined">arrow_forward</span>
-                  </button>
-                </div>
+                ) : activeQuiz ? (
+                  <>
+                    <div className="flex justify-between items-center mb-10">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-primary shadow-inner">
+                          <span className="font-bold">Q{currentQuizIndex + 1}</span>
+                        </div>
+                        <div>
+                          <h3 className="font-headline font-bold text-xl text-surface-on">Assessment Quiz</h3>
+                          <p className="text-sm text-on-surface-variant">Progress: {currentQuizIndex + 1} of {quizzes.length}</p>
+                        </div>
+                      </div>
+                      <span className="px-3 py-1 bg-surface rounded-full text-xs font-bold text-on-surface-variant border border-surface-container text-center hidden sm:block">AI Validation</span>
+                    </div>
+
+                    <div className="mb-10">
+                      <p className="text-lg font-medium leading-relaxed text-surface-on">
+                        {activeQuiz.question}
+                      </p>
+                    </div>
+
+                    <div className="space-y-4 flex flex-col items-stretch">
+                      {activeQuiz.options.map((opt, i) => {
+                        const isSelected = selectedOption === opt;
+                        const isCorrectOpt = activeQuiz.correct_answer === opt;
+
+                        let btnClasses = "border-surface-container hover:border-surface-variant hover:bg-surface text-on-surface-variant";
+                        let icon = null;
+
+                        if (quizStatus !== "idle") {
+                          if (isCorrectOpt) {
+                            btnClasses = "border-primary bg-primary/5 text-primary font-bold shadow-sm ring-1 ring-primary/20";
+                            icon = <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>;
+                          } else if (isSelected) {
+                            btnClasses = "border-error/50 bg-error/5 text-error";
+                            icon = <span className="material-symbols-outlined text-error">cancel</span>;
+                          }
+                        } else if (isSelected) {
+                          btnClasses = "border-tertiary bg-tertiary/5 text-tertiary";
+                        }
+
+                        return (
+                          <button
+                            key={i}
+                            onClick={() => handleQuizSelect(opt)}
+                            className={`w-full text-left p-5 rounded-2xl border-2 flex justify-between items-center transition-all ${btnClasses}`}
+                          >
+                            <span className="font-medium">{opt}</span>
+                            {icon}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {quizStatus === "correct" && (
+                      <div className="mt-10 p-6 bg-primary/10 border border-primary/20 rounded-2xl shadow-inner flex items-center justify-between">
+                        <div>
+                          <h4 className="font-bold text-sm mb-1 flex items-center gap-2 text-primary">
+                            <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span> Brilliant!
+                          </h4>
+                          <p className="text-sm text-primary/80">+100 XP awarded to your profile.</p>
+                        </div>
+
+                        {currentQuizIndex < quizzes.length - 1 ? (
+                          <button onClick={nextQuiz} className="bg-primary text-primary-on px-6 py-3 rounded-full font-bold shadow-md hover:brightness-110 active:scale-95 transition-all flex items-center gap-2">
+                            Next Question <span className="material-symbols-outlined">arrow_forward</span>
+                          </button>
+                        ) : (
+                          <span className="bg-white text-primary px-4 py-2 rounded-full text-xs font-bold uppercase">Quiz Completed!</span>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-center font-bold text-on-surface-variant my-10">No quizzes available for this set.</p>
+                )}
               </div>
             </section>
 
             {/* Right Panel: Flashcards & Progress */}
             <section className="col-span-12 xl:col-span-4 space-y-6">
-              
-              {/* Refined Mastered Cards List since we have no 3D flip library standardly injected without the Flashcard component logic, we will use our existing component */}
+
               <div className="bg-white p-6 rounded-2xl border border-surface-container shadow-sm flex flex-col h-[500px]">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-headline font-bold text-primary">Generated Flashcards</h3>
                   <span className="text-xs font-bold text-on-surface-variant bg-surface px-2 py-1 border border-surface-container rounded">{flashcards.length - masteredIds.size} Left</span>
                 </div>
-                
+
                 <div className="flex-1 overflow-y-auto space-y-4 no-scrollbar pb-4 pr-1">
                   {loading && <p className="text-center font-bold text-on-surface-variant my-10 animate-pulse">Loading AI Data...</p>}
                   {!loading && flashcards.length === 0 && <p className="text-center font-bold text-on-surface-variant my-10">No flashcards found for this study set.</p>}
@@ -257,21 +310,21 @@ export default function ResultsPage() {
                     <div key={card.id} className="relative shadow-sm rounded-xl overflow-hidden border border-surface-container group">
                       {masteredIds.has(card.id) && (
                         <div className="absolute inset-0 z-20 bg-white/70 backdrop-blur-[2px] flex items-center justify-center pointer-events-none">
-                           <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
-                             <span className="material-symbols-outlined text-sm font-bold">done_all</span>
-                             <span className="text-xs font-bold font-headline">+50 XP</span>
-                           </div>
+                          <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
+                            <span className="material-symbols-outlined text-sm font-bold">done_all</span>
+                            <span className="text-xs font-bold font-headline">+50 XP</span>
+                          </div>
                         </div>
                       )}
                       <Flashcard card={card} onMastered={handleMastered} />
                     </div>
                   ))}
                 </div>
-                
+
                 {masteredIds.size === flashcards.length && flashcards.length > 0 && (
                   <div className="mt-4 text-center">
-                    <button onClick={() => router.push('/dashboard')} className="text-primary font-bold text-sm hover:underline active:scale-95 transition-transform">
-                       Finish Session
+                    <button onClick={() => router.push('/dashboard')} className="text-primary font-bold text-sm hover:underline active:scale-95 transition-transform flex items-center justify-center gap-2 mx-auto">
+                      Return to Dashboard <span className="material-symbols-outlined text-sm">home</span>
                     </button>
                   </div>
                 )}
