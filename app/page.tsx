@@ -26,12 +26,12 @@ export default function HomePage() {
 							</p>
 							<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
 								<Link href="/register" passHref legacyBehavior>
-									<Button as="a" className="px-10 py-5 text-lg" variant="primary">
+									<Button className="px-10 py-5 text-lg" variant="primary">
 										Start Your First Quest
 									</Button>
 								</Link>
 								<Link href="/demo" passHref legacyBehavior>
-									<Button as="a" variant="glass" className="text-lg">
+									<Button variant="glass" className="text-lg">
 										<span className="material-symbols-outlined bg-white shadow-md p-3 rounded-full border border-surface-container-low mr-2">play_circle</span>
 										See How It Works
 									</Button>
@@ -188,12 +188,12 @@ export default function HomePage() {
 							</p>
 							<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
 								<Link href="/register" passHref legacyBehavior>
-									<Button as="a" className="px-12 py-5 text-xl font-black" variant="glass">
+									<Button className="px-12 py-5 text-xl font-black" variant="glass">
 										Get Started Free
 									</Button>
 								</Link>
 								<Link href="/premium" passHref legacyBehavior>
-									<Button as="a" className="px-12 py-5 text-xl font-bold border-2 border-white/30" variant="primary">
+									<Button className="px-12 py-5 text-xl font-bold border-2 border-white/30" variant="primary">
 										Compare Plans
 									</Button>
 								</Link>
