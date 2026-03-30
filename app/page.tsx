@@ -102,22 +102,9 @@ export default function LandingPage() {
               <h2 className="text-4xl md:text-5xl font-black font-headline mb-6 tracking-tighter leading-none">The Lab in Your Pocket</h2>
               <p className="text-on-surface-variant text-lg md:text-xl font-medium">Your study materials shouldn't just sit there. They should challenge you.</p>
             </div>
-            
-            <div className="relative max-w-5xl mx-auto group">
-              <div className="absolute -inset-10 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-[4rem] blur-[100px] opacity-40 group-hover:opacity-70 transition-opacity"></div>
-              <motion.div 
-                animate={{ y: [0, 20, 0] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                className="relative bg-white p-5 rounded-[2.5rem] shadow-2xl border border-white/50"
-              >
-                <img 
-                  alt="Dashboard Showcase" 
-                  className="w-full h-auto rounded-[1.5rem] shadow-inner" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3zr9xAUIRlb9cjP4eXgVCFIzXhh07QGOYtZYJmobdl4NkSESy0MLpJU_VYeYZOK098JiGae2ikjnm6jvu9VlH1eMfQlbv4v3g83OoWZ_bSwZZ_td2vFFKPnIBinSgAqciuwYTfm8SMzfOtRuAHuqxLaVFjLZN2pCUKYZuRss3mrh5jFCHiO9XHUNNq4oyVdDBSr2n0v1wKoN9swAPbGx0lXXia-mdP-uleKbfiSAl3K5N-MwBew-1RgCuziqPpeI3lkwoQJ2tW4I"
-                />
-              </motion.div>
-            </div>
           </div>
+          </div>
+            <
         </section>
 
         {/* 4. Features Section */}

@@ -6,6 +6,17 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'bg-surface',
+    'bg-surface-bright',
+    'bg-surface-container',
+    'text-surface-on',
+    'text-surface-variant',
+    'border-surface-container',
+    'glass-panel',
+    'gradient-text',
+    'preserve-3d',
+  ],
   theme: {
     extend: {
       colors: {
