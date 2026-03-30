@@ -120,40 +120,61 @@ export async function POST(req: Request) {
       });
     }
 
-    // Call Gemini 1.5 Flash (stable latest version for free tier)
-    const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash-latest',
-      contents: [{ role: 'user', parts }],
-      config: {
-        responseMimeType: 'application/json',
-        temperature: 0.1, // Even lower for maximum JSON consistency
+    // Call Gemini with Multi-Model Resilience Loop
+    const candidateModels = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-pro'];
+    let responseText = "";
+    let lastError = null;
+
+    for (const modelId of candidateModels) {
+      try {
+        console.log(`Attempting generation with model: ${modelId}...`);
+        const result = await ai.models.generateContent({
+          model: modelId,
+          contents: [{ role: 'user', parts }],
+          config: {
+            responseMimeType: 'application/json',
+            temperature: 0.1,
+          }
+        });
+        
+        responseText = result.text || "";
+        if (responseText) {
+          console.log(`SUCCESS with model: ${modelId}`);
+          break; 
+        }
+      } catch (err: any) {
+        lastError = err;
+        if (err.message?.includes('404') || err.message?.includes('not found')) {
+          console.warn(`Model ${modelId} not found, trying next...`);
+          continue;
+        }
+        throw err; // Re-throw real errors (auth, quota, etc.)
       }
-    });
-
-    let responseText = response.text;
-    
-    if (!responseText) {
-      throw new Error('No response text received from Gemini');
     }
 
-    // Clean up markdown markers if Gemini ignores the prompt instruction
-    responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+    // 4. Parse AI Response
+    try {
+      const cleanedText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+      const data = JSON.parse(cleanedText);
 
-    const data = JSON.parse(responseText);
+      // AI Generation succeeded, trigger the deduction engine
+      if (userData.subscription_tier === 'free') {
+         const client = supabaseAdmin || supabase;
+         await client
+           .from('users')
+           .update({ 
+             daily_credits: Math.max(userData.daily_credits - 1, 0),
+             updated_at: new Date().toISOString()
+           })
+           .eq('id', user.id);
+      }
 
-    // AI Generation succeeded, trigger the deduction engine
-    if (userData.subscription_tier === 'free') {
-       const client = supabaseAdmin || supabase;
-       await client
-         .from('users')
-         .update({ 
-           daily_credits: Math.max(userData.daily_credits - 1, 0),
-           updated_at: new Date().toISOString()
-         })
-         .eq('id', user.id);
+      return NextResponse.json(data);
+
+    } catch (parseError: any) {
+       console.error("AI Output parsing failure:", responseText);
+       throw new Error(`The AI generated an invalid data format: ${parseError.message}`);
     }
-
-    return NextResponse.json(data);
 
   } catch (error: any) {
     console.error('Generation API Error:', error);
