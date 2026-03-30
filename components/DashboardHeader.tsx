@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabase/client";
 
 interface DashboardHeaderProps {
   title: string;
@@ -16,6 +16,7 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
 
   useEffect(() => {
     async function fetchHeaderData() {
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -37,21 +38,21 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   };
 
   return (
-    <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-20 bg-white/90 backdrop-blur-xl border-b border-surface-container/50 shadow-sm flex items-center justify-between px-8 z-40 transition-all duration-300">
+    <nav className="fixed top-0 right-0 left-0 lg:left-72 w-full lg:w-auto h-20 bg-white/80 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm flex items-center justify-between px-8 z-40 transition-all duration-300">
       <div className="flex items-center gap-10">
-        <h1 className="text-2xl font-black font-headline text-surface-on tracking-tighter leading-none hidden md:block">
+        <h1 className="text-2xl font-black font-headline text-on-surface tracking-tighter leading-none hidden md:block">
           {title}
         </h1>
         
         {/* Universal Search */}
-        <form onSubmit={handleSearch} className="hidden sm:flex items-center bg-surface-container rounded-full px-5 py-2.5 border border-surface-container/30 w-72 lg:w-80 group focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-white transition-all">
-          <span className="material-symbols-outlined text-surface-variant text-sm group-focus-within:text-primary">search</span>
+        <form onSubmit={handleSearch} className="hidden sm:flex items-center bg-surface-container-low rounded-full px-5 py-2.5 border border-outline-variant/20 w-72 lg:w-80 group focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-white transition-all">
+          <span className="material-symbols-outlined text-on-surface-variant text-sm group-focus-within:text-primary">search</span>
           <input 
             type="text" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search resources, topics..." 
-            className="bg-transparent border-none focus:ring-0 text-sm w-full font-bold placeholder:font-medium placeholder:text-surface-variant text-surface-on ml-2 outline-none" 
+            className="bg-transparent border-none focus:ring-0 text-sm w-full font-bold placeholder:font-medium placeholder:text-on-surface-variant text-on-surface ml-2 outline-none" 
           />
         </form>
       </div>
@@ -59,13 +60,13 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           <HeaderAction icon="notifications" badge="2" />
-          <HeaderAction icon="local_fire_department" color="text-secondary" badge={userData?.streak_count?.toString() || "0"} />
-          <HeaderAction icon="stars" color="text-tertiary" />
+          <HeaderAction icon="local_fire_department" color="text-tertiary" badge={userData?.streak_count?.toString() || "0"} />
+          <HeaderAction icon="workspace_premium" color="text-secondary" />
         </div>
         
         <div className="h-10 w-px bg-surface-container mx-2" />
         
-        <Link href="/profile" className="w-10 h-10 rounded-full border-2 border-primary-container bg-surface flex justify-center items-center text-primary font-bold shadow-sm font-headline hover:scale-105 active:scale-95 transition-all">
+        <Link href="/profile" className="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-container-low flex justify-center items-center text-primary font-bold shadow-sm font-headline hover:scale-105 active:scale-95 transition-all">
           {userData?.initials || "U"}
         </Link>
       </div>
@@ -73,12 +74,12 @@ export default function DashboardHeader({ title }: DashboardHeaderProps) {
   );
 }
 
-function HeaderAction({ icon, color = "text-surface-variant", badge }: { icon: string, color?: string, badge?: string }) {
+function HeaderAction({ icon, color = "text-on-surface-variant", badge }: { icon: string; color?: string; badge?: string }) {
   return (
-    <button className="relative w-10 h-10 rounded-full border border-surface-container bg-white flex items-center justify-center hover:bg-surface-container transition-all active:scale-90 group outline-none">
+    <button className="relative w-10 h-10 rounded-full border border-outline-variant/20 bg-white flex items-center justify-center hover:bg-surface-container-low transition-all active:scale-90 group outline-none">
       <span className={`material-symbols-outlined text-xl transition-colors ${color} group-hover:text-primary`}>{icon}</span>
       {badge && parseInt(badge) > 0 && (
-        <span className="absolute -top-1 -right-1 bg-primary text-white text-[8px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">{badge}</span>
+        <span className="absolute -top-1 -right-1 bg-primary text-on-primary text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">{badge}</span>
       )}
     </button>
   );

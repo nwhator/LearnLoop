@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -20,7 +20,22 @@ export default function RegisterPage() {
     setLoading(true);
     setError(null);
 
+    // Client-side validation
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      setLoading(false);
+      return;
+    }
+
     try {
+      const supabase = createClient();
+      
       const { data, error: signupError } = await supabase.auth.signUp({
         email,
         password,
@@ -34,40 +49,50 @@ export default function RegisterPage() {
       if (signupError) throw signupError;
 
       if (data.user) {
+        // Check if email confirmation is required
+        // If identities array is empty, it means the user already exists
+        if (data.user.identities && data.user.identities.length === 0) {
+          setError("An account with this email already exists. Try logging in instead.");
+          return;
+        }
+        
         setSuccess(true);
-        // Optional: Automagically redirect after 3s
-        setTimeout(() => router.push("/login"), 3000);
+        // If the session exists immediately, email confirmation is disabled
+        if (data.session) {
+          setTimeout(() => router.push("/dashboard"), 1500);
+        }
+        // Otherwise, user needs to confirm email — show the success message
       }
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred during synthesis.");
+      setError(err.message || "An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-surface text-on-surface flex flex-col min-h-screen selection:bg-primary/10 selection:text-primary">
+    <div className="bg-surface text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-container">
       {/* Auth Layout Wrapper */}
       <main className="flex-1 flex flex-col md:flex-row min-h-screen">
         
-        {/* Branding & Visual Side (Legacy LearnLoop Split Aesthetic) */}
+        {/* Branding & Visual Side */}
         <section className="hidden md:flex md:w-1/2 bg-primary relative overflow-hidden flex-col justify-between p-12">
           {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[120px] opacity-20 -mr-48 -mt-48" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary/20 rounded-full blur-[100px] opacity-10 -ml-40 -mb-40" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary-fixed-dim rounded-full blur-[120px] opacity-20 -mr-48 -mt-48" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-secondary rounded-full blur-[100px] opacity-10 -ml-40 -mb-40" />
           
           <div className="relative z-10">
             <Link href="/" className="flex items-center gap-2 mb-16 hover:opacity-80 transition-opacity w-fit group">
-              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-on-primary rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-primary text-2xl font-black" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
               </div>
-              <span className="text-3xl font-black font-headline text-white tracking-tighter">LearnLoop</span>
+              <span className="text-3xl font-black font-headline text-on-primary tracking-tighter">LearnLoop</span>
             </Link>
             
-            <h1 className="text-5xl lg:text-7xl font-black font-headline text-white leading-[0.95] tracking-tighter max-w-lg mb-8">
-              Join the <br /> <span className="italic font-normal opacity-90 text-surface-lowest">Intellectual</span> <br /> Playground.
+            <h1 className="text-5xl lg:text-7xl font-black font-headline text-on-primary leading-[0.95] tracking-tighter max-w-lg mb-8">
+              Join the <br /> <span className="italic font-normal opacity-90 text-primary-fixed">Intellectual</span> <br /> Playground.
             </h1>
-            <p className="text-xl text-white/80 font-medium max-w-md leading-relaxed">
+            <p className="text-xl text-on-primary/80 font-medium max-w-md leading-relaxed">
               Master any topic through gamified missions, AI-personalized pathways, and a global community of scholars.
             </p>
           </div>
@@ -81,11 +106,11 @@ export default function RegisterPage() {
                   className="w-14 h-14 rounded-full border-4 border-white/20 object-cover" 
                 />
                 <div>
-                  <p className="text-white font-black font-headline text-lg tracking-tight">Sarah Chen</p>
-                  <p className="text-white/60 text-xs font-bold uppercase tracking-widest leading-none">Senior Scholar</p>
+                  <p className="text-on-primary font-black font-headline text-lg tracking-tight">Sarah Chen</p>
+                  <p className="text-on-primary/60 text-xs font-bold uppercase tracking-widest leading-none">Senior Scholar</p>
                 </div>
               </div>
-              <p className="text-white/90 italic text-sm leading-relaxed font-medium">
+              <p className="text-on-primary/90 italic text-sm leading-relaxed font-medium">
                 "The Mission-based learning keeps me coming back every day. It's the first platform that actually makes upskilling feel like a game."
               </p>
             </div>
@@ -98,17 +123,13 @@ export default function RegisterPage() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-[80px] -z-10" />
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-md"
-          >
+          <div className="w-full max-w-md">
             
             {/* Mobile Logo */}
             <div className="md:hidden flex items-center gap-3 mb-12 justify-center">
               <Link href="/" className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="material-symbols-outlined text-white text-xl font-black" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+                  <span className="material-symbols-outlined text-on-primary text-xl font-black" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
                 </div>
                 <span className="text-2xl font-black font-headline text-primary tracking-tighter">LearnLoop</span>
               </Link>
@@ -122,7 +143,7 @@ export default function RegisterPage() {
             
             {/* Social Logins */}
             <div className="grid grid-cols-2 gap-4 mb-10">
-              <button className="group flex items-center justify-center gap-3 py-4 px-4 rounded-2xl bg-white border border-surface-container hover:bg-surface-lowest shadow-sm hover:shadow-premium transition-all">
+              <button className="group flex items-center justify-center gap-3 py-4 px-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 hover:bg-surface-container-low shadow-sm hover:shadow-premium transition-all">
                 <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -131,7 +152,7 @@ export default function RegisterPage() {
                 </svg>
                 <span className="text-sm font-black text-on-surface">Google</span>
               </button>
-              <button className="group flex items-center justify-center gap-3 py-4 px-4 rounded-2xl bg-white border border-surface-container hover:bg-surface-lowest shadow-sm hover:shadow-premium transition-all">
+              <button className="group flex items-center justify-center gap-3 py-4 px-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/20 hover:bg-surface-container-low shadow-sm hover:shadow-premium transition-all">
                 <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.05 20.28c-.96.95-2.04 1.44-3.23 1.47-1.2.02-2.13-.39-3.13-.39s-1.95.42-3.04.39c-1.14-.03-2.26-.54-3.27-1.53C2.33 18.2 1.4 15.2 1.4 12.3c0-2.4 1-4.2 2.6-5.1 1.1-.7 2.4-1.1 3.7-1.1 1.2 0 2.2.4 3 .8.7.4 1.5.8 2.3.8.7 0 1.6-.4 2.5-.9 1.1-.6 2.4-.9 3.6-.9 1.1 0 2.2.3 3.2.9.8.5 1.4 1.2 1.9 2-2.3 1-3.4 3.1-3.4 5.2 0 2.4 1.3 4.3 3.3 5.3-.5 1.1-1.2 2.1-2 3zM14.2 2.1c0 1.2-.5 2.5-1.3 3.3-.9 1-2.1 1.6-3.3 1.5-.1-1.3.5-2.6 1.3-3.4.9-1.1 2.2-1.7 3.3-1.4z" />
                 </svg>
@@ -141,112 +162,126 @@ export default function RegisterPage() {
             
             {/* Separator */}
             <div className="relative flex items-center mb-10">
-              <div className="flex-grow border-t border-surface-container"></div>
-              <span className="flex-shrink mx-6 text-[10px] font-black text-on-surface-variant uppercase tracking-[0.25em]">Or sign up with email</span>
-              <div className="flex-grow border-t border-surface-container"></div>
+              <div className="flex-grow border-t border-outline-variant/20"></div>
+              <span className="flex-shrink mx-6 text-[10px] font-black text-outline uppercase tracking-[0.25em]">Or sign up with email</span>
+              <div className="flex-grow border-t border-outline-variant/20"></div>
             </div>
             
             {/* Registration Form */}
-            <form onSubmit={handleRegister} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2.5 ml-1" htmlFor="name">Full Name</label>
-                  <input 
-                    type="text" 
-                    id="name" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    placeholder="Sarah Chen" 
-                    className="w-full px-6 py-4 rounded-2xl bg-white border border-surface-container focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all underline-offset-0 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-bold shadow-sm" 
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2.5 ml-1" htmlFor="email">Email address</label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="sarah@learnloop.app" 
-                    className="w-full px-6 py-4 rounded-2xl bg-white border border-surface-container focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all underline-offset-0 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-bold shadow-sm" 
-                  />
-                </div>
-              </div>
-
+            <form onSubmit={handleRegister} className="space-y-5">
               <div>
-                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-2.5 ml-1" htmlFor="password">Create Password</label>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2 ml-1" htmlFor="name">Full Name</label>
                 <input 
-                  type="password" 
-                  id="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  type="text" 
+                  id="name" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="••••••••" 
-                  className="w-full px-6 py-4 rounded-2xl bg-white border border-surface-container focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all underline-offset-0 outline-none text-on-surface placeholder:text-on-surface-variant/40 font-bold shadow-sm" 
+                  placeholder="Enter your name" 
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-container-low border-transparent focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-on-surface placeholder:text-on-surface-variant/50 font-medium" 
                 />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2 ml-1" htmlFor="email">Email Address</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="hello@example.com" 
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-container-low border-transparent focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-on-surface placeholder:text-on-surface-variant/50 font-medium" 
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2 ml-1" htmlFor="password">Password</label>
+                  <input 
+                    type="password" 
+                    id="password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••" 
+                    className="w-full px-5 py-4 rounded-2xl bg-surface-container-low border-transparent focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-on-surface placeholder:text-on-surface-variant/50 font-medium" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2 ml-1" htmlFor="confirm">Confirm</label>
+                  <input 
+                    type="password" 
+                    id="confirm" 
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    placeholder="••••••••" 
+                    className="w-full px-5 py-4 rounded-2xl bg-surface-container-low border-transparent focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-on-surface placeholder:text-on-surface-variant/50 font-medium" 
+                  />
+                </div>
               </div>
 
               {error && (
                 <div className="p-4 bg-error/10 border border-error/20 rounded-2xl flex items-center gap-3">
                   <span className="material-symbols-outlined text-error text-xl">error</span>
-                  <p className="text-error text-xs font-bold leading-none">{error}</p>
+                  <p className="text-error text-xs font-bold leading-tight">{error}</p>
                 </div>
               )}
 
               {success && (
-                <div className="p-4 bg-tertiary/10 border border-tertiary/20 rounded-2xl flex items-center gap-3">
-                  <span className="material-symbols-outlined text-tertiary text-xl">verified</span>
-                  <p className="text-tertiary text-xs font-bold leading-none">Synthesis Initiated! Check your email to confirm.</p>
+                <div className="p-5 bg-green-50 border border-green-200 rounded-2xl flex items-start gap-3">
+                  <span className="material-symbols-outlined text-green-600 text-xl mt-0.5">check_circle</span>
+                  <div>
+                    <p className="text-green-800 text-sm font-bold mb-1">Account created successfully!</p>
+                    <p className="text-green-700 text-xs leading-relaxed">Please check your email inbox for a confirmation link. Click it to activate your account, then you can log in.</p>
+                  </div>
                 </div>
               )}
               
-              <div className="pt-6 relative">
+              <div className="pt-4 relative">
                 {/* Gamified Hint Badge */}
-                <div className="absolute -right-4 -top-6 flex items-center gap-2 bg-secondary-container text-secondary-on px-4 py-2 rounded-full shadow-lg animate-bounce z-10 border border-secondary/20">
-                  <span className="material-symbols-outlined text-sm font-black" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
+                <div className="absolute -right-4 -top-2 flex items-center gap-1.5 bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full shadow-sm animate-bounce z-10">
+                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
                   <span className="text-[10px] font-black uppercase tracking-tighter">Level 1 Awaits</span>
                 </div>
                 <button 
                   disabled={loading || success}
                   type="submit" 
-                  className="w-full bg-primary text-white py-5 px-8 rounded-full font-black text-lg shadow-premium hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 flex justify-center items-center gap-3"
+                  className="w-full bg-primary text-on-primary py-4 px-8 rounded-full font-bold text-lg shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 flex justify-center items-center gap-3"
                 >
                   {loading && <span className="material-symbols-outlined animate-spin text-xl">autorenew</span>}
-                  {loading ? "Sythesizing..." : "Join the Loop"}
+                  {loading ? "Synthesizing..." : "Create Account"}
                 </button>
               </div>
             </form>
 
             {/* Social Proof */}
-            <div className="mt-14 flex justify-center">
-              <div className="flex items-center gap-4 bg-white/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-surface-container shadow-sm">
+            <div className="mt-12 flex justify-center">
+              <div className="flex items-center gap-3 bg-surface-container-high/50 backdrop-blur px-4 py-2 rounded-full border border-outline-variant/10">
                 <div className="flex -space-x-2">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center font-black text-[8px]">{i}</div>
-                  ))}
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuASUs2oIouP2fTHUZBZHfGrER-0zSIcTp5tJVvW1r5ALetiTo1bd-q7FE1hdlYZEXllMyLpZAYScEDPj2jAp6Z2knMGmVkQA_ghzyAl0IzVVEY6h-QPucKd-eViZOfktujfsnIZBNHwmIBLOYROib2Xlmw-VmG9s7W29kNYWZGgEgtZi0EtFSRVmpQkr5cGtYWXNiTsnpVrD9FfFsqOSDUhBGhF-nmURYcBKrYVhd1CHjxOdZhQazGyfnkr50tyShOrulFZkkabgcs" alt="User" className="w-6 h-6 rounded-full border-2 border-surface object-cover" />
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmw0MQSqkAFAP2Xu06br-zFGZrGjbxcWoxqo7WeLigCmoK_KtRo16qswRerEyZVkzxPRWyxsy7jtS0Os4YHHNA0jt5JwHM9iTMscChr87QxFbHzJiW_cc_nefptbr-UH2zIIKn_TsdI6R1-VKrsuhIgrmvznU3AFDs-N3dq7-7Ev-r9_XuZDgimmUMVkQimKjiP-_2mEOYCa_VOlqOR-L7pKwCGw5oq3nHnbQN1rCeh8uUWt4x6TIgTkbk_8_x7A7cDForQsu0iKk" alt="User" className="w-6 h-6 rounded-full border-2 border-surface object-cover" />
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7MH4VEmf-VR0-JTDTSXo83jwa1X06uetUHYbpZBjL9T4Er5TivqxioHWR6mMrYJ5TvADuFB5eLXzWwcvv9Lulbf7Scf3gfar7yUK_HunWsGMvUfX0NFm0Kym30oYtQ-l6366Lqnl8eRw8AAoPDazTpre0_5tfoX50g-W98yciRK12kO6p5KRyxsKpCROsl8i4Gj8yztOwxpYoQ-Z1xlewk9AiwUlEYYX_9d_rFkbmXJNna6bvMST86s1p10xRGuwiVZe5VVUr7tw" alt="User" className="w-6 h-6 rounded-full border-2 border-surface object-cover" />
                 </div>
-                <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest">Join 12k+ other scholars</span>
+                <span className="text-xs font-semibold text-on-surface-variant">Join 124 others online now</span>
               </div>
             </div>
 
-            {/* Footer Terms */}
-            <p className="mt-10 text-center text-xs text-on-surface-variant leading-relaxed font-medium">
-              By joining LearnLoop, you agree to our <Link href="/terms" className="font-black text-on-surface hover:text-primary underline decoration-primary/20">Terms of Service</Link> and <Link href="/privacy" className="font-black text-on-surface hover:text-primary underline decoration-primary/20">Privacy Policy</Link>.
+            {/* Terms */}
+            <p className="mt-8 text-center text-xs text-on-surface-variant leading-relaxed">
+              By joining LearnLoop, you agree to our <Link href="/terms" className="font-bold text-on-surface hover:text-primary underline decoration-primary/30">Terms of Service</Link> and <Link href="/privacy" className="font-bold text-on-surface hover:text-primary underline decoration-primary/30">Privacy Policy</Link>.
             </p>
-          </motion.div>
+          </div>
         </section>
       </main>
 
       {/* Simple Footer */}
-      <footer className="bg-surface py-10 border-t border-surface-container mt-auto">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-xs font-black text-on-surface-variant/40 uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} LearnLoop Systems. Elevate your intellect.</p>
-          <div className="flex gap-10">
-            <Link href="/help" className="text-xs font-black text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-[0.2em]">Help Center</Link>
-            <Link href="/privacy" className="text-xs font-black text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-[0.2em]">Privacy</Link>
-            <Link href="/careers" className="text-xs font-black text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-[0.2em]">Careers</Link>
+      <footer className="bg-surface py-8 border-t border-outline-variant/10">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs font-medium text-on-surface-variant/60">&copy; {new Date().getFullYear()} LearnLoop AI. Elevate your intellect.</p>
+          <div className="flex gap-6">
+            <Link href="/support" className="text-xs font-bold text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-widest">Help Center</Link>
+            <Link href="/privacy" className="text-xs font-bold text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-widest">Privacy</Link>
+            <Link href="/terms" className="text-xs font-bold text-on-surface-variant/60 hover:text-primary transition-colors uppercase tracking-widest">Careers</Link>
           </div>
         </div>
       </footer>

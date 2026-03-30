@@ -54,25 +54,25 @@ export default function MissionsPage() {
         <div className="p-8 lg:p-12 mt-20 space-y-12 max-w-7xl mx-auto w-full">
             
             <header className="space-y-4">
-                <h2 className="text-5xl font-black font-headline text-surface-on tracking-tighter">Daily Operations</h2>
-                <p className="text-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Complete synchronized challenges to earn bonus XP and exclusive badges. Operations reset in <span className="text-error font-black">08:42:15</span>.</p>
+                <h2 className="text-5xl font-black font-headline text-on-surface tracking-tighter">Daily Operations</h2>
+                <p className="text-on-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Complete synchronized challenges to earn bonus XP and exclusive badges. Operations reset in <span className="text-error font-black">08:42:15</span>.</p>
             </header>
 
             {/* Event Spotlight */}
             <section className="relative w-full overflow-hidden bg-primary-container rounded-[3rem] p-12 shadow-premium group">
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-on/10 to-transparent blur-[120px] rounded-full" />
                 <div className="absolute top-0 right-0 w-80 h-full flex items-center justify-center opacity-10 pointer-events-none transform translate-x-12 group-hover:rotate-12 group-hover:scale-110 transition-transform duration-[2000ms]">
-                    <span className="material-symbols-outlined text-[250px] text-primary-on" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
+                    <span className="material-symbols-outlined text-[250px] text-on-primary" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
                 </div>
 
                 <div className="relative z-10 space-y-8">
-                    <span className="bg-primary/20 text-primary-on border border-primary-on/30 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 inline-block shadow-sm">
+                    <span className="bg-primary/20 text-on-primary border border-on-primary/30 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 inline-block shadow-sm">
                         Global Event Operation
                     </span>
-                    <h2 className="text-4xl md:text-6xl font-black font-headline text-primary-on tracking-tighter mb-4 max-w-2xl leading-none">
+                    <h2 className="text-4xl md:text-6xl font-black font-headline text-on-primary tracking-tighter mb-4 max-w-2xl leading-none">
                         The Neural <br /><span className="italic font-serif opacity-70">Architecture</span> Challenge
                     </h2>
-                    <p className="text-primary-on/80 max-w-lg font-medium text-lg leading-relaxed">
+                    <p className="text-on-primary/80 max-w-lg font-medium text-lg leading-relaxed">
                         Generate 5 high-accuracy study sets in under 24 hours to earn the restricted <span className="text-white font-black underline underline-offset-4 decoration-white/30 truncate">Synaptic Master</span> badge.
                     </p>
                     
@@ -86,7 +86,7 @@ export default function MissionsPage() {
 
             {/* List of active tasks */}
             <section className="space-y-10">
-                <h3 className="text-2xl font-black font-headline text-surface-on tracking-tight">Active Assignments</h3>
+                <h3 className="text-2xl font-black font-headline text-on-surface tracking-tight">Active Assignments</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {loading ? (
@@ -101,7 +101,7 @@ export default function MissionsPage() {
                           onInit={() => {}} 
                         />
                     )) : (
-                        <div className="col-span-full py-20 bg-white border border-surface-container rounded-[2.5rem] flex flex-col items-center justify-center text-surface-variant font-bold">
+                        <div className="col-span-full py-20 bg-white border border-surface-container rounded-[2.5rem] flex flex-col items-center justify-center text-on-surface-variant font-bold">
                             <span className="material-symbols-outlined text-6xl mb-4 opacity-30">check_circle</span>
                             <p className="text-xl font-headline font-black">All Objectives Complete.</p>
                         </div>
@@ -130,19 +130,19 @@ function MissionCard({ mission, onClaim, onInit }: { mission: Mission, onClaim: 
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colorMap[mission.type ?? 'daily']}`}>
               <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{iconMap[mission.type ?? 'daily']}</span>
             </div>
-            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-inner border border-surface-container/50 ${mission.is_claimed ? 'bg-surface text-surface-variant opacity-50' : 'bg-primary/10 text-primary'}`}>
+            <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-inner border border-surface-container/50 ${mission.is_claimed ? 'bg-surface text-on-surface-variant opacity-50' : 'bg-primary/10 text-primary'}`}>
                 {mission.is_claimed ? 'Awarded' : `+${mission.reward_xp} XP`}
             </div>
         </div>
 
-        <h4 className="text-2xl font-black font-headline text-surface-on mb-3 leading-tight group-hover:text-primary transition-colors line-clamp-1">{mission.title}</h4>
-        <p className="text-surface-variant text-sm font-medium leading-relaxed mb-10 italic opacity-80 line-clamp-2">"{mission.description}"</p>
+        <h4 className="text-2xl font-black font-headline text-on-surface mb-3 leading-tight group-hover:text-primary transition-colors line-clamp-1">{mission.title}</h4>
+        <p className="text-on-surface-variant text-sm font-medium leading-relaxed mb-10 italic opacity-80 line-clamp-2">"{mission.description}"</p>
         
         <div className="mt-auto space-y-6">
             <div className="space-y-2">
-                <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.2em] text-surface-variant">
+                <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">
                     <span>Progress</span>
-                    <span className="text-surface-on">{mission.current_value || 0} / {mission.target_value}</span>
+                    <span className="text-on-surface">{mission.current_value || 0} / {mission.target_value}</span>
                 </div>
                 <div className="w-full h-2 bg-surface rounded-full overflow-hidden shadow-inner border border-surface-container/30">
                     <motion.div 
@@ -154,7 +154,7 @@ function MissionCard({ mission, onClaim, onInit }: { mission: Mission, onClaim: 
             </div>
 
             {mission.is_claimed ? (
-              <div className="w-full py-4 rounded-2xl bg-surface text-surface-variant text-[10px] font-black uppercase tracking-widest text-center border border-dashed border-surface-container">
+              <div className="w-full py-4 rounded-2xl bg-surface text-on-surface-variant text-[10px] font-black uppercase tracking-widest text-center border border-dashed border-surface-container">
                 Mission Finalized
               </div>
             ) : isCompleted ? (

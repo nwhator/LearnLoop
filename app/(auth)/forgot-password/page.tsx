@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="bg-surface text-surface-on antialiased min-h-screen flex flex-col relative">
+    <div className="bg-surface text-on-surface antialiased min-h-screen flex flex-col relative">
       
       {/* Decorative Visual Background Element */}
       <div className="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40 overflow-hidden">
@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
           <div className="flex items-center gap-2">
             <span className="text-2xl font-black font-headline text-primary tracking-tighter">LearnLoop</span>
           </div>
-          <Link href="/login" className="flex items-center gap-2 text-surface-variant hover:text-primary transition-colors font-semibold text-sm">
+          <Link href="/login" className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-semibold text-sm">
             <span className="material-symbols-outlined text-lg">arrow_back</span>
             Back to Login
           </Link>
@@ -65,17 +65,17 @@ export default function ForgotPasswordPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-container/20 rounded-2xl mb-6 shadow-inner">
               <span className="material-symbols-outlined text-primary text-3xl">lock_reset</span>
             </div>
-            <h1 className="text-3xl font-extrabold font-headline text-surface-on tracking-tight mb-3">Forgot Password?</h1>
-            <p className="text-surface-variant text-base leading-relaxed">
+            <h1 className="text-3xl font-extrabold font-headline text-on-surface tracking-tight mb-3">Forgot Password?</h1>
+            <p className="text-on-surface-variant text-base leading-relaxed">
               No worries, it happens. Enter your email and we'll send you a recovery link.
             </p>
           </div>
 
           <form onSubmit={handleReset} className="space-y-6 relative z-10">
             <div className="space-y-2 text-left">
-              <label htmlFor="email" className="block text-sm font-bold text-surface-on ml-1">Email Address</label>
+              <label htmlFor="email" className="block text-sm font-bold text-on-surface ml-1">Email Address</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-surface-variant/70">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-on-surface-variant/70">
                   <span className="material-symbols-outlined text-xl">mail</span>
                 </span>
                 <input 
@@ -86,7 +86,7 @@ export default function ForgotPasswordPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="alex@example.com" 
                   required 
-                  className="block w-full pl-11 pr-4 py-4 bg-surface border border-surface-container rounded-xl focus:ring-2 focus:ring-primary focus:bg-white text-surface-on placeholder-surface-variant transition-all outline-none" 
+                  className="block w-full pl-11 pr-4 py-4 bg-surface border border-surface-container rounded-xl focus:ring-2 focus:ring-primary focus:bg-white text-on-surface placeholder-surface-variant transition-all outline-none" 
                 />
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function ForgotPasswordPage() {
             <button 
               disabled={loading || success}
               type="submit" 
-              className="w-full py-4 px-6 bg-primary text-primary-on font-bold rounded-xl text-lg hover:brightness-110 active:scale-95 transition-all shadow-md shadow-primary/20 disabled:opacity-50 flex items-center justify-center gap-3"
+              className="w-full py-4 px-6 bg-primary text-on-primary font-bold rounded-xl text-lg hover:brightness-110 active:scale-95 transition-all shadow-md shadow-primary/20 disabled:opacity-50 flex items-center justify-center gap-3"
             >
               {loading && <span className="material-symbols-outlined animate-spin text-xl">autorenew</span>}
               {loading ? "Requesting..." : "Send Reset Link"}
@@ -113,8 +113,8 @@ export default function ForgotPasswordPage() {
               <div className="flex items-start gap-4 p-4 bg-tertiary-container/10 border border-tertiary-container/30 rounded-2xl">
                 <span className="material-symbols-outlined text-tertiary mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
                 <div className="text-left">
-                  <p className="text-surface-on font-semibold text-sm">Check your email for instructions</p>
-                  <p className="text-surface-variant text-xs mt-1 leading-relaxed">
+                  <p className="text-on-surface font-semibold text-sm">Check your email for instructions</p>
+                  <p className="text-on-surface-variant text-xs mt-1 leading-relaxed">
                     If an account exists for {email}, you will receive a password reset link shortly.
                   </p>
                 </div>
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
           )}
 
           <div className="mt-10 text-center relative z-10">
-            <p className="text-surface-variant text-sm">
+            <p className="text-on-surface-variant text-sm">
               Didn't receive the email? 
               <button className="text-primary font-bold hover:underline underline-offset-4 ml-1">Resend link</button>
             </p>
@@ -134,13 +134,13 @@ export default function ForgotPasswordPage() {
       {/* Footer (Transactional Minimal Version) */}
       <footer className="w-full py-12 px-6 max-w-7xl mx-auto border-t border-surface-container">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-surface-variant text-sm font-medium">
+          <div className="text-on-surface-variant text-sm font-medium">
             &copy; {new Date().getFullYear()} LearnLoop Systems. Elevate your intellect.
           </div>
           <div className="flex gap-8">
-            <Link href="/privacy" className="text-surface-variant hover:text-primary transition-all text-sm font-semibold hover:underline decoration-2 underline-offset-4">Privacy Policy</Link>
-            <Link href="/terms" className="text-surface-variant hover:text-primary transition-all text-sm font-semibold hover:underline decoration-2 underline-offset-4">Terms of Service</Link>
-            <Link href="/help" className="text-surface-variant hover:text-primary transition-all text-sm font-semibold hover:underline decoration-2 underline-offset-4">Help Center</Link>
+            <Link href="/privacy" className="text-on-surface-variant hover:text-primary transition-all text-sm font-semibold hover:underline decoration-2 underline-offset-4">Privacy Policy</Link>
+            <Link href="/terms" className="text-on-surface-variant hover:text-primary transition-all text-sm font-semibold hover:underline decoration-2 underline-offset-4">Terms of Service</Link>
+            <Link href="/help" className="text-on-surface-variant hover:text-primary transition-all text-sm font-semibold hover:underline decoration-2 underline-offset-4">Help Center</Link>
           </div>
         </div>
       </footer>

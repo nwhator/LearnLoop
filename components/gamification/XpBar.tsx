@@ -37,7 +37,7 @@ export function XpBar() {
       </div>
 
       <div className="flex justify-end mt-1 relative z-10">
-        <span className="text-[10px] font-bold text-surface-variant">
+        <span className="text-[10px] font-bold text-on-surface-variant">
           {xp} / {nextLevelXp} XP Base
         </span>
       </div>

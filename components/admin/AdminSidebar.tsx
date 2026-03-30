@@ -22,7 +22,7 @@ export default function AdminSidebar() {
           </div>
           <div>
             <h1 className="text-xl font-black font-headline text-primary tracking-tight leading-none mb-1">Admin Console</h1>
-            <p className="text-[10px] font-bold text-surface-variant uppercase tracking-widest leading-none">System Overview</p>
+            <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest leading-none">System Overview</p>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@ export default function AdminSidebar() {
             <Link 
               key={link.href}
               href={link.href} 
-              className={`${isActive ? 'bg-primary/10 text-primary' : 'text-surface-variant hover:text-surface-on hover:bg-surface'} px-4 py-3 flex items-center gap-3 font-headline text-sm font-bold rounded-xl transition-all duration-200 group`}
+              className={`${isActive ? 'bg-primary/10 text-primary' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface'} px-4 py-3 flex items-center gap-3 font-headline text-sm font-bold rounded-xl transition-all duration-200 group`}
             >
               <span className="material-symbols-outlined" style={{ fontVariationSettings: isActive ? "'FILL' 1" : undefined }}>{link.icon}</span> 
               {link.label}
@@ -44,12 +44,12 @@ export default function AdminSidebar() {
       </nav>
       
       <div className="px-6 mt-auto space-y-4 pt-6 border-t border-surface-container">
-        <button className="w-full bg-primary text-primary-on py-3 rounded-xl font-bold text-sm hover:brightness-110 active:scale-95 transition-all outline-none shadow-md">
+        <button className="w-full bg-primary text-on-primary py-3 rounded-xl font-bold text-sm hover:brightness-110 active:scale-95 transition-all outline-none shadow-md">
            Generate Report
         </button>
         <div className="pt-2 flex flex-col gap-1">
-          <Link href="/support" className="text-surface-variant px-2 py-2 flex items-center gap-3 font-headline text-xs font-bold hover:bg-surface rounded-lg transition-all group">
-            <span className="material-symbols-outlined text-[1rem] group-hover:text-surface-on transition-colors">help</span> Help Center
+          <Link href="/support" className="text-on-surface-variant px-2 py-2 flex items-center gap-3 font-headline text-xs font-bold hover:bg-surface rounded-lg transition-all group">
+            <span className="material-symbols-outlined text-[1rem] group-hover:text-on-surface transition-colors">help</span> Help Center
           </Link>
           <button className="text-error/80 px-2 py-2 flex items-center gap-3 font-headline text-xs font-bold hover:bg-error/10 hover:text-error rounded-lg transition-all text-left">
             <span className="material-symbols-outlined text-[1rem]">logout</span> Logout

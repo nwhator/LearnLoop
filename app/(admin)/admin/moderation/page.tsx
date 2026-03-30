@@ -74,7 +74,7 @@ export default function ModerationPage() {
 
   if (loading) {
     return (
-      <div className="bg-surface text-surface-on min-h-screen flex items-center justify-center">
+      <div className="bg-surface text-on-surface min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           <span className="text-lg font-headline font-bold text-primary">Scanning records...</span>
@@ -84,7 +84,7 @@ export default function ModerationPage() {
   }
 
   return (
-    <div className="bg-surface text-surface-on min-h-screen">
+    <div className="bg-surface text-on-surface min-h-screen">
       <AdminSidebar />
 
       <main className="ml-64 min-h-screen">
@@ -126,7 +126,7 @@ export default function ModerationPage() {
                         <button 
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm tracking-wide transition-all ${activeTab === tab ? 'bg-primary text-white shadow-md' : 'bg-surface border border-surface-container text-surface-variant hover:text-surface-on hover:border-surface-variant/50'}`}
+                            className={`whitespace-nowrap px-6 py-2.5 rounded-full font-bold text-sm tracking-wide transition-all ${activeTab === tab ? 'bg-primary text-white shadow-md' : 'bg-surface border border-surface-container text-on-surface-variant hover:text-on-surface hover:border-surface-variant/50'}`}
                         >
                             {tab}
                         </button>
@@ -144,7 +144,7 @@ export default function ModerationPage() {
                     isModerating={isModerating === item.id}
                   />
                 )) : (
-                  <div className="col-span-full py-20 bg-white rounded-[2rem] border border-dashed border-surface-container flex flex-col items-center justify-center text-surface-variant">
+                  <div className="col-span-full py-20 bg-white rounded-[2rem] border border-dashed border-surface-container flex flex-col items-center justify-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-6xl mb-4">check_circle</span>
                     <p className="text-xl font-headline font-bold">Clear Skies! No items found.</p>
                   </div>
@@ -165,8 +165,8 @@ function ModerationStat({ title, value, icon, color }: { title: string, value: s
   return (
     <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-surface-container flex items-center justify-between">
       <div>
-        <p className="text-sm font-black text-surface-variant uppercase tracking-widest font-headline">{title}</p>
-        <h3 className="text-4xl font-black mt-2 text-surface-on tracking-tight">{value}</h3>
+        <p className="text-sm font-black text-on-surface-variant uppercase tracking-widest font-headline">{title}</p>
+        <h3 className="text-4xl font-black mt-2 text-on-surface tracking-tight">{value}</h3>
       </div>
       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl material-symbols-outlined ${colorMap[color]}`}>
         {icon}
@@ -180,7 +180,7 @@ function ModerationCard({ item, onAIReview, isModerating }: { item: ModerationIt
     <div className="bg-white rounded-[2rem] overflow-hidden group border border-surface-container hover:border-primary/30 hover:shadow-md transition-all duration-300">
       <div className="flex flex-col sm:flex-row h-full">
           <div className="w-full sm:w-48 h-48 sm:h-auto relative overflow-hidden bg-surface-container flex items-center justify-center">
-              <span className="material-symbols-outlined text-6xl text-surface-variant/30">
+              <span className="material-symbols-outlined text-6xl text-on-surface-variant/30">
                 {item.type === 'quiz' ? 'quiz' : item.type === 'flashcard' ? 'style' : 'description'}
               </span>
               <div className="absolute top-4 left-4 bg-error text-white text-[10px] font-black px-3 py-1 rounded-full flex items-center gap-1.5 z-20 shadow-md">
@@ -191,10 +191,10 @@ function ModerationCard({ item, onAIReview, isModerating }: { item: ModerationIt
           <div className="flex-1 p-6 flex flex-col">
               <div className="flex justify-between items-start mb-2">
                   <span className="text-[10px] font-black text-primary uppercase tracking-widest font-headline">{item.type} • ID: {item.content_id.slice(0,8)}</span>
-                  <span className="text-[10px] font-bold text-surface-variant uppercase tracking-wider">{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</span>
+                  <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'N/A'}</span>
               </div>
-              <h4 className="text-lg font-black font-headline text-surface-on leading-tight mb-3">Report Reason</h4>
-              <p className="text-sm text-surface-variant leading-relaxed mb-6 font-medium">"{item.reason}"</p>
+              <h4 className="text-lg font-black font-headline text-on-surface leading-tight mb-3">Report Reason</h4>
+              <p className="text-sm text-on-surface-variant leading-relaxed mb-6 font-medium">"{item.reason}"</p>
               
               <div className="mt-auto pt-5 flex items-center justify-between border-t border-surface-container">
                   <button 

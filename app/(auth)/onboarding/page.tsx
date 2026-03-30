@@ -21,7 +21,7 @@ export default function OnboardingTourPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface font-body text-surface-on antialiased relative overflow-hidden">
+    <div className="min-h-screen bg-surface font-body text-on-surface antialiased relative overflow-hidden">
       
       {/* Blurred "Fake Dashboard" Background to simulate the tour context */}
       <div className="absolute inset-0 z-0 opacity-40 mix-blend-luminosity filter blur-sm pointer-events-none">
@@ -39,7 +39,7 @@ export default function OnboardingTourPage() {
       </div>
 
       {/* ONBOARDING OVERLAY & STEPPER */}
-      <div className="fixed inset-0 z-[100] bg-surface-on/40 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[100] bg-on-surface/40 backdrop-blur-sm flex items-center justify-center p-4">
         
         <div className="max-w-md w-full bg-white rounded-[2rem] shadow-premium overflow-hidden relative transform transition-all">
           <div className="h-2 bg-primary"></div>
@@ -52,7 +52,7 @@ export default function OnboardingTourPage() {
               </div>
               <div>
                 <h3 className="font-headline font-extrabold text-xl text-primary">Your Learning Companion</h3>
-                <p className="text-xs text-surface-variant font-bold uppercase tracking-widest">Step {step} of 3</p>
+                <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest">Step {step} of 3</p>
               </div>
             </div>
 
@@ -60,10 +60,10 @@ export default function OnboardingTourPage() {
             {step === 1 && (
               <div className="space-y-4 mb-8">
                 <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-primary text-primary-on flex items-center justify-center font-bold shrink-0">1</div>
+                  <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold shrink-0">1</div>
                   <div>
-                    <p className="font-headline font-bold text-surface-on">Paste Your Knowledge</p>
-                    <p className="text-sm text-surface-variant leading-relaxed mt-1">
+                    <p className="font-headline font-bold text-on-surface">Paste Your Knowledge</p>
+                    <p className="text-sm text-on-surface-variant leading-relaxed mt-1">
                       This is the heart of LearnLoop! Paste your messy lecture notes, articles, or text right here. I'll transform them into professional study sets in seconds.
                     </p>
                   </div>
@@ -83,10 +83,10 @@ export default function OnboardingTourPage() {
             {step === 2 && (
               <div className="space-y-4 mb-8">
                 <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-secondary text-secondary-on flex items-center justify-center font-bold shrink-0">2</div>
+                  <div className="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold shrink-0">2</div>
                   <div>
-                    <p className="font-headline font-bold text-surface-on">Gamify it!</p>
-                    <p className="text-sm text-surface-variant leading-relaxed mt-1">
+                    <p className="font-headline font-bold text-on-surface">Gamify it!</p>
+                    <p className="text-sm text-on-surface-variant leading-relaxed mt-1">
                       Keep your streak alive and earn XP for every note you process. Higher streaks unlock premium rewards!
                     </p>
                   </div>
@@ -103,10 +103,10 @@ export default function OnboardingTourPage() {
             {step === 3 && (
               <div className="space-y-4 mb-8">
                 <div className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-tertiary text-tertiary-on flex items-center justify-center font-bold shrink-0">3</div>
+                  <div className="w-8 h-8 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center font-bold shrink-0">3</div>
                   <div>
-                    <p className="font-headline font-bold text-surface-on">Compete</p>
-                    <p className="text-sm text-surface-variant leading-relaxed mt-1">
+                    <p className="font-headline font-bold text-on-surface">Compete</p>
+                    <p className="text-sm text-on-surface-variant leading-relaxed mt-1">
                       Check the Leaderboard to see how you rank against other architects. Level up to become a Legend!
                     </p>
                   </div>
@@ -119,13 +119,13 @@ export default function OnboardingTourPage() {
             )}
 
             <div className="flex items-center justify-between border-t border-surface-container pt-6">
-              <button onClick={skipTour} className="text-surface-variant font-bold text-sm hover:text-surface-on transition-colors">
+              <button onClick={skipTour} className="text-on-surface-variant font-bold text-sm hover:text-on-surface transition-colors">
                 Skip Tour
               </button>
               <div className="flex gap-3">
                 <button 
                   onClick={handleNext}
-                  className="bg-primary text-primary-on px-8 py-3 rounded-full font-headline font-bold text-sm hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 shadow-md shadow-primary/20"
+                  className="bg-primary text-on-primary px-8 py-3 rounded-full font-headline font-bold text-sm hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 shadow-md shadow-primary/20"
                 >
                   {step === 3 ? "Complete" : "Next"}
                   {step !== 3 && <span className="material-symbols-outlined text-sm">arrow_forward</span>}

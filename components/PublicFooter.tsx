@@ -4,59 +4,59 @@ import Link from "next/link";
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-surface-container-lowest border-t border-surface-container w-full">
-      <div className="w-full py-16 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div className="col-span-1">
-          <div className="text-2xl font-black font-headline text-primary mb-6">LearnLoop</div>
-          <p className="text-surface-variant text-sm mb-8 max-w-xs leading-relaxed font-medium">
-            The AI-driven learning platform designed for the modern intellect. Fast, fun, and effective.
+    <footer className="bg-white border-t border-surface-container-low pt-20 pb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
+        <div className="col-span-2 lg:col-span-2">
+          <Link href="/" className="text-2xl font-black font-headline text-primary tracking-tighter mb-6 block">LearnLoop</Link>
+          <p className="text-on-surface-variant text-sm mb-8 max-w-xs leading-relaxed">
+            The AI-driven learning platform designed for the modern intellect. Master any subject through gameplay, competition, and neural-extraction technology.
           </p>
           <div className="flex gap-4">
             <SocialIcon icon="public" />
-            <SocialIcon icon="alternate_email" />
             <SocialIcon icon="share" />
+            <SocialIcon icon="chat_bubble" />
           </div>
         </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 col-span-1 md:col-span-3 gap-8">
-          <FooterColumn title="Product" links={[
-            { label: "Dashboard", href: "/dashboard" },
-            { label: "Community Hub", href: "/community" },
-            { label: "Leaderboards", href: "/leaderboard" },
-            { label: "Missions", href: "/missions" }
+        <div className="col-span-1">
+          <FooterColumn title="Explore" links={[
+            { label: "Missions", href: "/missions" },
+            { label: "Leaderboard", href: "/leaderboard" },
+            { label: "XP Store", href: "/premium" },
+            { label: "Study Pods", href: "/community" },
           ]} />
-          
-          <FooterColumn title="Legal" links={[
-            { label: "Privacy Policy", href: "/privacy" },
-            { label: "Terms of Service", href: "/terms" },
-            { label: "Cookie Policy", href: "/terms" }
-          ]} />
-          
+        </div>
+        <div className="col-span-1">
           <FooterColumn title="Support" links={[
             { label: "Help Center", href: "/support" },
-            { label: "Contact Us", href: "/contact" },
-            { label: "Status", href: "/status" }
+            { label: "API Docs", href: "/support" },
+            { label: "Community", href: "/community" },
+            { label: "Contact", href: "/support" },
+          ]} />
+        </div>
+        <div className="col-span-1">
+          <FooterColumn title="Company" links={[
+            { label: "About Us", href: "/about" },
+            { label: "Careers", href: "/terms" },
+            { label: "Privacy", href: "/privacy" },
+            { label: "Terms", href: "/terms" },
           ]} />
         </div>
       </div>
-      
-      <div className="border-t border-surface-container py-8 px-6 text-center">
-        <p className="text-surface-variant text-[10px] font-black uppercase tracking-widest">
-           &copy; {new Date().getFullYear()} LearnLoop Systems. All Rights Reserved.
-        </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-surface-container-low flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="text-on-surface-variant text-sm">&copy; {new Date().getFullYear()} LearnLoop. Built for the future of education.</p>
       </div>
     </footer>
   );
 }
 
-function FooterColumn({ title, links }: { title: string, links: { label: string, href: string }[] }) {
+function FooterColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (
     <div className="flex flex-col gap-5">
-      <h3 className="font-black font-headline text-surface-on text-xs uppercase tracking-[0.2em]">{title}</h3>
-      <ul className="flex flex-col gap-3">
+      <h3 className="font-bold text-on-surface mb-1">{title}</h3>
+      <ul className="space-y-4">
         {links.map((link) => (
           <li key={link.label}>
-            <Link href={link.href} className="text-surface-variant hover:text-primary text-sm font-bold transition-colors">
+            <Link href={link.href} className="text-on-surface-variant hover:text-primary text-sm transition-colors">
               {link.label}
             </Link>
           </li>
@@ -68,8 +68,8 @@ function FooterColumn({ title, links }: { title: string, links: { label: string,
 
 function SocialIcon({ icon }: { icon: string }) {
   return (
-    <span className="material-symbols-outlined text-surface-variant hover:text-primary cursor-pointer transition-colors p-2.5 bg-surface rounded-full border border-surface-container">
-      {icon}
-    </span>
+    <a href="#" className="w-10 h-10 rounded-full border border-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-all">
+      <span className="material-symbols-outlined text-xl">{icon}</span>
+    </a>
   );
 }

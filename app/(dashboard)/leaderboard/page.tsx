@@ -50,8 +50,8 @@ export default function LeaderboardPage() {
             
             <header className="space-y-4">
                 <span className="inline-block px-4 py-1.5 bg-secondary/10 text-secondary border border-secondary/20 text-[10px] font-black rounded-full mb-2 tracking-[0.2em] uppercase">Global Rankings</span>
-                <h2 className="text-5xl font-black font-headline text-surface-on tracking-tighter">The Hall of Fame</h2>
-                <p className="text-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Recognizing the most dedicated learners on the platform. Can you climb to the top?</p>
+                <h2 className="text-5xl font-black font-headline text-on-surface tracking-tighter">The Hall of Fame</h2>
+                <p className="text-on-surface-variant font-medium text-lg max-w-2xl leading-relaxed">Recognizing the most dedicated learners on the platform. Can you climb to the top?</p>
             </header>
 
             {/* Main Leaderboard Table */}
@@ -61,7 +61,7 @@ export default function LeaderboardPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse min-w-[800px]">
                         <thead>
-                            <tr className="bg-surface/50 border-b border-surface-container text-[10px] font-black uppercase tracking-widest text-surface-variant">
+                            <tr className="bg-surface/50 border-b border-surface-container text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
                                 <th className="px-10 py-6">Rank</th>
                                 <th className="px-10 py-6">Learner</th>
                                 <th className="px-10 py-6">Level</th>
@@ -78,7 +78,7 @@ export default function LeaderboardPage() {
                             ) : leaderboard.map((entry) => (
                                 <tr key={entry.user_id} className={`hover:bg-surface/30 transition-all duration-300 group ${entry.rank === 1 ? 'bg-tertiary/5' : ''}`}>
                                     <td className="px-10 py-8">
-                                        <div className={`text-2xl font-black font-headline ${entry.rank === 1 ? 'text-tertiary' : entry.rank === 2 ? 'text-primary' : 'text-surface-variant'}`}>
+                                        <div className={`text-2xl font-black font-headline ${entry.rank === 1 ? 'text-tertiary' : entry.rank === 2 ? 'text-primary' : 'text-on-surface-variant'}`}>
                                             #{entry.rank}
                                         </div>
                                     </td>
@@ -88,8 +88,8 @@ export default function LeaderboardPage() {
                                                 {entry.users?.initials || entry.users?.name?.charAt(0) || 'U'}
                                             </div>
                                             <div>
-                                                <p className="font-black font-headline text-surface-on text-lg tracking-tight">{entry.users?.name || 'Anonymous User'}</p>
-                                                <p className="text-[10px] text-surface-variant font-black uppercase tracking-widest mt-0.5">Verified Scholar</p>
+                                                <p className="font-black font-headline text-on-surface text-lg tracking-tight">{entry.users?.name || 'Anonymous User'}</p>
+                                                <p className="text-[10px] text-on-surface-variant font-black uppercase tracking-widest mt-0.5">Verified Scholar</p>
                                             </div>
                                         </div>
                                     </td>
@@ -100,7 +100,7 @@ export default function LeaderboardPage() {
                                     </td>
                                     <td className="px-10 py-8 text-right">
                                         <div className="flex flex-col items-end">
-                                            <span className="text-xl font-black font-headline text-surface-on tracking-tight">
+                                            <span className="text-xl font-black font-headline text-on-surface tracking-tight">
                                                 {entry.xp.toLocaleString()} <span className="text-xs text-primary ml-1 opacity-70">XP</span>
                                             </span>
                                             <div className="w-20 h-1 bg-surface-container rounded-full mt-2 overflow-hidden">

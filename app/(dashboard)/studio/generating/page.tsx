@@ -20,7 +20,7 @@ export default function GeneratingStatePage() {
   }, [router]);
 
   return (
-    <div className="bg-surface text-surface-on min-h-screen">
+    <div className="bg-surface text-on-surface min-h-screen">
       
       {/* TopNavBar */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 h-16">
@@ -32,11 +32,11 @@ export default function GeneratingStatePage() {
       {/* SideNavBar (hidden on this focused screen, or simplified) */}
       <aside className="hidden lg:flex flex-col h-screen w-64 fixed left-0 top-0 pt-20 bg-surface-bright border-r border-surface-container pb-6 z-40">
         <div className="px-6 mb-8 mt-6">
-          <p className="text-xl font-bold text-surface-on font-headline">AI Studio</p>
-          <p className="text-surface-variant text-xs font-semibold uppercase tracking-wider mt-1">Lvl {level} Architect</p>
+          <p className="text-xl font-bold text-on-surface font-headline">AI Studio</p>
+          <p className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mt-1">Lvl {level} Architect</p>
         </div>
         <nav className="flex-1 flex flex-col gap-1">
-          <Link href="/dashboard" className="text-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-xl transition-all">
+          <Link href="/dashboard" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-xl transition-all">
              <span className="material-symbols-outlined">dashboard</span> Back to Dashboard
           </Link>
         </nav>
@@ -53,8 +53,8 @@ export default function GeneratingStatePage() {
                 </div>
             </div>
             
-            <h3 className="text-2xl font-bold text-surface-on mb-3 font-headline">Cooking New Content</h3>
-            <p className="text-surface-variant text-base leading-relaxed mb-10">
+            <h3 className="text-2xl font-bold text-on-surface mb-3 font-headline">Cooking New Content</h3>
+            <p className="text-on-surface-variant text-base leading-relaxed mb-10">
                 Our AI tutors are currently drafting your personalized quizzes and flashcards. This usually takes less than a minute.
             </p>
             
@@ -66,7 +66,7 @@ export default function GeneratingStatePage() {
                 
                 <button 
                   onClick={() => router.push('/dashboard')}
-                  className="w-full py-4 border-2 border-surface-container text-surface-variant font-bold rounded-full hover:bg-surface-bright active:scale-95 transition-all"
+                  className="w-full py-4 border-2 border-surface-container text-on-surface-variant font-bold rounded-full hover:bg-surface-bright active:scale-95 transition-all"
                 >
                     Cancel Generation
                 </button>

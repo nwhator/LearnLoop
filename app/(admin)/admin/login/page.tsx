@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="bg-surface text-surface-on min-h-screen flex flex-col items-center justify-center p-6 selection:bg-primary-container selection:text-primary-on relative overflow-hidden">
+    <div className="bg-surface text-on-surface min-h-screen flex flex-col items-center justify-center p-6 selection:bg-primary-container selection:text-on-primary relative overflow-hidden">
       
       {/* Subtle Background Elements for Intellectual Playground Aesthetic */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -71,8 +71,8 @@ export default function AdminLoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-5 shadow-premium shadow-primary/20">
             <span className="material-symbols-outlined text-white text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
           </div>
-          <h1 className="text-3xl font-black font-headline tracking-tight text-surface-on mb-2">LearnLoop Admin</h1>
-          <p className="text-surface-variant font-medium text-sm tracking-wide">Secure Portal Access</p>
+          <h1 className="text-3xl font-black font-headline tracking-tight text-on-surface mb-2">LearnLoop Admin</h1>
+          <p className="text-on-surface-variant font-medium text-sm tracking-wide">Secure Portal Access</p>
         </div>
 
         {/* Login Card */}
@@ -89,16 +89,16 @@ export default function AdminLoginPage() {
             
             {/* Admin ID/Email */}
             <div className="space-y-2">
-              <label htmlFor="admin-id" className="text-xs font-black uppercase tracking-widest text-surface-variant ml-1 font-headline">Admin Identity</label>
+              <label htmlFor="admin-id" className="text-xs font-black uppercase tracking-widest text-on-surface-variant ml-1 font-headline">Admin Identity</label>
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-surface-variant group-focus-within:text-primary transition-colors z-10">badge</span>
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors z-10">badge</span>
                 <input 
                   id="admin-id" 
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@enterprise.app" 
-                  className="w-full pl-12 pr-4 py-4 bg-surface border border-surface-container rounded-xl focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-all text-sm font-semibold text-surface-on outline-none placeholder:font-medium placeholder:text-surface-variant"
+                  className="w-full pl-12 pr-4 py-4 bg-surface border border-surface-container rounded-xl focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-all text-sm font-semibold text-on-surface outline-none placeholder:font-medium placeholder:text-on-surface-variant"
                   required
                 />
               </div>
@@ -107,24 +107,24 @@ export default function AdminLoginPage() {
             {/* Password */}
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-1">
-                <label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-surface-variant font-headline">Access Key</label>
+                <label htmlFor="password" className="text-xs font-black uppercase tracking-widest text-on-surface-variant font-headline">Access Key</label>
                 <Link href="/forgot-password" title="Recover Access" className="text-[10px] font-black text-primary hover:brightness-110 uppercase tracking-wider">Forgot Password?</Link>
               </div>
               <div className="relative group">
-                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-surface-variant group-focus-within:text-primary transition-colors z-10">key</span>
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors z-10">key</span>
                 <input 
                   id="password" 
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••" 
-                  className="w-full pl-12 pr-12 py-4 bg-surface border border-surface-container rounded-xl focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-all text-sm font-semibold text-surface-on outline-none placeholder:font-medium placeholder:text-surface-variant tracking-wider"
+                  className="w-full pl-12 pr-12 py-4 bg-surface border border-surface-container rounded-xl focus:ring-2 focus:ring-primary focus:border-primary focus:bg-white transition-all text-sm font-semibold text-on-surface outline-none placeholder:font-medium placeholder:text-on-surface-variant tracking-wider"
                   required
                 />
                 <button 
                   type="button" 
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-surface-variant hover:text-surface-on transition-colors z-10 outline-none"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors z-10 outline-none"
                 >
                   <span className="material-symbols-outlined text-lg">{showPassword ? 'visibility_off' : 'visibility'}</span>
                 </button>
@@ -157,12 +157,12 @@ export default function AdminLoginPage() {
         {/* Secondary Actions & Status */}
         <footer className="mt-12 flex flex-col items-center gap-6">
           <div className="flex items-center gap-8">
-            <Link href="#" className="flex items-center gap-2 text-xs font-bold text-surface-variant hover:text-primary transition-colors group">
+            <Link href="#" className="flex items-center gap-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors group">
               <span className="material-symbols-outlined text-base group-hover:animate-pulse">monitor_heart</span>
               System Status
             </Link>
             <div className="w-1.5 h-1.5 rounded-full bg-surface-container-high"></div>
-            <Link href="#" className="flex items-center gap-2 text-xs font-bold text-surface-variant hover:text-error transition-colors group">
+            <Link href="#" className="flex items-center gap-2 text-xs font-bold text-on-surface-variant hover:text-error transition-colors group">
               <span className="material-symbols-outlined text-base group-hover:animate-bounce">emergency_home</span>
               Emergency Support
             </Link>
@@ -170,7 +170,7 @@ export default function AdminLoginPage() {
           
           <div className="flex items-center gap-2 bg-surface border border-surface-container px-4 py-2 rounded-full shadow-inner">
             <div className="w-2 h-2 rounded-full bg-tertiary animate-pulse shadow-[0_0_8px_rgba(111,89,0,0.6)]"></div>
-            <span className="text-[10px] font-black text-surface-on uppercase tracking-widest font-headline">Global Auth Node 04: Active</span>
+            <span className="text-[10px] font-black text-on-surface uppercase tracking-widest font-headline">Global Auth Node 04: Active</span>
           </div>
         </footer>
       </main>
@@ -182,7 +182,7 @@ export default function AdminLoginPage() {
         </div>
         <div>
           <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1 font-headline">End-to-End Encryption</p>
-          <p className="text-xs font-bold text-surface-on">AES-256 Session Layer Active</p>
+          <p className="text-xs font-bold text-on-surface">AES-256 Session Layer Active</p>
         </div>
       </div>
 

@@ -21,14 +21,14 @@ export default function SubscriptionPage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-surface text-surface-on">
+            <div className="flex items-center justify-center min-h-screen bg-surface text-on-surface">
                 <span className="text-lg font-bold">Loading...</span>
             </div>
         );
     }
 
     return (
-        <div className="bg-surface text-surface-on min-h-screen">
+        <div className="bg-surface text-on-surface min-h-screen">
       
       {/* TopNavBar */}
       <nav className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-sm border-b border-surface-container/50">
@@ -36,18 +36,18 @@ export default function SubscriptionPage() {
           <Link href="/" className="text-2xl font-black text-primary font-headline tracking-tighter">LearnLoop</Link>
           
           <div className="hidden md:flex items-center gap-8 font-headline font-bold text-sm tracking-tight">
-            <Link href="/dashboard" className="text-surface-variant hover:text-primary transition-colors">Dashboard</Link>
-            <Link href="/missions" className="text-surface-variant hover:text-primary transition-colors">Missions</Link>
-            <Link href="/leaderboard" className="text-surface-variant hover:text-primary transition-colors">Leaderboard</Link>
+            <Link href="/dashboard" className="text-on-surface-variant hover:text-primary transition-colors">Dashboard</Link>
+            <Link href="/missions" className="text-on-surface-variant hover:text-primary transition-colors">Missions</Link>
+            <Link href="/leaderboard" className="text-on-surface-variant hover:text-primary transition-colors">Leaderboard</Link>
             <Link href="/subscription" className="text-primary border-b-2 border-primary pb-1">Pricing</Link>
           </div>
           
           <div className="flex items-center gap-5">
             <div className="hidden sm:flex items-center gap-3">
-              <Link href="/notifications" className="material-symbols-outlined p-2 text-surface-variant hover:bg-surface-container rounded-full transition-all active:scale-95">notifications</Link>
+              <Link href="/notifications" className="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-all active:scale-95">notifications</Link>
               <Link href="/missions" className="material-symbols-outlined p-2 text-orange-500 hover:bg-surface-container rounded-full transition-all active:scale-95" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</Link>
             </div>
-            <Link href="/dashboard" className="bg-primary text-primary-on px-6 py-2.5 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:brightness-110 active:scale-95 transition-all">
+            <Link href="/dashboard" className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-bold text-sm shadow-sm hover:shadow-md hover:brightness-110 active:scale-95 transition-all">
                 Get Started
             </Link>
           </div>
@@ -68,10 +68,10 @@ export default function SubscriptionPage() {
                 <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
                 Premium Membership
             </span>
-            <h1 className="font-headline text-4xl md:text-6xl font-black text-surface-on mb-6 tracking-tight leading-tight">
+            <h1 className="font-headline text-4xl md:text-6xl font-black text-on-surface mb-6 tracking-tight leading-tight">
                 Unlock Your Full <br className="hidden md:block"/> <span className="text-primary italic font-serif opacity-90 pr-2">Intellectual Potential</span>
             </h1>
-            <p className="text-surface-variant text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+            <p className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
                 Join 50,000+ lifelong learners who have accelerated their growth with AI-powered personalized missions and deep analytics.
             </p>
         </section>
@@ -84,13 +84,13 @@ export default function SubscriptionPage() {
                 <div className="bg-white p-1 rounded-full flex items-center mb-16 border border-surface-container shadow-sm">
                     <button 
                         onClick={() => setIsYearly(false)}
-                        className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${!isYearly ? 'bg-surface border border-surface-container shadow-sm text-primary' : 'text-surface-variant hover:text-surface-on'}`}
+                        className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${!isYearly ? 'bg-surface border border-surface-container shadow-sm text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
                     >
                         Monthly
                     </button>
                     <button 
                         onClick={() => setIsYearly(true)}
-                        className={`px-8 py-3 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${isYearly ? 'bg-surface border border-surface-container shadow-sm text-primary' : 'text-surface-variant hover:text-surface-on'}`}
+                        className={`px-8 py-3 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${isYearly ? 'bg-surface border border-surface-container shadow-sm text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
                     >
                         Yearly <span className="text-secondary bg-secondary/10 px-2 rounded-md font-black text-[10px] py-0.5">-25%</span>
                     </button>
@@ -101,29 +101,29 @@ export default function SubscriptionPage() {
                     {/* Standard Plan */}
                     <div className="bg-white p-10 rounded-[2rem] flex flex-col justify-between border border-surface-container h-[95%] shadow-sm hover:shadow-md transition-shadow">
                         <div>
-                            <h3 className="font-headline text-2xl font-black mb-2 text-surface-on">Explorer</h3>
-                            <p className="text-surface-variant text-sm mb-8 font-medium">Master the basics of any subject.</p>
+                            <h3 className="font-headline text-2xl font-black mb-2 text-on-surface">Explorer</h3>
+                            <p className="text-on-surface-variant text-sm mb-8 font-medium">Master the basics of any subject.</p>
                             
                             <div className="flex items-baseline mb-10">
-                                <span className="text-5xl font-black text-surface-on">$0</span>
-                                <span className="text-surface-variant ml-2 font-bold font-headline">/ month</span>
+                                <span className="text-5xl font-black text-on-surface">$0</span>
+                                <span className="text-on-surface-variant ml-2 font-bold font-headline">/ month</span>
                             </div>
                             
                             <ul className="space-y-5 mb-10">
-                                <li className="flex items-center gap-4 text-sm font-bold text-surface-on">
+                                <li className="flex items-center gap-4 text-sm font-bold text-on-surface">
                                     <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                                     3 AI generations per day
                                 </li>
-                                <li className="flex items-center gap-4 text-sm font-bold text-surface-on">
+                                <li className="flex items-center gap-4 text-sm font-bold text-on-surface">
                                     <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                                     Basic leaderboard access
                                 </li>
-                                <li className="flex items-center gap-4 text-sm font-bold text-surface-on">
+                                <li className="flex items-center gap-4 text-sm font-bold text-on-surface">
                                     <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                                     Standard community support
                                 </li>
-                                <li className="flex items-center gap-4 text-sm font-bold text-surface-variant opacity-60 line-through">
-                                    <span className="material-symbols-outlined text-surface-variant text-xl">block</span>
+                                <li className="flex items-center gap-4 text-sm font-bold text-on-surface-variant opacity-60 line-through">
+                                    <span className="material-symbols-outlined text-on-surface-variant text-xl">block</span>
                                     Ad-free experience
                                 </li>
                             </ul>
@@ -144,40 +144,40 @@ export default function SubscriptionPage() {
                             
                             <div className="relative z-10">
                                 <h3 className="font-headline text-3xl font-black mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Polymath Premium</h3>
-                                <p className="text-surface-variant text-sm mb-8 font-medium">For the serious intellectual athlete.</p>
+                                <p className="text-on-surface-variant text-sm mb-8 font-medium">For the serious intellectual athlete.</p>
                                 
                                 <div className="flex items-baseline mb-10">
-                                    <span className="text-5xl font-black text-surface-on">${isYearly ? '7.49' : '9.99'}</span>
-                                    <span className="text-surface-variant ml-2 font-bold font-headline">/ month</span>
+                                    <span className="text-5xl font-black text-on-surface">${isYearly ? '7.49' : '9.99'}</span>
+                                    <span className="text-on-surface-variant ml-2 font-bold font-headline">/ month</span>
                                 </div>
                                 {isYearly && <p className="text-xs text-secondary font-bold -mt-8 mb-8">Billed annually at $89.88</p>}
                                 
                                 <ul className="space-y-5 mb-10">
-                                    <li className="flex items-center gap-4 text-sm font-black text-surface-on group hover:-translate-y-0.5 transition-transform">
+                                    <li className="flex items-center gap-4 text-sm font-black text-on-surface group hover:-translate-y-0.5 transition-transform">
                                         <div className="bg-secondary/10 p-1.5 rounded-full text-secondary">
                                             <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                                         </div>
                                         Unlimited AI generations
                                     </li>
-                                    <li className="flex items-center gap-4 text-sm font-black text-surface-on group hover:-translate-y-0.5 transition-transform">
+                                    <li className="flex items-center gap-4 text-sm font-black text-on-surface group hover:-translate-y-0.5 transition-transform">
                                         <div className="bg-secondary/10 p-1.5 rounded-full text-secondary">
                                             <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
                                         </div>
                                         Unlimited daily missions
                                     </li>
-                                    <li className="flex items-center gap-4 text-sm font-black text-surface-on group hover:-translate-y-0.5 transition-transform">
+                                    <li className="flex items-center gap-4 text-sm font-black text-on-surface group hover:-translate-y-0.5 transition-transform">
                                         <div className="bg-secondary/10 p-1.5 rounded-full text-secondary">
                                             <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>insights</span>
                                         </div>
                                         Advanced analytics
                                     </li>
-                                    <li className="flex items-center gap-4 text-sm font-black text-surface-on group hover:-translate-y-0.5 transition-transform">
+                                    <li className="flex items-center gap-4 text-sm font-black text-on-surface group hover:-translate-y-0.5 transition-transform">
                                         <div className="bg-secondary/10 p-1.5 rounded-full text-secondary">
                                             <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>block</span>
                                         </div>
                                         Ad-free experience
                                     </li>
-                                    <li className="flex items-center gap-4 text-sm font-black text-surface-on group hover:-translate-y-0.5 transition-transform">
+                                    <li className="flex items-center gap-4 text-sm font-black text-on-surface group hover:-translate-y-0.5 transition-transform">
                                         <div className="bg-secondary/10 p-1.5 rounded-full text-secondary">
                                             <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>support_agent</span>
                                         </div>
@@ -197,7 +197,7 @@ export default function SubscriptionPage() {
 
         {/* Features Bento Grid */}
         <section className="mb-24">
-            <h2 className="font-headline text-3xl font-black text-center mb-12 text-surface-on tracking-tight">The Premium Experience</h2>
+            <h2 className="font-headline text-3xl font-black text-center mb-12 text-on-surface tracking-tight">The Premium Experience</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
@@ -210,8 +210,8 @@ export default function SubscriptionPage() {
                         <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 border border-primary/20 shadow-inner">
                             <span className="material-symbols-outlined text-primary text-3xl">psychology</span>
                         </div>
-                        <h4 className="text-3xl font-black font-headline mb-4 text-surface-on tracking-tight">Unlimited AI Generations</h4>
-                        <p className="text-surface-variant font-medium text-lg leading-relaxed">Our most powerful models are at your fingertips. Ask anything, anytime, and get deep contextual learning paths instantly.</p>
+                        <h4 className="text-3xl font-black font-headline mb-4 text-on-surface tracking-tight">Unlimited AI Generations</h4>
+                        <p className="text-on-surface-variant font-medium text-lg leading-relaxed">Our most powerful models are at your fingertips. Ask anything, anytime, and get deep contextual learning paths instantly.</p>
                     </div>
                 </div>
                 
@@ -221,8 +221,8 @@ export default function SubscriptionPage() {
                         <span className="material-symbols-outlined text-secondary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>leaderboard</span>
                     </div>
                     <div className="mt-8">
-                        <h4 className="text-2xl font-black font-headline mb-3 text-surface-on">Advanced Analytics</h4>
-                        <p className="text-surface-variant font-medium leading-relaxed">Visualize your knowledge retention and competitive standing across 50+ dimensions.</p>
+                        <h4 className="text-2xl font-black font-headline mb-3 text-on-surface">Advanced Analytics</h4>
+                        <p className="text-on-surface-variant font-medium leading-relaxed">Visualize your knowledge retention and competitive standing across 50+ dimensions.</p>
                     </div>
                 </div>
                 
@@ -240,16 +240,16 @@ export default function SubscriptionPage() {
                 {/* Large Feature 2 */}
                 <div className="md:col-span-2 bg-white border border-surface-container p-10 rounded-[2rem] flex flex-col md:flex-row items-center gap-10 shadow-sm group hover:shadow-md transition-shadow min-h-[300px]">
                     <div className="flex-1">
-                        <h4 className="text-3xl font-black font-headline mb-4 text-surface-on tracking-tight">No Distractions. Just Learning.</h4>
-                        <p className="text-surface-variant mb-8 font-medium text-lg leading-relaxed">Enjoy a completely ad-free environment across all platforms. Focus on what matters: your intellectual growth.</p>
+                        <h4 className="text-3xl font-black font-headline mb-4 text-on-surface tracking-tight">No Distractions. Just Learning.</h4>
+                        <p className="text-on-surface-variant mb-8 font-medium text-lg leading-relaxed">Enjoy a completely ad-free environment across all platforms. Focus on what matters: your intellectual growth.</p>
                         <ul className="space-y-4">
-                            <li className="flex items-center gap-3 text-base font-bold text-surface-on">
+                            <li className="flex items-center gap-3 text-base font-bold text-on-surface">
                                 <div className="bg-green-100 p-1 rounded-full text-green-600">
                                     <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
                                 </div>
                                 No Banner Ads
                             </li>
-                            <li className="flex items-center gap-3 text-base font-bold text-surface-on">
+                            <li className="flex items-center gap-3 text-base font-bold text-on-surface">
                                 <div className="bg-green-100 p-1 rounded-full text-green-600">
                                     <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
                                 </div>
@@ -260,7 +260,7 @@ export default function SubscriptionPage() {
                     <div className="w-full md:w-5/12 bg-surface rounded-[2rem] p-6 overflow-hidden rotate-3 shadow-inner border border-surface-container group-hover:-rotate-3 transition-transform duration-500">
                         <div className="h-4 w-full bg-surface-container rounded-full mb-3"></div>
                         <div className="h-4 w-3/4 bg-surface-container rounded-full mb-6"></div>
-                        <div className="h-32 w-full bg-surface-variant/30 rounded-xl mb-3 flex items-center justify-center text-surface-variant font-bold">Ad Blocked</div>
+                        <div className="h-32 w-full bg-surface-variant/30 rounded-xl mb-3 flex items-center justify-center text-on-surface-variant font-bold">Ad Blocked</div>
                         <div className="h-4 w-1/2 bg-surface-container rounded-full"></div>
                     </div>
                 </div>
@@ -274,14 +274,14 @@ export default function SubscriptionPage() {
             <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-tertiary/5 rounded-full blur-3xl pointer-events-none"></div>
 
             <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center">
-                <p className="text-3xl md:text-4xl font-headline font-black text-surface-on mb-10 leading-tight tracking-tight px-4">
+                <p className="text-3xl md:text-4xl font-headline font-black text-on-surface mb-10 leading-tight tracking-tight px-4">
                     "LearnLoop Premium transformed my daily commute into a high-octane learning ritual. The AI-generated missions are scarily accurate to my career goals."
                 </p>
                 
                 <div className="flex items-center justify-center gap-5">
                     <div className="w-16 h-16 rounded-full border-4 border-white bg-surface-container flex items-center justify-center text-xl font-bold font-headline text-primary shadow-md">M</div>
                     <div className="text-left">
-                        <div className="font-black font-headline text-surface-on text-lg">Marcus Thorne</div>
+                        <div className="font-black font-headline text-on-surface text-lg">Marcus Thorne</div>
                         <div className="text-sm font-bold text-tertiary uppercase tracking-widest mt-0.5">Senior Research Analyst & Premium Member</div>
                     </div>
                 </div>
@@ -295,36 +295,36 @@ export default function SubscriptionPage() {
         <div className="w-full px-6 md:px-12 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
             <div className="md:col-span-2">
                 <div className="text-2xl font-black text-primary mb-4 font-headline tracking-tighter">LearnLoop</div>
-                <p className="font-medium text-surface-variant max-w-xs mb-8 leading-relaxed">Elevate your intellect through AI-powered personalized learning journeys.</p>
+                <p className="font-medium text-on-surface-variant max-w-xs mb-8 leading-relaxed">Elevate your intellect through AI-powered personalized learning journeys.</p>
                 <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-white text-surface-variant transition-all cursor-pointer border border-surface-container"><span className="material-symbols-outlined text-lg">public</span></div>
-                    <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-white text-surface-variant transition-all cursor-pointer border border-surface-container"><span className="material-symbols-outlined text-lg">campaign</span></div>
-                    <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-white text-surface-variant transition-all cursor-pointer border border-surface-container"><span className="material-symbols-outlined text-lg">mail</span></div>
+                    <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-white text-on-surface-variant transition-all cursor-pointer border border-surface-container"><span className="material-symbols-outlined text-lg">public</span></div>
+                    <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-white text-on-surface-variant transition-all cursor-pointer border border-surface-container"><span className="material-symbols-outlined text-lg">campaign</span></div>
+                    <div className="w-10 h-10 rounded-full bg-surface flex items-center justify-center hover:bg-primary hover:text-white text-on-surface-variant transition-all cursor-pointer border border-surface-container"><span className="material-symbols-outlined text-lg">mail</span></div>
                 </div>
             </div>
             
             <div>
-                <h5 className="font-black text-surface-on mb-6 uppercase text-xs tracking-widest font-headline">Platform</h5>
+                <h5 className="font-black text-on-surface mb-6 uppercase text-xs tracking-widest font-headline">Platform</h5>
                 <ul className="space-y-4 font-medium text-sm">
-                    <li><Link href="/dashboard" className="text-surface-variant hover:text-primary transition-colors">Dashboard</Link></li>
-                    <li><Link href="/missions" className="text-surface-variant hover:text-primary transition-colors">Missions</Link></li>
-                    <li><Link href="/leaderboard" className="text-surface-variant hover:text-primary transition-colors">Leaderboard</Link></li>
+                    <li><Link href="/dashboard" className="text-on-surface-variant hover:text-primary transition-colors">Dashboard</Link></li>
+                    <li><Link href="/missions" className="text-on-surface-variant hover:text-primary transition-colors">Missions</Link></li>
+                    <li><Link href="/leaderboard" className="text-on-surface-variant hover:text-primary transition-colors">Leaderboard</Link></li>
                 </ul>
             </div>
             
             <div>
-                <h5 className="font-black text-surface-on mb-6 uppercase text-xs tracking-widest font-headline">Legal & Support</h5>
+                <h5 className="font-black text-on-surface mb-6 uppercase text-xs tracking-widest font-headline">Legal & Support</h5>
                 <ul className="space-y-4 font-medium text-sm">
-                    <li><Link href="/support" className="text-surface-variant hover:text-primary transition-colors">Privacy Policy</Link></li>
-                    <li><Link href="/support" className="text-surface-variant hover:text-primary transition-colors">Terms of Service</Link></li>
-                    <li><Link href="/support" className="text-surface-variant hover:text-primary transition-colors">Help Center</Link></li>
+                    <li><Link href="/support" className="text-on-surface-variant hover:text-primary transition-colors">Privacy Policy</Link></li>
+                    <li><Link href="/support" className="text-on-surface-variant hover:text-primary transition-colors">Terms of Service</Link></li>
+                    <li><Link href="/support" className="text-on-surface-variant hover:text-primary transition-colors">Help Center</Link></li>
                 </ul>
             </div>
         </div>
         
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 border-t border-surface-container flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="font-medium text-xs text-surface-variant">&copy; {new Date().getFullYear()} LearnLoop Systems. Elevate your intellect.</p>
-            <div className="flex items-center gap-2 text-xs font-bold text-surface-variant">
+            <p className="font-medium text-xs text-on-surface-variant">&copy; {new Date().getFullYear()} LearnLoop Systems. Elevate your intellect.</p>
+            <div className="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
                 Made with <span className="material-symbols-outlined text-xs text-error" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span> by LearnLoop Team
             </div>
         </div>
@@ -332,11 +332,11 @@ export default function SubscriptionPage() {
 
       {/* BottomNavBar (Mobile Only) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(0,0,0,0.05)] border-t border-surface-container/50 flex justify-around items-center h-16 px-4 z-50 rounded-t-[2rem]">
-        <Link href="/dashboard" className="flex flex-col items-center gap-1 text-surface-variant hover:text-primary transition-colors">
+        <Link href="/dashboard" className="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
           <span className="material-symbols-outlined">dashboard</span>
           <span className="text-[10px] font-bold font-headline">Home</span>
         </Link>
-        <Link href="/missions" className="flex flex-col items-center gap-1 text-surface-variant hover:text-primary transition-colors">
+        <Link href="/missions" className="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
           <span className="material-symbols-outlined">rocket_launch</span>
           <span className="text-[10px] font-bold font-headline">Missions</span>
         </Link>
@@ -344,7 +344,7 @@ export default function SubscriptionPage() {
           <span className="material-symbols-outlined bg-primary/10 p-2 rounded-full border border-primary/20">workspace_premium</span>
           <span className="text-[10px] font-bold font-headline mt-0.5">Premium</span>
         </Link>
-        <Link href="/profile" className="flex flex-col items-center gap-1 text-surface-variant hover:text-primary transition-colors">
+        <Link href="/profile" className="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
           <span className="material-symbols-outlined">person</span>
           <span className="text-[10px] font-bold font-headline">Profile</span>
         </Link>

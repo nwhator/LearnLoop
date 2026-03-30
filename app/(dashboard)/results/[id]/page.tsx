@@ -5,12 +5,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useStore } from "@/lib/store";
 import Flashcard, { FlashcardData } from "@/components/ui/Flashcard";
-
-const MOCK_FLASHCARDS: FlashcardData[] = [
-  { id: "1", front: "What is a Perceptron?", back: "The simplest type of artificial neural network, a linear classifier." },
-  { id: "2", front: "What is ReLU?", back: "Rectified Linear Unit. Returns 0 for negative input, and x for positive input." },
-  { id: "3", front: "What is Backpropagation?", back: "The process of calculating gradients by applying the chain rule." },
-];
+import { createClient } from "@/lib/supabase/client";
 
 export default function ResultsPage() {
   const params = useParams();
@@ -20,12 +15,31 @@ export default function ResultsPage() {
   const xp = useStore((state) => state.xp);
   const incrementXP = useStore((state) => state.incrementXP);
 
-  const [flashcards, setFlashcards] = useState<FlashcardData[]>(MOCK_FLASHCARDS);
+  const [flashcards, setFlashcards] = useState<FlashcardData[]>([]);
   const [masteredIds, setMasteredIds] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
 
-  // Simulating fetching data
+  // Fetch data dynamically
   useEffect(() => {
-    console.log(`Loading learning set with ID: ${params.id}`);
+    async function fetchCards() {
+      if (!params.id) return;
+      try {
+        setLoading(true);
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from("flashcards")
+          .select("*")
+          .eq("study_set_id", params.id);
+          
+        if (error) throw error;
+        if (data) setFlashcards(data);
+      } catch (err) {
+        console.error("Failed to load flashcards:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCards();
   }, [params.id]);
 
   const handleMastered = (id: string) => {
@@ -47,8 +61,8 @@ export default function ResultsPage() {
         <div className="flex items-center gap-8">
           <Link href="/" className="text-2xl font-extrabold text-primary font-headline tracking-tight">LearnLoop</Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/dashboard" className="text-surface-variant font-medium font-headline hover:bg-surface-container/50 transition-colors px-3 py-1 rounded-lg">Dashboard</Link>
-            <Link href="/library" className="text-surface-variant font-medium font-headline hover:bg-surface-container/50 transition-colors px-3 py-1 rounded-lg">Library</Link>
+            <Link href="/dashboard" className="text-on-surface-variant font-medium font-headline hover:bg-surface-container/50 transition-colors px-3 py-1 rounded-lg">Dashboard</Link>
+            <Link href="/library" className="text-on-surface-variant font-medium font-headline hover:bg-surface-container/50 transition-colors px-3 py-1 rounded-lg">Library</Link>
             <Link href={`/results/${params.id}`} className="text-primary font-bold border-b-2 border-primary font-headline px-3 py-1">Results</Link>
           </div>
         </div>
@@ -58,7 +72,7 @@ export default function ResultsPage() {
             <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full transition-all active:scale-95">workspace_premium</button>
             <button className="material-symbols-outlined text-primary p-2 hover:bg-surface-container rounded-full transition-all active:scale-95">local_fire_department</button>
           </div>
-          <div className="h-10 w-10 rounded-full bg-surface-container overflow-hidden ring-2 ring-primary/10 flex items-center justify-center font-bold text-surface-variant">
+          <div className="h-10 w-10 rounded-full bg-surface-container overflow-hidden ring-2 ring-primary/10 flex items-center justify-center font-bold text-on-surface-variant">
              A
           </div>
         </div>
@@ -68,25 +82,25 @@ export default function ResultsPage() {
       <aside className="hidden lg:flex flex-col h-full w-64 fixed left-0 top-0 pt-20 bg-surface-bright border-r border-surface-container z-40">
         <div className="px-6 mb-8 flex flex-col gap-1">
           <span className="text-surface-on font-bold text-lg font-headline">Alex Chen</span>
-          <span className="text-surface-variant text-xs font-semibold uppercase tracking-wider">Level {level} Architect</span>
+          <span className="text-on-surface-variant text-xs font-semibold uppercase tracking-wider">Level {level} Architect</span>
           <button className="mt-6 w-full bg-primary text-primary-on font-bold py-3 px-4 rounded-full shadow-md active:translate-x-1 transition-all duration-150 text-sm flex items-center justify-center gap-2 hover:brightness-110">
              Start Daily Quiz
           </button>
         </div>
         <nav className="flex-1 flex flex-col gap-1">
-          <Link href="/dashboard" className="text-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
+          <Link href="/dashboard" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
              <span className="material-symbols-outlined">dashboard</span> Dashboard
           </Link>
-          <Link href="/library" className="text-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
+          <Link href="/library" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
              <span className="material-symbols-outlined">local_library</span> Library
           </Link>
-          <Link href="/leaderboard" className="text-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
+          <Link href="/leaderboard" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
              <span className="material-symbols-outlined">leaderboard</span> Leaderboard
           </Link>
           <Link href={`/results/${params.id}`} className="bg-primary/10 text-primary rounded-full px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm">
              <span className="material-symbols-outlined">analytics</span> Results
           </Link>
-          <Link href="/profile" className="text-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
+          <Link href="/profile" className="text-on-surface-variant px-4 py-3 mx-2 flex items-center gap-3 font-semibold text-sm hover:bg-surface-container rounded-full transition-all">
              <span className="material-symbols-outlined">person</span> Profile
           </Link>
         </nav>
@@ -130,7 +144,7 @@ export default function ResultsPage() {
                         <span>The Perceptron</span>
                         <span className="material-symbols-outlined text-sm">expand_more</span>
                       </summary>
-                      <div className="px-4 pb-3 pt-1 text-sm text-surface-variant border-t border-surface-container/50 space-y-2">
+                      <div className="px-4 pb-3 pt-1 text-sm text-on-surface-variant border-t border-surface-container/50 space-y-2">
                         <p>The simplest type of artificial neural network, a linear classifier.</p>
                         <ul className="list-disc pl-4 space-y-1">
                           <li>Input weights</li>
@@ -147,7 +161,7 @@ export default function ResultsPage() {
                         <span>Activation Functions</span>
                         <span className="material-symbols-outlined text-sm">expand_more</span>
                       </summary>
-                      <div className="px-4 pb-3 pt-1 text-sm text-surface-variant border-t border-surface-container/50 space-y-2">
+                      <div className="px-4 pb-3 pt-1 text-sm text-on-surface-variant border-t border-surface-container/50 space-y-2">
                         <p>Non-linear transformations applied to the output of a neuron.</p>
                         <ul className="list-disc pl-4 space-y-1">
                           <li>Sigmoid (0 to 1)</li>
@@ -163,7 +177,7 @@ export default function ResultsPage() {
                       <span className="material-symbols-outlined text-lg">warning</span>
                       <span className="font-bold text-sm">Weak Area</span>
                     </div>
-                    <p className="text-xs text-surface-variant">You missed 2 questions regarding the chain rule in gradient descent. Review this section.</p>
+                    <p className="text-xs text-on-surface-variant">You missed 2 questions regarding the chain rule in gradient descent. Review this section.</p>
                   </div>
 
                 </div>
@@ -180,10 +194,10 @@ export default function ResultsPage() {
                     </div>
                     <div>
                       <h3 className="font-headline font-bold text-xl text-surface-on">Assessment Quiz</h3>
-                      <p className="text-sm text-surface-variant">Progress: 4 of 10</p>
+                      <p className="text-sm text-on-surface-variant">Progress: 4 of 10</p>
                     </div>
                   </div>
-                  <span className="px-3 py-1 bg-surface rounded-full text-xs font-bold text-surface-variant border border-surface-container text-center hidden sm:block">Topic: Gradients</span>
+                  <span className="px-3 py-1 bg-surface rounded-full text-xs font-bold text-on-surface-variant border border-surface-container text-center hidden sm:block">Topic: Gradients</span>
                 </div>
                 
                 <div className="mb-10">
@@ -202,10 +216,10 @@ export default function ResultsPage() {
                     <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                   </button>
                   <button className="w-full text-left p-5 rounded-2xl border-2 border-surface-container hover:border-surface-variant hover:bg-surface transition-all">
-                    <span className="font-medium text-surface-variant">Fourier Transformation</span>
+                    <span className="font-medium text-on-surface-variant">Fourier Transformation</span>
                   </button>
                   <button className="w-full text-left p-5 rounded-2xl border-2 border-surface-container hover:border-surface-variant hover:bg-surface transition-all">
-                    <span className="font-medium text-surface-variant">Bayesian Probability</span>
+                    <span className="font-medium text-on-surface-variant">Bayesian Probability</span>
                   </button>
                 </div>
                 
@@ -213,7 +227,7 @@ export default function ResultsPage() {
                   <h4 className="font-bold text-sm mb-2 flex items-center gap-2 text-surface-on">
                     <span className="material-symbols-outlined text-primary text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>lightbulb</span> Instant Feedback
                   </h4>
-                  <p className="text-sm text-surface-variant">
+                  <p className="text-sm text-on-surface-variant">
                     <strong className="text-surface-on">The Chain Rule</strong> is the core mechanism. It allows the network to distribute the error from the output layer back through each weight in the preceding layers.
                   </p>
                 </div>
@@ -233,15 +247,17 @@ export default function ResultsPage() {
               <div className="bg-white p-6 rounded-2xl border border-surface-container shadow-sm flex flex-col h-[500px]">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-headline font-bold text-primary">Generated Flashcards</h3>
-                  <span className="text-xs font-bold text-surface-variant bg-surface px-2 py-1 border border-surface-container rounded">{flashcards.length - masteredIds.size} Left</span>
+                  <span className="text-xs font-bold text-on-surface-variant bg-surface px-2 py-1 border border-surface-container rounded">{flashcards.length - masteredIds.size} Left</span>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto space-y-4 no-scrollbar pb-4 pr-1">
-                  {flashcards.map((card) => (
+                  {loading && <p className="text-center font-bold text-on-surface-variant my-10 animate-pulse">Loading AI Data...</p>}
+                  {!loading && flashcards.length === 0 && <p className="text-center font-bold text-on-surface-variant my-10">No flashcards found for this study set.</p>}
+                  {!loading && flashcards.map((card) => (
                     <div key={card.id} className="relative shadow-sm rounded-xl overflow-hidden border border-surface-container group">
                       {masteredIds.has(card.id) && (
                         <div className="absolute inset-0 z-20 bg-white/70 backdrop-blur-[2px] flex items-center justify-center pointer-events-none">
-                           <div className="bg-secondary text-secondary-on px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
+                           <div className="bg-secondary text-on-secondary px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
                              <span className="material-symbols-outlined text-sm font-bold">done_all</span>
                              <span className="text-xs font-bold font-headline">+50 XP</span>
                            </div>
@@ -268,12 +284,12 @@ export default function ResultsPage() {
                     <span className="material-symbols-outlined text-secondary text-3xl">trending_up</span>
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs font-bold text-surface-variant leading-none uppercase tracking-tighter mb-1">Set Mastery</p>
+                    <p className="text-xs font-bold text-on-surface-variant leading-none uppercase tracking-tighter mb-1">Set Mastery</p>
                     <p className="text-xl font-bold font-headline text-surface-on">{Math.round(progressPercent)}%</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-between text-xs mb-2">
-                  <span className="text-surface-variant font-medium">Session Goal</span>
+                  <span className="text-on-surface-variant font-medium">Session Goal</span>
                   <span className="font-bold text-secondary">{masteredIds.size}/{flashcards.length} Mastered</span>
                 </div>
                 <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden shadow-inner flex">

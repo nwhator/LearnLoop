@@ -15,26 +15,24 @@ export default function HomePage() {
 						<div className="text-left">
 							<div className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-full text-xs font-bold mb-6 tracking-wide uppercase">
 								<span className="material-symbols-outlined text-base" style={{ fontVariationSettings: '"FILL" 1' }}>auto_awesome</span>
-								Gamified Learning Engine
+								The Fun Way to Study
 							</div>
-							<h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-headline text-on-surface tracking-tight leading-[0.9] mb-8">
+							<h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-headline text-on-surface tracking-tight leading-tight lg:leading-[1.1] mb-8 pb-2">
 								Master Any Topic <br />
-								<span className="gradient-text italic">Through Play</span>
+								<span className="gradient-text italic pr-4">Through Play</span>
 							</h1>
 							<p className="max-w-xl text-lg md:text-xl text-on-surface-variant mb-10 leading-relaxed">
-								Transform boring PDFs and dry notes into high-stakes quests. Build your knowledge base while earning XP and climbing global leaderboards.
+								Turn your boring notes and PDFs into fun, interactive games instantly. Level up your grades, earn XP, and climb the leaderboards.
 							</p>
 							<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-								<Link href="/register" passHref legacyBehavior>
-									<Button className="px-10 py-5 text-lg" variant="primary">
+								<Link href="/register">
+									<Button className="px-10 py-5 text-lg shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:-translate-y-1" variant="primary">
 										Start Your First Quest
 									</Button>
 								</Link>
-								<Link href="/demo" passHref legacyBehavior>
-									<Button variant="glass" className="text-lg">
-										<span className="material-symbols-outlined bg-white shadow-md p-3 rounded-full border border-surface-container-low mr-2">play_circle</span>
-										See How It Works
-									</Button>
+								<Link href="/demo" className="flex items-center justify-center gap-3 text-on-surface font-bold text-lg hover:text-primary transition-all px-6">
+									<span className="material-symbols-outlined bg-white shadow-md p-3 rounded-full border border-surface-container-low">play_circle</span>
+									See How It Works
 								</Link>
 							</div>
 							<div className="mt-12 flex items-center gap-4">
@@ -79,12 +77,73 @@ export default function HomePage() {
 				<section className="py-24 px-4 sm:px-6 lg:px-8 bg-surface-container-low">
 					<div className="max-w-7xl mx-auto">
 						<div className="text-center mb-16">
-							<h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight font-headline">Your Personal Knowledge Forge</h2>
+							<h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight font-headline">Your Personal Study Buddy</h2>
 							<p className="text-on-surface-variant max-w-2xl mx-auto text-lg leading-relaxed">
-								Upload any material. Our AI carves out the core concepts and builds a personalized curriculum designed for flow-state learning.
+								Upload any lecture note or PDF. We instantly turn the hardest concepts into simple, bite-sized games that make learning a breeze.
 							</p>
 						</div>
-						{/* ... Product UI mockup and leaderboard ... */}
+						{/* Product UI Mockup */}
+						<div className="relative max-w-5xl mx-auto">
+							<div className="absolute -inset-10 bg-primary/10 rounded-[4rem] blur-3xl -z-10"></div>
+							<div className="bg-white rounded-[2.5rem] shadow-2xl border border-white overflow-hidden p-2 sm:p-4">
+								<div className="bg-surface rounded-2xl border border-surface-container-low p-6">
+									<div className="flex items-center justify-between mb-8 border-b border-surface-container-low pb-4">
+										<div className="flex gap-2">
+											<div className="w-3 h-3 rounded-full bg-red-400"></div>
+											<div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+											<div className="w-3 h-3 rounded-full bg-green-400"></div>
+										</div>
+										<div className="flex items-center gap-2 bg-white px-3 py-1 rounded-lg text-xs font-bold shadow-sm">
+											<span className="material-symbols-outlined text-sm text-primary">book_2</span> Course: Advanced AI
+										</div>
+									</div>
+									<div className="grid md:grid-cols-3 gap-6">
+										<div className="md:col-span-2 space-y-6">
+											<div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-container-low">
+												<h4 className="font-bold text-lg mb-4 flex items-center gap-2">
+													<span className="material-symbols-outlined text-secondary">quiz</span> Generated Challenge
+												</h4>
+												<p className="text-on-surface-variant mb-6 italic">&quot;Based on the &apos;Neural Networks&apos; PDF you uploaded, how would back propagation change if the activation function was linear?&quot;</p>
+												<div className="space-y-3">
+													<div className="p-4 border-2 border-primary/20 rounded-xl hover:bg-primary/5 cursor-pointer transition-colors font-medium">A. The network would collapse to a single layer.</div>
+													<div className="p-4 border border-surface-container-low rounded-xl hover:border-primary/20 cursor-pointer transition-colors font-medium">B. Learning rate would become infinite.</div>
+													<div className="p-4 border border-surface-container-low rounded-xl hover:border-primary/20 cursor-pointer transition-colors font-medium">C. No change in performance.</div>
+												</div>
+											</div>
+										</div>
+										<div className="space-y-6">
+											<div className="bg-primary/5 p-6 rounded-2xl border border-primary/10">
+												<h4 className="font-bold text-sm mb-4 uppercase tracking-widest text-primary">Weekly Leaderboard</h4>
+												<div className="space-y-4">
+													<div className="flex items-center justify-between">
+														<div className="flex items-center gap-3">
+															<div className="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center font-bold text-white text-xs">1</div>
+															<span className="font-bold text-sm">Alex M.</span>
+														</div>
+														<span className="text-xs font-bold">14,200 XP</span>
+													</div>
+													<div className="flex items-center justify-between border-y border-primary/10 py-3">
+														<div className="flex items-center gap-3">
+															<div className="w-8 h-8 rounded-full bg-slate-300 flex items-center justify-center font-bold text-white text-xs">2</div>
+															<span className="font-bold text-sm">Sarah K.</span>
+														</div>
+														<span className="text-xs font-bold">12,100 XP</span>
+													</div>
+													<div className="flex items-center justify-between">
+														<div className="flex items-center gap-3">
+															<div className="w-8 h-8 rounded-full bg-orange-400 flex items-center justify-center font-bold text-white text-xs">3</div>
+															<span className="font-bold text-sm">You</span>
+														</div>
+														<span className="text-xs font-bold">11,950 XP</span>
+													</div>
+												</div>
+											</div>
+											<button className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-sm shadow-lg shadow-primary/20">Resume Mission</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</section>
 
@@ -96,28 +155,28 @@ export default function HomePage() {
 								<div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
 									<span className="material-symbols-outlined text-primary text-3xl">psychology</span>
 								</div>
-								<h3 className="text-2xl font-black mb-4">AI Deep Scan</h3>
+								<h3 className="text-2xl font-black mb-4">Instant Flashcards</h3>
 								<p className="text-on-surface-variant leading-relaxed">
-									Upload notes, books, or web links. Our neural engine extracts key concepts and creates interactive flashcards automatically.
+									Stop wasting time making cards. Drop your notes in, and we magically organize them into fun quizzes and flashcards so you can start playing right away.
 								</p>
 							</div>
 							<div className="p-10 rounded-[2.5rem] bg-surface-container-low hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-surface-container-low group lg:translate-y-8">
 								<div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
 									<span className="material-symbols-outlined text-secondary text-3xl">emoji_events</span>
 								</div>
-								<h3 className="text-2xl font-black mb-4">Progression Loops</h3>
+								<h3 className="text-2xl font-black mb-4">Level Up IRL</h3>
 								<p className="text-on-surface-variant leading-relaxed">
-									Turn study sessions into RPG-style quests. Earn badges, unlock new skill trees, and level up as you master difficult topics.
+									Turn study sessions into epic quests. Earn badges, hit milestones, and level up your rank as you crush difficult topics and build solid study habits.
 								</p>
 							</div>
 							<div className="p-10 rounded-[2.5rem] bg-surface-container-low hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-surface-container-low group">
 								<div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
 									<span className="material-symbols-outlined text-tertiary text-3xl">groups</span>
 								</div>
-								<h3 className="text-2xl font-black mb-4">Peer Squads</h3>
-								<div className="text-on-surface-variant leading-relaxed">
-									Join specialized study groups. Compete in group missions, share resources, and help your squad climb the global ranking.
-								</div>
+								<h3 className="text-2xl font-black mb-4">Study with Friends</h3>
+								<p className="text-on-surface-variant leading-relaxed">
+									Why study alone when you can join a squad? Compete in group challenges, share your best study guides, and climb the leaderboard together.
+								</p>
 							</div>
 						</div>
 					</div>
@@ -132,21 +191,19 @@ export default function HomePage() {
 								<div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
 								<div className="absolute bottom-8 left-8 right-8 text-white">
 									<div className="flex items-center gap-2 mb-2">
-										<span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: '"FILL" 1' }}>star</span>
-										<span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: '"FILL" 1' }}>star</span>
-										<span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: '"FILL" 1' }}>star</span>
-										<span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: '"FILL" 1' }}>star</span>
-										<span className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: '"FILL" 1' }}>star</span>
+										{[1, 2, 3, 4, 5].map(i => (
+											<span key={i} className="material-symbols-outlined text-yellow-400" style={{ fontVariationSettings: '"FILL" 1' }}>star</span>
+										))}
 									</div>
-									<p className="text-lg font-bold italic leading-relaxed">"LearnLoop turned my Bar Exam prep from a nightmare into a game I actually wanted to play. I've never felt more prepared."</p>
+									<p className="text-lg font-bold italic leading-relaxed">&quot;LearnLoop turned my Bar Exam prep from a nightmare into a game I actually wanted to play. I&apos;ve never felt more prepared.&quot;</p>
 									<p className="mt-4 font-bold text-sm uppercase tracking-widest">— Maria J., Law Graduate</p>
 								</div>
 							</div>
 						</div>
 						<div className="order-1 lg:order-2">
-							<h2 className="text-4xl md:text-5xl font-black mb-8 leading-tight tracking-tight font-headline">The Modern Standard for <span className="text-primary italic">Deep Learning</span></h2>
+							<h2 className="text-4xl md:text-5xl font-black mb-8 leading-tight tracking-tight font-headline">Join thousands of students <span className="text-primary italic">having fun</span></h2>
 							<p className="text-xl text-on-surface-variant mb-10 leading-relaxed">
-								Used by medical students, engineers, and life-long learners who value their time and mental energy.
+								Used by high schoolers, college students, and life-long learners who want to get great grades without giving up their free time.
 							</p>
 							<div className="grid grid-cols-2 gap-6">
 								<div className="bg-white p-6 rounded-2xl shadow-sm">
@@ -182,18 +239,18 @@ export default function HomePage() {
 							</svg>
 						</div>
 						<div className="relative z-10">
-							<h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tight font-headline">Ready to Level Up Your Mind?</h2>
+							<h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tight font-headline">Ready to Start Playing?</h2>
 							<p className="text-on-primary/90 mb-12 max-w-xl mx-auto text-lg md:text-xl font-medium">
-								Join the thousands of learners who have turned their study materials into a competitive advantage.
+								Join thousands of learners who've turned their study time into a game they actually enjoy.
 							</p>
 							<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-								<Link href="/register" passHref legacyBehavior>
-									<Button className="px-12 py-5 text-xl font-black" variant="glass">
+								<Link href="/register">
+									<Button className="w-full sm:w-auto px-12 py-5 text-xl font-black !bg-white !text-primary shadow-xl hover:scale-105 border-transparent">
 										Get Started Free
 									</Button>
 								</Link>
-								<Link href="/premium" passHref legacyBehavior>
-									<Button className="px-12 py-5 text-xl font-bold border-2 border-white/30" variant="primary">
+								<Link href="/premium">
+									<Button className="w-full sm:w-auto px-12 py-5 text-xl font-bold border-2 !border-white/30 !bg-transparent hover:!bg-white/10 !text-white">
 										Compare Plans
 									</Button>
 								</Link>
@@ -204,6 +261,26 @@ export default function HomePage() {
 				</section>
 			</main>
 			<PublicFooter />
+
+			{/* Mobile Bottom Nav */}
+			<nav className="fixed bottom-4 left-4 right-4 h-16 bg-white/90 backdrop-blur-xl border border-surface-container-low shadow-2xl rounded-2xl flex md:hidden justify-around items-center z-[100]">
+				<Link href="/" className="flex flex-col items-center gap-1 text-primary">
+					<span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>home</span>
+					<span className="text-[10px] font-bold">Home</span>
+				</Link>
+				<Link href="/missions" className="flex flex-col items-center gap-1 text-on-surface-variant">
+					<span className="material-symbols-outlined text-2xl">rocket_launch</span>
+					<span className="text-[10px] font-bold">Quests</span>
+				</Link>
+				<Link href="/leaderboard" className="flex flex-col items-center gap-1 text-on-surface-variant">
+					<span className="material-symbols-outlined text-2xl">leaderboard</span>
+					<span className="text-[10px] font-bold">Ranks</span>
+				</Link>
+				<Link href="/profile" className="flex flex-col items-center gap-1 text-on-surface-variant">
+					<span className="material-symbols-outlined text-2xl">person</span>
+					<span className="text-[10px] font-bold">Profile</span>
+				</Link>
+			</nav>
 		</div>
 	);
 }

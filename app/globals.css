@@ -1,56 +1,155 @@
 @import "tailwindcss";
 
+/* ─── Tailwind v4 Plugins ──────────────────────────────────────────── */
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/container-queries";
+
+/* ─── Theme: Full Stitch Design System ─────────────────────────────── */
+@theme {
+  /* ── Primary ── */
+  --color-primary: #4A90E2;
+  --color-primary-dim: #005192;
+  --color-primary-fixed: #68abff;
+  --color-primary-fixed-dim: #599ef1;
+  --color-primary-container: #68abff;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #002b52;
+  --color-on-primary-fixed: #000c1e;
+  --color-on-primary-fixed-variant: #003461;
+
+  /* ── Secondary ── */
+  --color-secondary: #843aa3;
+  --color-secondary-dim: #762d96;
+  --color-secondary-fixed: #f1c1ff;
+  --color-secondary-fixed-dim: #eaaeff;
+  --color-secondary-container: #f1c1ff;
+  --color-on-secondary: #ffedff;
+  --color-on-secondary-container: #6d228d;
+  --color-on-secondary-fixed: #570278;
+  --color-on-secondary-fixed-variant: #782e97;
+
+  /* ── Tertiary ── */
+  --color-tertiary: #6f5900;
+  --color-tertiary-dim: #614d00;
+  --color-tertiary-fixed: #fed023;
+  --color-tertiary-fixed-dim: #eec209;
+  --color-tertiary-container: #fed023;
+  --color-on-tertiary: #fff2d3;
+  --color-on-tertiary-container: #594700;
+  --color-on-tertiary-fixed: #433500;
+  --color-on-tertiary-fixed-variant: #655000;
+
+  /* ── Error ── */
+  --color-error: #b31b25;
+  --color-error-dim: #9f0519;
+  --color-error-container: #fb5151;
+  --color-on-error: #ffefee;
+  --color-on-error-container: #570008;
+
+  /* ── Surface System ── */
+  --color-surface: #f5f7fa;
+  --color-surface-bright: #f5f7fa;
+  --color-surface-dim: #d0d5d9;
+  --color-surface-variant: #d9dde1;
+  --color-surface-tint: #005da7;
+  --color-surface-container: #e5e8ec;
+  --color-surface-container-low: #eef1f4;
+  --color-surface-container-high: #dfe3e7;
+  --color-surface-container-highest: #d9dde1;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #2c2f32;
+  --color-on-surface-variant: #595c5e;
+
+  /* ── Background ── */
+  --color-background: #f5f7fa;
+  --color-on-background: #2c2f32;
+
+  /* ── Outline ── */
+  --color-outline: #74777a;
+  --color-outline-variant: #abadb0;
+
+  /* ── Inverse ── */
+  --color-inverse-surface: #0b0f11;
+  --color-inverse-on-surface: #9a9da0;
+  --color-inverse-primary: #68abff;
+
+  /* ── Fonts ── */
+  --font-headline: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
+  --font-body: var(--font-inter), "Inter", sans-serif;
+  --font-label: var(--font-inter), "Inter", sans-serif;
+  --font-plus-jakarta-sans: var(--font-jakarta), "Plus Jakarta Sans", sans-serif;
+
+  /* ── Border Radius ── */
+  --radius: 1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+
+  /* ── Shadows ── */
+  --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.05);
+  --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.05);
+
+  /* ── Animations ── */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-soft: pulse-soft 4s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+}
+
+/* ─── Base Styles ──────────────────────────────────────────────────── */
 @layer base {
   :root {
     --foreground-rgb: 44, 47, 50;
     --background-rgb: 245, 247, 250;
     --primary-rgb: 74, 144, 226;
-    --color-surface: #f5f7fa;
-    --color-surface-bright: #ffffff;
-    --color-surface-container: #eef1f4;
-    --color-surface-on: #2c2f32;
-    --color-surface-variant: #595c5e;
   }
-
 }
-
 
 body {
   background-color: var(--color-surface);
-  color: var(--color-surface-on);
-  font-family: var(--font-inter), sans-serif;
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
-
-/* Custom utility classes for surface colors */
-.bg-surface { background-color: var(--color-surface) !important; }
-.bg-surface-bright { background-color: var(--color-surface-bright) !important; }
-.bg-surface-container { background-color: var(--color-surface-container) !important; }
-.text-surface-on { color: var(--color-surface-on) !important; }
-.text-surface-variant { color: var(--color-surface-variant) !important; }
-.border-surface-container { border-color: var(--color-surface-container) !important; }
-
-
-@layer utilities {
-  .glass-panel {
-    background-color: rgba(255,255,255,0.7) !important;
-    backdrop-filter: blur(24px);
-  }
+h1, h2, h3, h4 {
+  font-family: var(--font-headline);
 }
 
-  .gradient-text {
-    background: linear-gradient(135deg, #4A90E2 0%, #843aa3 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+/* ─── Utility Classes ──────────────────────────────────────────────── */
+@utility glass-panel {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
 
-  .preserve-3d {
-    transform-style: preserve-3d;
-  }
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+@utility gradient-text {
+  background: linear-gradient(135deg, #4A90E2 0%, #843aa3 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
 
 /* Material symbols outlined font styles */
 .material-symbols-outlined {

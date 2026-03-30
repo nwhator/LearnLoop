@@ -49,7 +49,7 @@ export default function UserManagementPage() {
 
   if (loading) {
     return (
-      <div className="bg-surface text-surface-on min-h-screen flex items-center justify-center">
+      <div className="bg-surface text-on-surface min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
           <span className="text-lg font-headline font-bold text-primary">Loading records...</span>
@@ -59,7 +59,7 @@ export default function UserManagementPage() {
   }
 
   return (
-    <div className="bg-surface text-surface-on min-h-screen">
+    <div className="bg-surface text-on-surface min-h-screen">
       <AdminSidebar />
 
       <main className="ml-64 min-h-screen">
@@ -100,12 +100,12 @@ export default function UserManagementPage() {
             {/* Table Controls */}
             <section className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white p-6 rounded-[2rem] border border-surface-container shadow-sm">
                 <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-2 px-6 py-3 bg-surface border border-surface-container text-surface-on font-bold rounded-full shadow-sm hover:bg-surface-bright active:scale-95 transition-all outline-none">
+                    <button className="flex items-center gap-2 px-6 py-3 bg-surface border border-surface-container text-on-surface font-bold rounded-full shadow-sm hover:bg-surface-bright active:scale-95 transition-all outline-none">
                         <span className="material-symbols-outlined text-lg">filter_list</span>
                         Filters
                     </button>
                     <div className="h-8 w-px bg-surface-container"></div>
-                    <span className="text-sm text-surface-variant font-bold">Showing {filteredUsers.length} of {users.length} users</span>
+                    <span className="text-sm text-on-surface-variant font-bold">Showing {filteredUsers.length} of {users.length} users</span>
                 </div>
                 <div className="flex items-center gap-4">
                     <button className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-bold shadow-md hover:brightness-110 active:scale-95 transition-all outline-none">
@@ -120,7 +120,7 @@ export default function UserManagementPage() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse min-w-[1000px]">
                         <thead>
-                            <tr className="bg-surface border-b border-surface-container text-surface-variant font-headline uppercase text-xs tracking-widest">
+                            <tr className="bg-surface border-b border-surface-container text-on-surface-variant font-headline uppercase text-xs tracking-widest">
                                 <th className="px-8 py-5 font-black">User</th>
                                 <th className="px-8 py-5 font-black text-center">Level</th>
                                 <th className="px-8 py-5 font-black min-w-[180px]">XP Status</th>
@@ -138,8 +138,8 @@ export default function UserManagementPage() {
                                                 {user.initials || user.name.at(0)}
                                             </div>
                                             <div>
-                                                <p className="font-bold font-headline text-surface-on">{user.name}</p>
-                                                <p className="text-xs text-surface-variant font-medium mt-0.5">{user.email}</p>
+                                                <p className="font-bold font-headline text-on-surface">{user.name}</p>
+                                                <p className="text-xs text-on-surface-variant font-medium mt-0.5">{user.email}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -148,7 +148,7 @@ export default function UserManagementPage() {
                                     </td>
                                     <td className="px-8 py-6">
                                         <div className="flex flex-col gap-1">
-                                            <span className="text-xs font-black text-surface-on tracking-tight">{(user.xp || 0).toLocaleString()} XP</span>
+                                            <span className="text-xs font-black text-on-surface tracking-tight">{(user.xp || 0).toLocaleString()} XP</span>
                                             <div className="h-1.5 w-24 bg-surface-container rounded-full overflow-hidden shadow-inner flex">
                                                 <div className="h-full bg-gradient-to-r from-secondary to-purple-500 rounded-full" style={{ width: `${(user.xp % 1000) / 10}%` }}></div>
                                             </div>
@@ -160,7 +160,7 @@ export default function UserManagementPage() {
                                             {user.is_banned ? 'Banned' : 'Active'}
                                         </span>
                                     </td>
-                                    <td className="px-8 py-6 text-sm font-bold text-surface-on">
+                                    <td className="px-8 py-6 text-sm font-bold text-on-surface">
                                       {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
                                     </td>
                                     <td className="px-8 py-6 text-right">
@@ -202,14 +202,14 @@ function StatCard({ title, value, icon, trend, color }: { title: string, value: 
     <div className={`bg-white p-8 rounded-3xl shadow-sm border border-surface-container border-b-[6px] transition-all duration-300 group hover:shadow-md ${color === 'primary' ? 'border-b-primary' : color === 'secondary' ? 'border-b-secondary' : 'border-b-error'}`}>
       <div className="flex justify-between items-start">
         <div>
-            <p className="text-sm font-black text-surface-variant group-hover:text-surface-on uppercase tracking-widest font-headline">{title}</p>
-            <h3 className="text-4xl font-black mt-2 text-surface-on tracking-tight">{value}</h3>
+            <p className="text-sm font-black text-on-surface-variant group-hover:text-on-surface uppercase tracking-widest font-headline">{title}</p>
+            <h3 className="text-4xl font-black mt-2 text-on-surface tracking-tight">{value}</h3>
         </div>
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors border ${iconBgClasses[color]} group-hover:bg-white group-hover:text-surface-on`}>
+        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors border ${iconBgClasses[color]} group-hover:bg-white group-hover:text-on-surface`}>
             <span className="material-symbols-outlined text-3xl">{icon}</span>
         </div>
       </div>
-      <div className={`mt-8 flex items-center gap-2 text-sm font-bold ${color === 'error' ? 'text-surface-variant' : 'text-green-600'}`}>
+      <div className={`mt-8 flex items-center gap-2 text-sm font-bold ${color === 'error' ? 'text-on-surface-variant' : 'text-green-600'}`}>
         <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>{color === 'error' ? 'gavel' : 'trending_up'}</span>
         <span>{trend}</span>
       </div>

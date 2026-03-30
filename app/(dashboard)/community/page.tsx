@@ -88,7 +88,7 @@ export default function CommunityPage() {
                 
                 {/* Study Sets Feed */}
                 <section className="lg:col-span-8 space-y-10">
-                    <h2 className="text-3xl font-black font-headline tracking-tighter text-surface-on flex items-center gap-3">
+                    <h2 className="text-3xl font-black font-headline tracking-tighter text-on-surface flex items-center gap-3">
                         <span className="material-symbols-outlined text-primary bg-primary/10 p-2.5 rounded-2xl border border-primary/20" style={{ fontVariationSettings: "'FILL' 1" }}>auto_stories</span>
                         Shared Mastery Sets
                     </h2>
@@ -104,11 +104,11 @@ export default function CommunityPage() {
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="bg-secondary/10 text-secondary border border-secondary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em]">{set.category || 'General'}</div>
                                 </div>
-                                <h3 className="text-2xl font-black font-headline mb-3 text-surface-on leading-tight group-hover:text-primary transition-colors">{set.title}</h3>
-                                <p className="text-surface-variant text-sm font-medium leading-relaxed mb-8 line-clamp-2 italic opacity-80">"{set.description}"</p>
+                                <h3 className="text-2xl font-black font-headline mb-3 text-on-surface leading-tight group-hover:text-primary transition-colors">{set.title}</h3>
+                                <p className="text-on-surface-variant text-sm font-medium leading-relaxed mb-8 line-clamp-2 italic opacity-80">"{set.description}"</p>
                                 
                                 <div className="flex items-center justify-between mt-auto pt-6 border-t border-surface-container">
-                                    <span className="text-[10px] text-surface-variant font-black uppercase tracking-widest">Added {set.created_at ? new Date(set.created_at).toLocaleDateString() : 'N/A'}</span>
+                                    <span className="text-[10px] text-on-surface-variant font-black uppercase tracking-widest">Added {set.created_at ? new Date(set.created_at).toLocaleDateString() : 'N/A'}</span>
                                     <Link href={`/sets/${set.id}`} className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest group/btn">
                                         View Set <span className="material-symbols-outlined text-lg group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
                                     </Link>
@@ -116,8 +116,8 @@ export default function CommunityPage() {
                             </div>
                         )) : (
                           <div className="col-span-full py-20 bg-white border border-dashed border-surface-container rounded-[2.5rem] flex flex-col items-center justify-center text-center">
-                              <span className="material-symbols-outlined text-4xl text-surface-variant mb-4">search_off</span>
-                              <p className="text-lg font-black font-headline text-surface-on">No sets discovered in this sector.</p>
+                              <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-4">search_off</span>
+                              <p className="text-lg font-black font-headline text-on-surface">No sets discovered in this sector.</p>
                           </div>
                         )}
                     </div>
@@ -127,7 +127,7 @@ export default function CommunityPage() {
                 <aside className="lg:col-span-4 space-y-10">
                     <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-surface-container hover:shadow-md transition-shadow relative overflow-hidden">
                         <div className="absolute -right-6 -top-6 material-symbols-outlined text-[120px] text-tertiary/5 rotate-12" style={{ fontVariationSettings: "'FILL' 1" }}>trophy</div>
-                        <h2 className="text-2xl font-black font-headline tracking-tighter flex items-center gap-3 text-surface-on mb-8 relative z-10">
+                        <h2 className="text-2xl font-black font-headline tracking-tighter flex items-center gap-3 text-on-surface mb-8 relative z-10">
                             Hall of Fame
                         </h2>
                         
@@ -136,13 +136,13 @@ export default function CommunityPage() {
                               Array(3).fill(0).map((_, i) => <div key={i} className="h-20 bg-surface rounded-3xl animate-pulse shadow-inner"></div>)
                             ) : topUsers.map((rankUser) => (
                                 <div key={rankUser.user_id} className={`flex items-center gap-5 p-4 rounded-3xl transition-all border ${rankUser.rank === 1 ? 'bg-tertiary/5 border-tertiary/20' : 'bg-surface border-transparent hover:border-surface-container hover:bg-white'}`}>
-                                    <div className={`text-xl font-black w-6 text-center ${rankUser.rank === 1 ? 'text-tertiary' : 'text-surface-variant'}`}>{rankUser.rank}</div>
+                                    <div className={`text-xl font-black w-6 text-center ${rankUser.rank === 1 ? 'text-tertiary' : 'text-on-surface-variant'}`}>{rankUser.rank}</div>
                                     <div className={`w-12 h-12 rounded-full flex items-center justify-center font-black text-lg font-headline shadow-inner bg-primary/20 text-primary`}>
                                       {rankUser.users?.initials || rankUser.users?.name?.charAt(0) || 'U'}
                                     </div>
                                     <div className="flex-grow">
-                                        <p className="font-black font-headline text-surface-on tracking-tight truncate max-w-[120px]">{rankUser.users?.name || 'Anonymous'}</p>
-                                        <p className="text-[10px] text-surface-variant font-black uppercase tracking-widest mt-0.5">{rankUser.xp.toLocaleString()} XP</p>
+                                        <p className="font-black font-headline text-on-surface tracking-tight truncate max-w-[120px]">{rankUser.users?.name || 'Anonymous'}</p>
+                                        <p className="text-[10px] text-on-surface-variant font-black uppercase tracking-widest mt-0.5">{rankUser.xp.toLocaleString()} XP</p>
                                     </div>
                                 </div>
                             ))}
