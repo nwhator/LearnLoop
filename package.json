@@ -33,7 +33,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
 
-    "@tailwindcss/postcss": "^4.2.2",
+    "tailwindcss": "^4.2.2",
 
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
@@ -41,7 +41,6 @@
     "@eslint/object-schema": "^3.0.3",
     "autoprefixer": "^10.4.27",
     "glob": "^10.3.10",
-    "postcss": "^8.4.38",
     "rimraf": "6.0.1",
     "tailwindcss": "^4.2.2",
     "typescript": "^5.4.0"
